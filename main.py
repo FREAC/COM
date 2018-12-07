@@ -6,7 +6,7 @@ here = 'https://geocoder.api.here.com/6.2/geocode.json'
 app_id = '3peEKduvqXuYDzZZnj0g'
 app_code = 'uur4uqOEz0zJZZWRr1kg1w'
 
-additional_data = 'IncludeMicroPointAddresses,true'
+additional_data = 'IncludeMicroPointAddresses,true;PreserveUnitDesignators,true'
 address = '2039 N Meridian Rd APT 139 Tallahassee FL 32303'
 payload = {'app_id': app_id, 'app_code': app_code, 'searchtext': up.quote_plus(address),
            'country': 'USA', 'state': 'US:FL', 'additionaldata': additional_data}
