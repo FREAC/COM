@@ -1,40 +1,54 @@
-import pyodbc
+import os
 import urllib.parse as parse
 import webbrowser
 import re
+import json
 
+import pyodbc
 import requests
 
 
 class HERE:
 
-    def __init__(self):
+    def __init__(self, fname='HERE.csv'):
 
         self.app_id = '3peEKduvqXuYDzZZnj0g'
         self.app_code = 'uur4uqOEz0zJZZWRr1kg1w'
         self.additional_data = 'IncludeMicroPointAddresses,true;PreserveUnitDesignators,true'
+        self.fname = fname
 
-    def find(self, data, web=True):
+    def find(self, data, web=False):
 
-            results = self.geocode_string(data)
-            google_url = 'https://www.google.com/maps/search/?api=1&query={}'
+        json_response = self.geocode_string(data)
+        google_url = 'https://www.google.com/maps/search/?api=1&query={}'
 
+        try:
+            results = json_response['Response']['View'][0]['Result']
             for result in results:
-                print(result)
-                print()
-                print('Main result:', result['Location']['Address']['Label'])
-                if web:
-                    latlon = '{Latitude},{Longitude}'.format(**result['Location']['DisplayPosition'])
-                    webbrowser.open(google_url.format(latlon), new=2)
-                print('Relevance:', result['Relevance'])
-                print('Match Quality: {}'.format(result['MatchQuality']))
-                if 'Related' in result['Location']:
-                    for related in result['Location']['Related']:
-                        print('-' * 20)
-                        print('Related result:', related['Location']['Address']['Label'])
-                        if web:
-                            latlon = '{Latitude},{Longitude}'.format(**related['Location']['DisplayPosition'])
-                            webbrowser.open(google_url.format(latlon), new=2)
+                rows = self.format_result(result)
+                self.write_to_csv(data, rows)
+        except IndexError:
+            self.write_to_csv(data)
+
+
+
+        # results = results['Response']['View'][0]['Result']
+        # for result in results:
+        #     print(result)
+        #     print()
+        #     print('Main result:', result['Location']['Address']['Label'])
+        #     if web:
+        #         latlon = '{Latitude},{Longitude}'.format(**result['Location']['DisplayPosition'])
+        #         webbrowser.open(google_url.format(latlon), new=2)
+        #     print('Relevance:', result['Relevance'])
+        #     print('Match Quality: {}'.format(result['MatchQuality']))
+        #     if 'Related' in result['Location']:
+        #         for related in result['Location']['Related']:
+        #             print('-' * 20)
+        #             print('Related result:', related['Location']['Address']['Label'])
+        #             if web:
+        #                 latlon = '{Latitude},{Longitude}'.format(**related['Location']['DisplayPosition'])
+        #                 webbrowser.open(google_url.format(latlon), new=2)
 
     def geocode_string(self, address):
 
@@ -44,9 +58,77 @@ class HERE:
 
         r = requests.get(here, params=payload)
         r.raise_for_status()
-        jsr = r.json()
 
-        return jsr['Response']['View'][0]['Result']
+        return r.json()
+
+    @staticmethod
+    def format_result(result):
+
+        rows = []
+        row = []
+
+        for key in ('Relevance', 'MatchLevel'):
+            try:
+                row.append(result[key])
+            except KeyError:
+                row.append(None)
+
+        # Gather match quality information
+        rmq = result['MatchQuality']
+        for key in ('PostalCode', 'City', 'Street', 'HouseNumber', 'Unit'):
+            try:
+                row.append(rmq[key])
+            except KeyError:
+                row.append(None)
+
+        # Gather address information
+        addr = result['Location']['Address']
+        for key in ('County', 'PostalCode', 'City', 'Street', 'HouseNumber'):
+            try:
+                row.append(addr[key])
+            except KeyError:
+                row.append(None)
+
+        # Gather unit information and lon/lat from micro addresses,
+        # otherwise gather lon/lat from addresses
+        locs = []
+        try:
+            micro = result['Location']['Related']
+            for loc in micro:
+                m_pos = loc['Location']['DisplayPosition']
+                lon = m_pos['Longitude']
+                lat = m_pos['Latitude']
+                unit_num = loc['Location']['Address']['Unit']
+                locs.append([unit_num, lon, lat])
+        except KeyError:
+            pos = result['Location']['DisplayPosition']
+            lon = pos['Longitude']
+            lat = pos['Latitude']
+            unit_num = None
+            locs.append([unit_num, lon, lat])
+
+        for loc in locs:
+            row.extend(loc)
+            rows.append(row)
+
+        return rows
+
+    def write_to_csv(self, data, rows=[[None]*15]):
+
+        if not os.path.isfile(self.fname):
+            header = ['Input', 'Relevance', 'MatchLevel', 'MQ_PostalCode', 'MQ_City', 'MQ_Street', 'MQ_HouseNumber',
+                      'MQ_Unit', 'County', 'PostalCode', 'City', 'Street', 'HouseNumber', 'Unit', 'Longitude',
+                      'Latitude']
+            with open(self.fname, 'w') as csvfile:
+                line = '{}\n'.format(','.join(str(column) for column in header))
+                csvfile.write(line)
+
+        with open(self.fname, 'a') as csvfile:
+            for row in rows:
+                row = [data] + row
+                line = '{}\n'.format(','.join(str(column) for column in row))
+                csvfile.write(line)
+        return
 
 
 class Access:
@@ -83,17 +165,22 @@ class ProcessData:
         self.pobox_pattern = re.compile(r'P[\.]?(OST)?\s?O[\.]?(FFICE)?\s((BOX)|(DRAWER))', re.IGNORECASE)
         self.data = []
         for item in data:
-            item = self.remove_items(item)
-            self.data.append(' '.join(item).strip())
+            item = self.remove_po_box(item)
+            item = list(self.remove_none(item))
+            self.data.append(' '.join(item).strip().replace(',', ''))
+        self.data = list(dict.fromkeys(self.data))
 
-    def remove_items(self, data):
+    @staticmethod
+    def remove_none(data):
+
+        return filter(None, data)
+
+    def remove_po_box(self, data):
 
         for i, address_field in enumerate(data):
             if address_field:
                 if self.pobox_pattern.search(address_field):
-                    data[i] = ''
-            else:
-                data[i] = ''
+                    data[i] = None
         return data
 
 
@@ -106,22 +193,21 @@ if __name__ == '__main__':
     addr = '2001 Old St. Augustine Rd Ste L208, Tallahassee, FL 32301'
     addr = '2365 Centerville Road, R-3, Tallahassee, FL 32308'
     addr = '8 South Main Street, P. O. Box 647, Chattahoochee, FL 32324'
+    addr = '110 NORTH APOPKA AVE INVERNESS FL 32650'
 
-    # h = HERE()
-    # h.find(addr, web=True)
+    h = HERE()
+    # h.find(addr, web=False)
 
-    # a = Access()
-    # addresses = a.get_data()
+    # for num in range(1, 3):
+    #     with open('pretty_response{}.json'.format(num)) as json_data:
+    #         d = json.load(json_data)
+    #         h.find(d['Response']['View'][0]['Result'])
 
-    x = [['2001 Old St. Augustine Rd', 'Ste L208', 'Tampa', 'FL', '33607'],
-         ['8 South Main Street', 'P. O. Box 647', 'Baker', 'FL', '32531'],
-         ['P O BOX 29056', '18260 SW 66 ST', 'DAVIE', 'FL', '33329'],
-         [None, 'POST OFFICE OX 636', 'ALACHUA', 'FL', '32615'],
-         [None, 'STAR RT 2 BOX 514', 'SATSUMA', 'FL', '32089'],
-         ['P.O. BOX 1320', None, 'LAKE WALES', 'FL', '33853'],
-         ['515 North Flagler Drive', None, 'West Palm Beach', 'FL', '33401'],
-         ['', 'POST OFFICE DRAWER C', 'LIVE OAK', 'FL', '32060'],
-         [None, None, 'Dania Beach', 'FL', None]]
+    access = Access()
+    data = access.get_data()
 
-    proc = ProcessData(x)
-    print(proc.data)
+    addresses = ProcessData(data)
+
+    for address in addresses.data[:10]:
+        print(address)
+        h.find(address)
