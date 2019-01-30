@@ -95,9 +95,9 @@ class HERE:
         try:
             micro = result['Location']['Related']
             for loc in micro:
-                m_pos = loc['Location']['DisplayPosition']
-                lon = m_pos['Longitude']
-                lat = m_pos['Latitude']
+                d_pos = loc['Location']['DisplayPosition']
+                lon = d_pos['Longitude']
+                lat = d_pos['Latitude']
                 unit_num = loc['Location']['Address']['Unit']
                 locs.append([unit_num, lon, lat])
         except KeyError:
@@ -108,8 +108,8 @@ class HERE:
             locs.append([unit_num, lon, lat])
 
         for loc in locs:
-            row.extend(loc)
-            rows.append(row)
+            loc_row = row + loc
+            rows.append(loc_row)
 
         return rows
 
@@ -194,20 +194,21 @@ if __name__ == '__main__':
     addr = '2365 Centerville Road, R-3, Tallahassee, FL 32308'
     addr = '8 South Main Street, P. O. Box 647, Chattahoochee, FL 32324'
     addr = '110 NORTH APOPKA AVE INVERNESS FL 32650'
+    addr = 'Route 2 Box 100A Greenville FL 32331'
 
     h = HERE()
     # h.find(addr, web=False)
 
-    # for num in range(1, 3):
+    # for num in range(1, 4):
     #     with open('pretty_response{}.json'.format(num)) as json_data:
     #         d = json.load(json_data)
-    #         h.find(d['Response']['View'][0]['Result'])
+    #         h.find(d)
 
-    access = Access()
-    data = access.get_data()
-
-    addresses = ProcessData(data)
-
-    for address in addresses.data[:10]:
-        print(address)
-        h.find(address)
+    # access = Access()
+    # data = access.get_data()
+    #
+    # addresses = ProcessData(data)
+    #
+    # for address in addresses.data[:30]:
+    #     print(address)
+    #     h.find(address)
