@@ -3,9 +3,11 @@ import urllib.parse as parse
 import webbrowser
 import re
 import json
+import base64
 
 import pyodbc
 import requests
+import shapefile
 
 
 class HERE:
@@ -167,7 +169,7 @@ class ProcessData:
         for item in data:
             item = self.remove_po_box(item)
             item = list(self.remove_none(item))
-            self.data.append(' '.join(item).strip().replace(',', ''))
+            self.data.append(' '.join(item).strip().replace(',', '').replace('  ', ' '))
         self.data = list(dict.fromkeys(self.data))
 
     @staticmethod
@@ -184,6 +186,29 @@ class ProcessData:
         return data
 
 
+def d2s(d):
+
+    try:
+        return d.strftime('%Y-%m-%d')
+    except AttributeError:
+        encoded = base64.encodebytes(bytes(d))
+        return encoded.decode('ascii')
+    except:
+        raise TypeError('Problem with: {}'.format(d))
+
+
+# with shapefile.Reader(r'Group Care/Group_Care') as shp:
+#
+#     records = shp.iterRecords()
+#
+#     fields = ['CompanyNam', 'CompleteSt', 'CITY', 'ZIP_CODE', 'STATE', 'Latitude', 'Longitude']
+#
+#     json_data = [dict((field, rec.as_dict()[field]) for field in fields if field in rec.as_dict()) for rec in records]
+#
+# with open('group_care_culled.json', 'w') as outfile:
+#     json.dump(json_data, outfile, default=d2s)
+
+
 if __name__ == '__main__':
 
     addr = '2039 N Meridian Rd APT 139 Tallahassee FL 32303'
@@ -196,7 +221,7 @@ if __name__ == '__main__':
     addr = '110 NORTH APOPKA AVE INVERNESS FL 32650'
     addr = 'Route 2 Box 100A Greenville FL 32331'
 
-    h = HERE()
+    h = HERE('group_care.csv')
     # h.find(addr, web=False)
 
     # for num in range(1, 4):
@@ -206,9 +231,17 @@ if __name__ == '__main__':
 
     # access = Access()
     # data = access.get_data()
-    #
     # addresses = ProcessData(data)
     #
     # for address in addresses.data[:30]:
     #     print(address)
     #     h.find(address)
+
+    with open('group_care_culled.json') as f:
+        data = json.load(f)
+        data = [[s['CompleteSt'], s['CITY'], s['STATE'], s['ZIP_CODE']] for s in data]
+
+    addresses = ProcessData(data)
+    for address in addresses.data[:30]:
+        print(address)
+        h.find(address)
