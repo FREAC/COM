@@ -1,0 +1,76 @@
+<!doctype html>
+<head>
+	<title>Group Care with Leaflet</title>
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+	<!-- Mobile meta tags-->
+	<meta name="HandheldFriendly" content="True">
+	<meta name="MobileOptimized" content="320"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="apple-touch-fullscreen" content="yes" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta http-equiv="cleartype" content="on">
+
+	<!-- CSS: Libs -->
+	<link rel="stylesheet" href="css/lib/bootstrap.css" />
+	<link rel="stylesheet" href="css/lib/font-awesome.css" />
+	<link rel="stylesheet" href="css/lib/leaflet.css" />
+	<link rel="stylesheet" href="css/lib/leaflet.awesome-markers.css" />
+	<!--[if lte IE 8]>
+        <link rel="stylesheet" href="css/lib/font-awesome-ie7.min.css" />
+    <![endif]-->
+
+	<!-- CSS: Custom -->
+	<link rel="stylesheet" href="css/styles.css" />
+
+	<!-- JS: Libs -->
+	<script type="text/javascript" src="js/lib/jquery.js"></script>
+	<script type="text/javascript" src="js/lib/underscore.js"></script>
+	<script type="text/javascript" src="js/lib/leaflet.js"></script>
+	<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
+	<script type="text/javascript" src="js/lib/leaflet.awesome-markers.js"></script>
+</head>
+<body>
+
+	<!-- Legend -->
+	<div id="legend">
+		<h3>FSU College of Medicine<br>Group Care Search Demo</h3>
+
+		<div id="geocoder_box" class="geocoder">
+			<form class="form-inline">
+					<input type="text" id="geocoder-input" class="form-control" placeholder="Enter an address...">
+					<button type="button" id="ESRI-Search" class="btn">Search</button>
+			</form>
+		</div>
+		
+		<div>Search radius:</div>
+		<div class="form">
+			<select id="radius-selected" name="radius">
+				<option value="5">5 miles</option>
+				<option value="10">10 miles</option>
+				<option value="25">25 miles</option>
+				<option value="50">50 miles</option>
+			</select>
+		</div>
+
+		<h3>Results</h3>
+		<p><span id="json_one_results_title"><span id="json_one_results">0</span> <span id="json_one_title">providers</span></span> are within the given radius.</p>
+
+		<h3>About</h3>
+		<p>This demo counts the number of group care facilities within a radius of a given point and displays them on a map using <a href="http://leafletjs.com/" target="_blank">Leaflet</a>.</p>
+		<p>To use, enter an address and then enter a radius. Under results will be the number of markers within the given radius. You can also drag the marker on the map; the number will update automatically.</p>
+		<p>More information regarding the original code is available <a href="http://csessig.wordpress.com/2014/06/22/leaflet-solution-counting-markers-within-a-radius/" target="_blank">here</a>. Code was originally used <a href="http://wcfcourier.com/app/special/ia-mental-health-public/" target="_blank">here</a>.</p>
+		<p>This project is sponsored by:<br><br><a href="https://www.sagerx.com/" target="_blank"><img alt="Sage Therapeutics" src="images/logo-sagerx.svg">
+			</a></p>
+	</div>
+
+	<!-- Map -->
+	<div id="map"></div>
+
+	<!-- JS: Custom -->
+	<script type="text/javascript" src="js/group_care.json"></script>
+	<script type="text/javascript" src="js/script.js"></script>
+</body>
+</html>
