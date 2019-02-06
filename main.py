@@ -197,16 +197,17 @@ def d2s(d):
         raise TypeError('Problem with: {}'.format(d))
 
 
-# with shapefile.Reader(r'Group Care/Group_Care') as shp:
-#
-#     records = shp.iterRecords()
-#
-#     fields = ['CompanyNam', 'CompleteSt', 'CITY', 'ZIP_CODE', 'STATE', 'Latitude', 'Longitude']
-#
-#     json_data = [dict((field, rec.as_dict()[field]) for field in fields if field in rec.as_dict()) for rec in records]
-#
-# with open('group_care_culled.json', 'w') as outfile:
-#     json.dump(json_data, outfile, default=d2s)
+with shapefile.Reader(r'Group Care/Group_Care') as shp:
+
+    records = shp.iterRecords()
+
+    fields = ['CompanyNam', 'CompleteSt', 'CITY', 'ZIP_CODE', 'STATE', 'Latitude', 'Longitude']
+    fields = ['CompanyNam', 'Latitude', 'Longitude']
+
+    json_data = [dict((field, rec.as_dict()[field]) for field in fields if field in rec.as_dict()) for rec in records]
+
+with open('group_care_culled2.json', 'w') as outfile:
+    json.dump(json_data, outfile, default=d2s)
 
 
 if __name__ == '__main__':
@@ -237,11 +238,11 @@ if __name__ == '__main__':
     #     print(address)
     #     h.find(address)
 
-    with open('group_care_culled.json') as f:
-        data = json.load(f)
-        data = [[s['CompleteSt'], s['CITY'], s['STATE'], s['ZIP_CODE']] for s in data]
-
-    addresses = ProcessData(data)
-    for address in addresses.data[:30]:
-        print(address)
-        h.find(address)
+    # with open('group_care_culled.json') as f:
+    #     data = json.load(f)
+    #     data = [[s['CompleteSt'], s['CITY'], s['STATE'], s['ZIP_CODE']] for s in data]
+    #
+    # addresses = ProcessData(data)
+    # for address in addresses.data[:30]:
+    #     print(address)
+    #     h.find(address)

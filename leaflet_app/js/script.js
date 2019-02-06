@@ -22,8 +22,8 @@ function pointsInCircle(circle, meters_user_set ) {
         var title_singular = 'provider';
         var title_plural = 'providers';
 
-        var selected_provider = $('#dropdown_select').val();
         var counter_points_in_circle = 0;
+        var results = [];
 
         // Loop through each point in JSON file
         json_group.eachLayer(function (layer) {
@@ -39,8 +39,26 @@ function pointsInCircle(circle, meters_user_set ) {
             // The user has selected
             if (distance_from_layer_circle <= meters_user_set) {
                 counter_points_in_circle += 1;
+                results.push({name: layer._popup._content, dist: distance_from_layer_circle});
             }
         });
+
+        //Sort the list by increasing distance from point
+        results.sort(function(a, b) {
+            return a.dist - b.dist;
+        });
+
+        var table = document.getElementById('results-table')
+        table.innerHTML = '';
+        for (var i = 0; i < counter_points_in_circle; i++) {
+            var tr = document.createElement('tr');
+            var td = document.createElement('td');
+            var text = document.createTextNode(results[i].name);
+
+            td.appendChild(text);
+            tr.appendChild(td);
+            table.appendChild(tr);
+        }
 
         // If we have just one result, we'll change the wording
         // So it reflects the category's singular form
@@ -60,10 +78,10 @@ function pointsInCircle(circle, meters_user_set ) {
 
 
 // This places marker, circle on map
-function geocodePlaceMarkersOnMap(location) {
+function geocodePlaceMarkersOnMap(location, z=10) {
 
     // Center the map on the result
-    map.setView(new L.LatLng(location.lat, location.lng), 10);
+    map.setView(new L.LatLng(location.lat, location.lng), z);
 
     // Remove circle if one is already on map
     if(circle) {
@@ -204,40 +222,6 @@ var search_icon = L.AwesomeMarkers.icon({
     color: 'blue'
 });
 
-
-/* $('#geocoder').geocodify({
-    onSelect: function (result) {
-        // Extract the location from the geocoder result
-        var location = result.geometry.location;
-
-        // Call function and place markers, circle on map
-        geocodePlaceMarkersOnMap(location);
-    },
-    initialText: 'Zip code, city, etc...',
-    regionBias: 'US',
-    // Lat, long information for Cedar Valley enter here
-    viewportBias: new google.maps.LatLngBounds(
-        new google.maps.LatLng(40.217754, -96.459961),
-        new google.maps.LatLng(43.749935, -90.175781)
-    ),
-    width: 300,
-    height: 26,
-    fontSize: '14px',
-    filterResults: function (results) {
-        var filteredResults = [];
-        $.each(results, function (i, val) {
-            var location = val.geometry.location;
-            if (location.lat() > minY && location.lat() < maxY) {
-                if (location.lng() > minX && location.lng() < maxX) {
-                    filteredResults.push(val);
-                }
-            }
-        });
-        return filteredResults;
-    }
-}); */
-
-
 // Base map
 var layer = new L.StamenTileLayer('toner-background');
 var map = new L.Map('map', {
@@ -254,5 +238,5 @@ map.addLayer(json_group);
 
 //Right-clicking the map triggers the search function
 map.on('contextmenu', function(e) {
-    geocodePlaceMarkersOnMap(e.latlng);
+    geocodePlaceMarkersOnMap(e.latlng, map.getZoom());
 });
