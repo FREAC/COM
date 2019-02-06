@@ -238,5 +238,10 @@ map.addLayer(json_group);
 
 //Right-clicking the map triggers the search function
 map.on('contextmenu', function(e) {
-    geocodePlaceMarkersOnMap(e.latlng, map.getZoom());
+    var z = map.getZoom();
+    if (z < 10) {
+        geocodePlaceMarkersOnMap(e.latlng);
+    } else {
+        geocodePlaceMarkersOnMap(e.latlng, z);
+    }
 });
