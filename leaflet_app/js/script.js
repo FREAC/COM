@@ -11,7 +11,7 @@ function milesToMeters(miles) {
 };
 
 // This figures out how many points are within our circle
-function pointsInCircle(circle, meters_user_set ) {
+function pointsInCircle(circle, meters_user_set) {
     if (circle !== undefined) {
         // Only run if we have an address entered
         // Lat, long of circle
@@ -39,12 +39,12 @@ function pointsInCircle(circle, meters_user_set ) {
             // The user has selected
             if (distance_from_layer_circle <= meters_user_set) {
                 counter_points_in_circle += 1;
-                results.push({name: layer._popup._content, dist: distance_from_layer_circle});
+                results.push({ name: layer._popup._content, dist: distance_from_layer_circle });
             }
         });
 
         //Sort the list by increasing distance from point
-        results.sort(function(a, b) {
+        results.sort(function (a, b) {
             return a.dist - b.dist;
         });
 
@@ -64,43 +64,43 @@ function pointsInCircle(circle, meters_user_set ) {
         // So it reflects the category's singular form
         // I.E. facility not facilities
         if (counter_points_in_circle === 1) {
-            $('#json_one_title').html( title_singular );
-        // If not one, set to plural form of word
+            $('#json_one_title').html(title_singular);
+            // If not one, set to plural form of word
         } else {
-            $('#json_one_title').html( title_plural );
+            $('#json_one_title').html(title_plural);
         }
-        
+
         // Set number of results on main page
-        $('#json_one_results').html( counter_points_in_circle );
+        $('#json_one_results').html(counter_points_in_circle);
     }
-// Close pointsInCircle
+    // Close pointsInCircle
 };
 
 
 // This places marker, circle on map
-function geocodePlaceMarkersOnMap(location, z=10) {
+function geocodePlaceMarkersOnMap(location, z = 10) {
 
     // Center the map on the result
     map.setView(new L.LatLng(location.lat, location.lng), z);
 
     // Remove circle if one is already on map
-    if(circle) {
+    if (circle) {
         map.removeLayer(circle);
     }
-    
+
     // Create circle around marker with our selected radius
-    circle = L.circle([location.lat, location.lng], milesToMeters( $('#radius-selected').val() ), {
+    circle = L.circle([location.lat, location.lng], milesToMeters($('#radius-selected').val()), {
         color: '#2BBED8',
         fillColor: '#2BBED8',
         fillOpacity: 0.1,
         clickable: false
     }).addTo(map);
-    
+
     // Remove marker if one is already on map
     if (search_marker) {
         map.removeLayer(search_marker);
     }
-        
+
     // Create marker
     search_marker = L.marker([location.lat, location.lng], {
         // Allow user to drag marker
@@ -109,12 +109,12 @@ function geocodePlaceMarkersOnMap(location, z=10) {
     });
 
     // Reset map view on marker drag
-    search_marker.on('dragend', function(event) {
-        map.setView( event.target.getLatLng() ); 
-        circle.setLatLng( event.target.getLatLng() );
+    search_marker.on('dragend', function (event) {
+        map.setView(event.target.getLatLng());
+        circle.setLatLng(event.target.getLatLng());
 
         // This will determine how many markers are within the circle
-        pointsInCircle( circle, milesToMeters( $('#radius-selected').val() ) );
+        pointsInCircle(circle, milesToMeters($('#radius-selected').val()));
 
         // Redraw: Leaflet function
         circle.redraw();
@@ -128,7 +128,7 @@ function geocodePlaceMarkersOnMap(location, z=10) {
 
     // This will determine how many markers are within the circle
     // Called when points are initially loaded
-    pointsInCircle( circle, milesToMeters( $('#radius-selected').val() ) );
+    pointsInCircle(circle, milesToMeters($('#radius-selected').val()));
 }
 
 
@@ -137,10 +137,10 @@ function changeCircleRadius(e) {
     // Determine which geocode box is filled
     // And fire click event
     // This will determine how many markers are within the circle
-    pointsInCircle(circle, milesToMeters( $('#radius-selected').val() ) )
+    pointsInCircle(circle, milesToMeters($('#radius-selected').val()))
     // Set radius of circle only if we already have one on the map
     if (circle) {
-        circle.setRadius( milesToMeters( $('#radius-selected').val() ) );
+        circle.setRadius(milesToMeters($('#radius-selected').val()));
     }
 }
 
@@ -148,10 +148,10 @@ function changeCircleRadius(e) {
 // This uses the ESRI geocoder
 function geocodeAddress(address) {
 
-    var url = 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates'; 
+    var url = 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates';
     var params = 'f=json&sourceCountry=USA&searchExtent=-88.5,33,-79,23.5&outFields=location&SingleLine=';
     var queryString = params + address;
-    $.get(url, queryString, function(data) {
+    $.get(url, queryString, function (data) {
         var coords = data.candidates[0].location;
         var location = {
             lng: coords.x,
@@ -161,17 +161,17 @@ function geocodeAddress(address) {
     });
 }
 
-$('#ESRI-Search').on('click', function() {
+$('#ESRI-Search').on('click', function () {
     geocodeAddress($('#geocoder-input').val());
 });
 
-$('select').change(function() {
+$('select').change(function () {
     changeCircleRadius();
 });
 
 // This loops through the data in our JSON file
 // And puts it on the map
-_.each(json_data, function(num) {
+_.each(json_data, function (num) {
     var dataLat = num['Latitude'];
     var dataLong = num['Longitude'];
 
@@ -190,7 +190,7 @@ _.each(json_data, function(num) {
     // Add events to marker
     layer_marker.on({
         // What happens when mouse hovers markers
-        mouseover: function(e) {
+        mouseover: function (e) {
             var layer_marker = e.target;
             layer_marker.setStyle({
                 radius: 6,
@@ -201,7 +201,7 @@ _.each(json_data, function(num) {
             });
         },
         // What happens when mouse leaves the marker
-        mouseout: function(e) {
+        mouseout: function (e) {
             var layer_marker = e.target;
             layer_marker.setStyle({
                 radius: 4,
@@ -213,7 +213,7 @@ _.each(json_data, function(num) {
         }
     });
     json_group.addLayer(layer_marker);
-// Close for loop
+    // Close for loop
 }, this);
 
 var search_marker;
@@ -223,21 +223,23 @@ var search_icon = L.AwesomeMarkers.icon({
 });
 
 // Base map
-var layer = new L.StamenTileLayer('toner-background');
+let basemap = L.tileLayer.provider('OpenStreetMap.Mapnik');
+
+// Map
 var map = new L.Map('map', {
-    center: new L.LatLng(28.3,-83.1),
+    center: new L.LatLng(28.3, -83.1),
     minZoom: 7,
     maxZoom: 13,
     zoom: 7,
-    maxBounds: [[23.5,-88.5],[33,-79]]
+    maxBounds: [[23.5, -88.5], [33, -79]]
 });
 // Add base layer to group
-map.addLayer(layer);
+map.addLayer(basemap);
 // Add our markers in our JSON file on the map
 map.addLayer(json_group);
 
 //Right-clicking the map triggers the search function
-map.on('contextmenu', function(e) {
+map.on('contextmenu', function (e) {
     var z = map.getZoom();
     if (z < 10) {
         geocodePlaceMarkersOnMap(e.latlng);
