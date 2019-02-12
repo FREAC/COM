@@ -169,8 +169,22 @@ $('select').change(function () {
     changeCircleRadius();
 });
 
+// This sets the marker styles for any of the circleMarker symbols 
+// inserted in setStyle, so any renderer that uses setStyle can use this function
+
+function markerStyle(radius, fillColor, color, weight, fillOpacity) {
+    return {
+        radius: radius,
+        fillColor: fillColor,
+        color: color,
+        weight: weight,
+        fillOpacity: fillOpacity
+    };
+}
+
 // This loops through the data in our JSON file
 // And puts it on the map
+
 _.each(json_data, function (num) {
     var dataLat = num['Latitude'];
     var dataLong = num['Longitude'];
@@ -178,38 +192,22 @@ _.each(json_data, function (num) {
     // Add to our marker
     var marker_location = new L.LatLng(dataLat, dataLong);
 
-    // Options for our circle marker
-    var layer_marker = L.circleMarker(marker_location, {
-        radius: 4,
-        fillColor: "#ED9118",
-        color: "#FFFFFF",
-        weight: 1,
-        fillOpacity: 0.8
-    }).bindPopup(num['CompanyNam']);
+    var layer_marker = L.circleMarker(marker_location, markerStyle(4, "#ED9118", "#FFFFFF", 1, .8))
+        .bindPopup(num['CompanyNam']);
 
     // Add events to marker
     layer_marker.on({
         // What happens when mouse hovers markers
         mouseover: function (e) {
             var layer_marker = e.target;
-            layer_marker.setStyle({
-                radius: 6,
-                fillColor: "#2BBED8",
-                color: "#2BBED8",
-                weight: 1,
-                fillOpacity: 1
-            });
+            layer_marker.setStyle(markerStyle(4, "#2BBED8", "#2BBED8", 1, 1));
+
         },
         // What happens when mouse leaves the marker
         mouseout: function (e) {
             var layer_marker = e.target;
-            layer_marker.setStyle({
-                radius: 4,
-                fillColor: "#ED9118",
-                color: "#FFFFFF",
-                weight: 1,
-                fillOpacity: 0.8
-            });
+            layer_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
+
         }
     });
     json_group.addLayer(layer_marker);
