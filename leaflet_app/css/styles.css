@@ -18,7 +18,7 @@ body {
 
 /* Map */
 #map {
-  background-color: #FFF;
+  /* background-color: #FFF; */
   right: 0px;
   height: 100%;
   position: absolute;
@@ -26,6 +26,7 @@ body {
   cursor: default;
   top: 0;
 }
+
 
 /* Legend */
 #legend {
@@ -37,7 +38,7 @@ body {
   position: absolute;
 }
 
-#json_one_results {
+*/ #json_one_results {
   font-weight: bold;
   font-size: 20px;
 }
