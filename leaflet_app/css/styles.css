@@ -38,7 +38,7 @@ body {
   position: absolute;
 }
 
-*/ #json_one_results {
+#json_one_results {
   font-weight: bold;
   font-size: 20px;
 }
