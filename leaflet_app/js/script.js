@@ -105,7 +105,6 @@ function geocodePlaceMarkersOnMap(location, z = 10) {
     search_marker = L.marker([location.lat, location.lng], {
         // Allow user to drag marker
         draggable: true
-        // icon: 
     });
 
     // Reset map view on marker drag
@@ -215,10 +214,6 @@ _.each(json_data, function (num) {
 }, this);
 
 var search_marker;
-// var search_icon = L.AwesomeMarkers.icon({
-//     icon: 'icon-circle',
-//     color: 'blue'
-// });
 
 // Base map
 let basemap = L.tileLayer.provider('OpenStreetMap.Mapnik');
