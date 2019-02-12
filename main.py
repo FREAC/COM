@@ -1,6 +1,5 @@
 import os
 import urllib.parse as parse
-import webbrowser
 import re
 import json
 import base64
@@ -19,10 +18,9 @@ class HERE:
         self.additional_data = 'IncludeMicroPointAddresses,true;PreserveUnitDesignators,true'
         self.fname = fname
 
-    def find(self, data, web=False):
+    def find(self, data):
 
         json_response = self.geocode_string(data)
-        google_url = 'https://www.google.com/maps/search/?api=1&query={}'
 
         try:
             results = json_response['Response']['View'][0]['Result']
@@ -31,26 +29,6 @@ class HERE:
                 self.write_to_csv(data, rows)
         except IndexError:
             self.write_to_csv(data)
-
-
-
-        # results = results['Response']['View'][0]['Result']
-        # for result in results:
-        #     print(result)
-        #     print()
-        #     print('Main result:', result['Location']['Address']['Label'])
-        #     if web:
-        #         latlon = '{Latitude},{Longitude}'.format(**result['Location']['DisplayPosition'])
-        #         webbrowser.open(google_url.format(latlon), new=2)
-        #     print('Relevance:', result['Relevance'])
-        #     print('Match Quality: {}'.format(result['MatchQuality']))
-        #     if 'Related' in result['Location']:
-        #         for related in result['Location']['Related']:
-        #             print('-' * 20)
-        #             print('Related result:', related['Location']['Address']['Label'])
-        #             if web:
-        #                 latlon = '{Latitude},{Longitude}'.format(**related['Location']['DisplayPosition'])
-        #                 webbrowser.open(google_url.format(latlon), new=2)
 
     def geocode_string(self, address):
 
@@ -186,28 +164,30 @@ class ProcessData:
         return data
 
 
-def d2s(d):
+def shp2json(fname, json_fname=None, fields=None):
 
-    try:
-        return d.strftime('%Y-%m-%d')
-    except AttributeError:
-        encoded = base64.encodebytes(bytes(d))
-        return encoded.decode('ascii')
-    except:
-        raise TypeError('Problem with: {}'.format(d))
+    def date2string(d):
+        try:
+            return d.strftime('%Y-%m-%d')
+        except AttributeError:
+            encoded = base64.encodebytes(bytes(d))
+            return encoded.decode('ascii')
+        except:
+            raise TypeError('Problem with: {}'.format(d))
 
+    with shapefile.Reader(fname) as shp:
 
-with shapefile.Reader(r'Group Care/Group_Care') as shp:
+        records = shp.iterRecords()
+        if not fields:
+            fields = [field[0] for field in shp.fields[1:]]
 
-    records = shp.iterRecords()
+        data = [dict((field, rec.as_dict()[field]) for field in fields if field in rec.as_dict()) for rec in records]
 
-    fields = ['CompanyNam', 'CompleteSt', 'CITY', 'ZIP_CODE', 'STATE', 'Latitude', 'Longitude']
-    fields = ['CompanyNam', 'Latitude', 'Longitude']
+    if json_fname:
+        with open(json_fname, 'w') as outfile:
+            json.dump(data, outfile, default=date2string)
 
-    json_data = [dict((field, rec.as_dict()[field]) for field in fields if field in rec.as_dict()) for rec in records]
-
-with open('group_care_culled2.json', 'w') as outfile:
-    json.dump(json_data, outfile, default=d2s)
+    return json.dumps(data, default=date2string)
 
 
 if __name__ == '__main__':
@@ -222,8 +202,8 @@ if __name__ == '__main__':
     addr = '110 NORTH APOPKA AVE INVERNESS FL 32650'
     addr = 'Route 2 Box 100A Greenville FL 32331'
 
-    h = HERE('group_care.csv')
-    # h.find(addr, web=False)
+    # h = HERE('group_care.csv')
+    # h.find(addr)
 
     # for num in range(1, 4):
     #     with open('pretty_response{}.json'.format(num)) as json_data:
@@ -246,3 +226,9 @@ if __name__ == '__main__':
     # for address in addresses.data[:30]:
     #     print(address)
     #     h.find(address)
+
+    # path = r'data/Group Care/Group_Care.shp'
+    # outpath = r'data/Group Care/group_care_culled.json'
+    # keep_fields = ['CompanyNam', 'Latitude', 'Longitude']
+    # json_data = shp2json(path, outpath, fields=keep_fields)
+    # print(json_data)
