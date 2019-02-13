@@ -222,12 +222,9 @@ var search_marker;
 // Base map
 let basemap = L.tileLayer.provider('OpenStreetMap.Mapnik');
 
-
-// Canvas layer to house all points
-var ciLayer = L.canvasIconLayer({});
-
 // Map
 var map = new L.Map('map', {
+    renderer: L.canvas(),
     center: new L.LatLng(28.3, -83.1),
     minZoom: 7,
     maxZoom: 13,
