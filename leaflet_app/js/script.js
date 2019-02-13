@@ -5,6 +5,7 @@ var circle;
 // Marker in the middle of the circle
 var search_marker;
 
+
 // Convert miles to meters to set radius of circle
 function milesToMeters(miles) {
     return miles * 1069.344;
@@ -39,7 +40,10 @@ function pointsInCircle(circle, meters_user_set) {
             // The user has selected
             if (distance_from_layer_circle <= meters_user_set) {
                 counter_points_in_circle += 1;
-                results.push({ name: layer._popup._content, dist: distance_from_layer_circle });
+                results.push({
+                    name: layer._popup._content,
+                    dist: distance_from_layer_circle
+                });
             }
         });
 
@@ -218,14 +222,25 @@ var search_marker;
 // Base map
 let basemap = L.tileLayer.provider('OpenStreetMap.Mapnik');
 
+
+// Canvas layer to house all points
+var ciLayer = L.canvasIconLayer({});
+
 // Map
 var map = new L.Map('map', {
     center: new L.LatLng(28.3, -83.1),
     minZoom: 7,
     maxZoom: 13,
     zoom: 7,
-    maxBounds: [[23.5, -88.5], [33, -79]]
+    maxBounds: [
+        [23.5, -88.5],
+        [33, -79]
+    ]
 });
+
+// // Add canvas layer to map
+// map.addLayer(ciLayer);
+
 // Add base layer to group
 map.addLayer(basemap);
 // Add our markers in our JSON file on the map
