@@ -28,9 +28,8 @@
 
 
     <style>
-
         #navbarHeader {
-            position:bottom;
+            position: bottom;
         }
     </style>
     <!-- Custom styles for this template -->
@@ -39,36 +38,47 @@
 
 <body>
     <header class="fixed-bottom">
-        <div class="collapse bg-dark" id="navbarHeader">
+        <div class="collapse bg-dark" id="search">
             <div class="container">
                 <div class="row">
                     <div class="col-sm-8 col-md-7 py-4">
-                        <h4 class="text-white">About</h4>
-                        <p class="text-muted">Add some information about the album below, the author, or any other
-                            background context. Make it a few sentences long so folks can pick up some informative
-                            tidbits. Then, link them off to some social networking sites or contact information.</p>
-                    </div>
-                    <div class="col-sm-4 offset-md-1 py-4">
-                        <h4 class="text-white">Contact</h4>
-                        <ul class="list-unstyled">
-                            <li><a href="#" class="text-white">Follow on Twitter</a></li>
-                            <li><a href="#" class="text-white">Like on Facebook</a></li>
-                            <li><a href="#" class="text-white">Email me</a></li>
-                        </ul>
+                        <h4 class="text-white">Search</h4>
+                        <p class="text-muted">Search DIV</p>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="navbar navbar-dark bg-dark shadow-sm">
-            <div class="container d-flex justify-content-between">
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader"
-                    aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+        <div class="collapse bg-dark" id="about">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-8 col-md-7 py-4">
+                        <h4 class="text-white">About</h4>
+                        <p class="text-muted">ABOUT DIV</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="navbar nav navbar-dark bg-dark shadow-sm">
+            <div class="container d-flex justify-content-between nav-items">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#about" aria-controls="about"
+                    aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#search" aria-controls="search"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <!-- <a href="#about" data-toggle="collapse" class="active">Search</a>
+                <a href="#search" data-toggle="collapse">About</a> -->
             </div>
         </div>
     </header>
 
 </body>
+<script>
+    jQuery('.nav-items').click(function (e) {
+        jQuery('.collapse').collapse('hide');
+    });
+</script>
 
 </html>
