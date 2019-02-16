@@ -30,11 +30,12 @@ body {
 /* Legend */
 #legend {
   padding: 0px 2%;
-  z-index: 7;
+  z-index: 1;
   height: 100%;
   /* top: 0; */
   background-color: #EEE;
   position: absolute;
+  overflow-y: scroll;
 }
 
 #json_one_results {
@@ -64,8 +65,12 @@ body {
   height: 100%;
 }
 
+#results-table {
+  overflow-y: scroll;
+}
+
 /* On small screens, set height to 'auto' for sidenav and grid */
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 767px) and (orientation: portrait) {
   .sidenav {
     height: 25%;
     padding: 15px;
@@ -93,6 +98,13 @@ body {
     /* z-index: 6; */
     /* cursor: default; */
     /* top: 0; */
+  }
+
+  #geocoder_box {
+    position: absolute;
+    top: 10%;
+    justify-content: center;
+    z-index: 20;
   }
 
   .row.content {
