@@ -235,9 +235,6 @@ var map = new L.Map('map', {
     ]
 });
 
-// // Add canvas layer to map
-// map.addLayer(ciLayer);
-
 // Add base layer to group
 map.addLayer(basemap);
 // Add our markers in our JSON file on the map
@@ -252,3 +249,10 @@ map.on('contextmenu', function (e) {
         geocodePlaceMarkersOnMap(e.latlng, z);
     }
 });
+
+// console.log(screen.availWidth);
+// if (screen.availWidth < 992) {
+//     document.getElementById('map').prepend(
+//         document.getElementById('geocoder_box')
+//     );
+// }

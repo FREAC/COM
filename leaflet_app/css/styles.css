@@ -80,7 +80,7 @@ body {
   }
 
   #legend {
-    /* padding: 0px 2%; */
+    padding: 0px 2%;
     /* z-index: 7; */
     height: 40%;
     /* background-color: #EEE; */
@@ -95,17 +95,17 @@ body {
     /* width: 100%; */
     height: 60%;
     position: absolute;
-    /* z-index: 6; */
+    z-index: -1;
     /* cursor: default; */
     /* top: 0; */
   }
 
-  #geocoder_box {
+  /* #geocoder_box {
     position: absolute;
     top: 10%;
     justify-content: center;
     z-index: 20;
-  }
+  } */
 
   .row.content {
     height: auto;
