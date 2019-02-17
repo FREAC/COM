@@ -165,8 +165,18 @@ function geocodeAddress(address) {
     });
 }
 
+// when submit button clicked, geocodeAddresses
 $('#ESRI-Search').on('click', function () {
     geocodeAddress($('#geocoder-input').val());
+});
+
+// when enter button clicked, geocodeAddresses
+$('#geocoder-input').keypress(function (event) {
+    console.log(event);
+    if (event.keyCode == 13) {
+        event.preventDefault();
+        geocodeAddress($('#geocoder-input').val());
+    }
 });
 
 $('select').change(function () {
@@ -251,8 +261,6 @@ map.on('contextmenu', function (e) {
     }
 });
 
-// check for window resize
-
 // append search bar to the top of the map when on small screen
 if (screen.availWidth < 766) {
     document.getElementById('full-page').appendChild(
@@ -264,16 +272,16 @@ if (screen.availWidth < 766) {
         console.log('happened');
         var infoButton = L.control.infoButton({
             position: 'topleft',
-            // title: '<h3 style="position: relative; top:1%;"> About: </h3>',
             html: "<div style='text-align:center;'><p></p><img src='images/fsulogo.png' alt='FSU Logo' width='75' height='75'=><br><br><h4>Florida State University College of Medicine</h4><br><h5>Group Care Search Demo</h5><br><p>This demo counts the number of group care facilities within a radius of a given point and displays them on a map using Leaflet.</p><br><p>To use, enter an address and then enter a radius. Under results will be the number of markers within the given radius. You can also drag the marker on the map; the number will update automatically.</p><br><p>More information regarding the original code is available here. Code was originally used here.</p><br><p>This project is sponsored by:</p><a href='https://www.sagerx.com/' target='_blank'><img alt='Sage Therapeutics' src='images/logo-sagerx.svg'><br><br></div>"
         });
 
         infoButton.addTo(map);
     }
 
-} else if (screen.availWidth >= 766) {
-    //the search box goes back to its original places
-    document.getElementById('search-box').appendChild(
-        document.getElementById('geocoder-box')
-    );
 }
+// else if (screen.availWidth >= 766) {
+//     //the search box goes back to its original places
+//     document.getElementById('search-box').appendChild(
+//         document.getElementById('geocoder-box')
+//     );
+// }
