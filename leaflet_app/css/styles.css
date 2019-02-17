@@ -69,10 +69,28 @@ body {
   overflow-y: scroll;
 }
 
+/* Put the submit button inside of the search bar */
+
+#search-bar {
+  position: relative;
+}
+
+#geocoder-input {
+  width: 100%
+}
+
+#ESRI-Search {
+  position: absolute;
+  width: 25%;
+  height: 100%;
+}
+
+
+
 /* On small screens, set height to 'auto' for sidenav and grid */
 @media screen and (max-width: 767px) and (orientation: portrait) {
   .sidenav {
-    height: 25%;
+    height: auto;
     padding: 15px;
     position: relative;
     width: 100%;
@@ -97,17 +115,19 @@ body {
     position: absolute;
     z-index: -1;
     /* cursor: default; */
-    /* top: 0; */
+    bottom: 0;
   }
-
-  /* #geocoder_box {
-    position: absolute;
-    top: 10%;
-    justify-content: center;
-    z-index: 20;
-  } */
 
   .row.content {
     height: auto;
   }
+
+  #geocoder_box {
+    position: absolute;
+    left: 15%;
+    top: 2%
+  }
+
+
+
 }
