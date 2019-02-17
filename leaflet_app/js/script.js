@@ -155,6 +155,7 @@ function geocodeAddress(address) {
     var params = 'f=json&sourceCountry=USA&searchExtent=-88.5,33,-79,23.5&outFields=location&SingleLine=';
     var queryString = params + address;
     $.get(url, queryString, function (data) {
+        console.log(data);
         var coords = data.candidates[0].location;
         var location = {
             lng: coords.x,
@@ -250,9 +251,9 @@ map.on('contextmenu', function (e) {
     }
 });
 
-// console.log(screen.availWidth);
-// if (screen.availWidth < 992) {
-//     document.getElementById('map').prepend(
-//         document.getElementById('geocoder_box')
-//     );
-// }
+// append search bar to the top of the map when on small screen
+if (screen.availWidth < 766) {
+    document.getElementById('full-page').appendChild(
+        document.getElementById('geocoder_box')
+    );
+}
