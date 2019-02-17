@@ -172,7 +172,6 @@ $('#ESRI-Search').on('click', function () {
 
 // when enter button clicked, geocodeAddresses
 $('#geocoder-input').keypress(function (event) {
-    console.log(event);
     if (event.keyCode == 13) {
         event.preventDefault();
         geocodeAddress($('#geocoder-input').val());
