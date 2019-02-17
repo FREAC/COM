@@ -144,3 +144,9 @@
         opacity: 0;
     }
 }
+
+/* info symbol default opacity */
+
+#info-symbol {
+    opacity: 0.85;
+}

@@ -14,7 +14,7 @@ L.Control.InfoButton = L.Control.extend({
         this.link = L.DomUtil.create('a', 'leaflet-bar-part leaflet-info-button', this.container);
         this.link.href = '#';
         this.link.title = this.options.linkTitle;
-        this.link.innerHTML = "?";
+        this.link.innerHTML = '<i id="info-symbol" class="fas fa-info-circle"></i>';
         L.DomEvent.on(this.link, 'click', this._click, this);
 
 
