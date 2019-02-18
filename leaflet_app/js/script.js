@@ -1,9 +1,9 @@
 // We'll append our markers to this global variable
-var json_group = new L.FeatureGroup();
+const json_group = new L.FeatureGroup();
 // This is the circle on the map that will be determine how many markers are around
-var circle;
+let circle;
 // Marker in the middle of the circle
-var search_marker;
+let search_marker;
 
 
 // Convert miles to meters to set radius of circle
@@ -20,11 +20,11 @@ function pointsInCircle(circle, meters_user_set) {
 
         // Singular, plural information about our JSON file
         // Which is getting put on the map
-        var title_singular = 'provider';
-        var title_plural = 'providers';
+        const title_singular = 'provider';
+        const title_plural = 'providers';
 
-        var counter_points_in_circle = 0;
-        var results = [];
+        let counter_points_in_circle = 0;
+        const results = [];
 
         // Loop through each point in JSON file
         json_group.eachLayer(function (layer) {
@@ -52,12 +52,12 @@ function pointsInCircle(circle, meters_user_set) {
             return a.dist - b.dist;
         });
 
-        var table = document.getElementById('results-table')
+        const table = document.getElementById('results-table')
         table.innerHTML = '';
-        for (var i = 0; i < counter_points_in_circle; i++) {
-            var tr = document.createElement('tr');
-            var td = document.createElement('td');
-            var text = document.createTextNode(results[i].name);
+        for (let i = 0; i < counter_points_in_circle; i++) {
+            const tr = document.createElement('tr');
+            const td = document.createElement('td');
+            const text = document.createTextNode(results[i].name);
 
             td.appendChild(text);
             tr.appendChild(td);
@@ -151,13 +151,13 @@ function changeCircleRadius(e) {
 // This uses the ESRI geocoder
 function geocodeAddress(address) {
 
-    var url = 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates';
-    var params = 'f=json&sourceCountry=USA&searchExtent=-88.5,33,-79,23.5&outFields=location&SingleLine=';
-    var queryString = params + address;
+    const url = 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates';
+    const params = 'f=json&sourceCountry=USA&searchExtent=-88.5,33,-79,23.5&outFields=location&SingleLine=';
+    const queryString = params + address;
     $.get(url, queryString, function (data) {
         console.log(data);
-        var coords = data.candidates[0].location;
-        var location = {
+        const coords = data.candidates[0].location;
+        const location = {
             lng: coords.x,
             lat: coords.y
         };
@@ -199,26 +199,26 @@ function markerStyle(radius, fillColor, color, weight, fillOpacity) {
 // And puts it on the map
 
 _.each(json_data, function (num) {
-    var dataLat = num['Latitude'];
-    var dataLong = num['Longitude'];
+    const dataLat = num['Latitude'];
+    const dataLong = num['Longitude'];
 
     // Add to our marker
-    var marker_location = new L.LatLng(dataLat, dataLong);
+    const marker_location = new L.LatLng(dataLat, dataLong);
 
-    var layer_marker = L.circleMarker(marker_location, markerStyle(4, "#ED9118", "#FFFFFF", 1, .8))
+    const layer_marker = L.circleMarker(marker_location, markerStyle(4, "#ED9118", "#FFFFFF", 1, .8))
         .bindPopup(num['CompanyNam']);
 
     // Add events to marker
     layer_marker.on({
         // What happens when mouse hovers markers
         mouseover: function (e) {
-            var layer_marker = e.target;
+            const layer_marker = e.target;
             layer_marker.setStyle(markerStyle(4, "#2BBED8", "#2BBED8", 1, 1));
 
         },
         // What happens when mouse leaves the marker
         mouseout: function (e) {
-            var layer_marker = e.target;
+            const layer_marker = e.target;
             layer_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
 
         }
@@ -227,13 +227,11 @@ _.each(json_data, function (num) {
     // Close for loop
 }, this);
 
-var search_marker;
-
 // Base map
 let basemap = L.tileLayer.provider('OpenStreetMap.Mapnik');
 
 // Map
-var map = new L.Map('map', {
+const map = new L.Map('map', {
     renderer: L.canvas(),
     center: new L.LatLng(28.3, -83.1),
     minZoom: 7,
@@ -252,7 +250,7 @@ map.addLayer(json_group);
 
 //Right-clicking the map triggers the search function
 map.on('contextmenu', function (e) {
-    var z = map.getZoom();
+    const z = map.getZoom();
     if (z < 10) {
         geocodePlaceMarkersOnMap(e.latlng);
     } else {
