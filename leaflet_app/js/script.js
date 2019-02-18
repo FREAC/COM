@@ -53,7 +53,7 @@ function pointsInCircle(circle, meters_user_set) {
         });
 
         const table = document.getElementById('results-table')
-        const tableResults = {};
+        const tableResults = [];
         table.innerHTML = '';
         for (let i = 0; i < counter_points_in_circle; i++) {
             const tr = document.createElement('tr');
@@ -63,17 +63,22 @@ function pointsInCircle(circle, meters_user_set) {
             td.appendChild(text);
             tr.appendChild(td);
             table.appendChild(tr);
-            tableResults[i] = { name: results[i].name }
+            tableResults[i] = {
+                id: i,
+                name: results[i].name
+            }
         }
 
-        console.log(tableResults);
-
-        const tabTable = new Tabulator("#example-table", {
-            height: 205,
-            data: tableResults,
-            layout: "fitColumns",
-            column: [
-                { title: "Name", field: "name", align: "left" }
+        var tabtable = new Tabulator("#example-table", {
+            height: 200, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+            data: tableResults, //assign data to table
+            layout: "fitColumns", //fit columns to width of table (optional)
+            columns: [ //Define Table Columns
+                {
+                    title: "Name",
+                    field: "name",
+                    width: 150
+                }
             ],
             rowClick: function (e, row) { //trigger an alert message when the row is clicked
                 alert("Row " + row.getData().id + " Clicked!!!!");
