@@ -259,9 +259,3 @@ map.on('contextmenu', function (e) {
         geocodePlaceMarkersOnMap(e.latlng, z);
     }
 });
-// else if (screen.availWidth >= 766) {
-//     //the search box goes back to its original places
-//     document.getElementById('search-box').appendChild(
-//         document.getElementById('geocoder-box')
-//     );
-// }
