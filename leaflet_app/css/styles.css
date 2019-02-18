@@ -137,7 +137,7 @@ body {
 }
 
 /* On small screens, set height to 'auto' for sidenav and grid */
-@media screen and (max-width: 767px) and (orientation: landscape) {
+@media screen and (max-width: 812px) and (orientation: landscape) {
   .sidenav {
     height: auto;
     padding: 15px;
@@ -173,7 +173,8 @@ body {
   #geocoder_box {
     position: absolute;
     left: 60%;
-    top: 2%
+    top: 2%;
+    width: 175px;
   }
 
   /* prevent about from showing when in mobile view */

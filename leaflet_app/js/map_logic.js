@@ -1,7 +1,7 @@
 // This file will house all of the map logic for screen size changes
 
 // append search bar to the top of the map when on small screen
-if (screen.availWidth < 766) {
+if (screen.availWidth < 813) {
     document.getElementById('full-page').appendChild(
         document.getElementById('geocoder_box')
     );
