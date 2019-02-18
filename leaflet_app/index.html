@@ -21,10 +21,7 @@
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
 	 crossorigin="anonymous">
 	<link rel="stylesheet" href="css/lib/leaflet.css" />
-	<!--[if lte IE 8]>
-        <link rel="stylesheet" href="css/lib/font-awesome-ie7.min.css" />
-    <![endif]-->
-
+	<link rel="stylesheet" href="https://unpkg.com/tabulator-tables@4.2.1/dist/css/tabulator.min.css">
 	<link rel="stylesheet" href="css/lib/leaflet.infoButton.css" />
 
 
@@ -38,6 +35,8 @@
 	<script type="text/javascript" src="js/lib/leaflet.js"></script>
 	<script type="text/javascript" src="js/lib/leaflet-providers.js"></script>
 	<script type="text/javascript" src="js/lib/leaflet.infoButton.js"></script>
+	<script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.2.1/dist/js/tabulator.min.js"></script>
+
 
 
 
@@ -83,6 +82,10 @@
 				<p><span id="json_one_results_title"><span id="json_one_results">0</span> <span id="json_one_title">providers</span></span>
 					are within the given radius.</p>
 
+
+				<div id="example-table"></div>
+
+
 				<div class="table-responsive">
 					<table class="table fixed">
 						<thead>
@@ -90,6 +93,8 @@
 								<th>Company Name</th>
 							</tr>
 						</thead>
+						<div id="example-table"></div>
+
 						<tbody id="results-table">
 						</tbody>
 					</table>

@@ -53,6 +53,7 @@ function pointsInCircle(circle, meters_user_set) {
         });
 
         const table = document.getElementById('results-table')
+        const tableResults = {};
         table.innerHTML = '';
         for (let i = 0; i < counter_points_in_circle; i++) {
             const tr = document.createElement('tr');
@@ -62,7 +63,22 @@ function pointsInCircle(circle, meters_user_set) {
             td.appendChild(text);
             tr.appendChild(td);
             table.appendChild(tr);
+            tableResults[i] = { name: results[i].name }
         }
+
+        console.log(tableResults);
+
+        const tabTable = new Tabulator("#example-table", {
+            height: 205,
+            data: tableResults,
+            layout: "fitColumns",
+            column: [
+                { title: "Name", field: "name", align: "left" }
+            ],
+            rowClick: function (e, row) { //trigger an alert message when the row is clicked
+                alert("Row " + row.getData().id + " Clicked!!!!");
+            },
+        });
 
         // If we have just one result, we'll change the wording
         // So it reflects the category's singular form
