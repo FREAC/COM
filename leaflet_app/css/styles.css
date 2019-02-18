@@ -163,7 +163,7 @@ body {
     height: 100%;
     position: absolute;
     z-index: -1;
-    bottom: 0;
+    bottom: 0px;
   }
 
   .row.content {

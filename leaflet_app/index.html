@@ -2,42 +2,42 @@
 <html lang="en">
 
 <head>
-  <title>Group Care with Leaflet</title>
-  <meta charset="utf-8">
+	<title>Group Care with Leaflet</title>
+	<meta charset="utf-8">
 
-  <!-- Mobile meta tags-->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="apple-touch-fullscreen" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta http-equiv="cleartype" content="on">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Mobile meta tags-->
+	<meta name="HandheldFriendly" content="True">
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="apple-touch-fullscreen" content="yes" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta http-equiv="cleartype" content="on">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 
 
-  <!-- CSS: Libs -->
-  <link rel="stylesheet" href="css/lib/bootstrap.css" />
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
-    crossorigin="anonymous">
-  <link rel="stylesheet" href="css/lib/leaflet.css" />
-  <!--[if lte IE 8]>
+	<!-- CSS: Libs -->
+	<link rel="stylesheet" href="css/lib/bootstrap.css" />
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+	 crossorigin="anonymous">
+	<link rel="stylesheet" href="css/lib/leaflet.css" />
+	<!--[if lte IE 8]>
         <link rel="stylesheet" href="css/lib/font-awesome-ie7.min.css" />
     <![endif]-->
 
-  <link rel="stylesheet" href="css/lib/leaflet.infoButton.css" />
+	<link rel="stylesheet" href="css/lib/leaflet.infoButton.css" />
 
 
-  <!-- CSS: Custom -->
-  <link rel="stylesheet" href="css/styles.css" />
+	<!-- CSS: Custom -->
+	<link rel="stylesheet" href="css/styles.css" />
 
-  <!-- JS: Libs -->
-  <script type="text/javascript" src="js/lib/jquery.js"></script>
-  <script type="text/javascript" src="js/lib/bootstrap.js"></script>
-  <script type="text/javascript" src="js/lib/underscore.js"></script>
-  <script type="text/javascript" src="js/lib/leaflet.js"></script>
-  <script type="text/javascript" src="js/lib/leaflet-providers.js"></script>
-  <script type="text/javascript" src="js/lib/leaflet.infoButton.js"></script>
+	<!-- JS: Libs -->
+	<script type="text/javascript" src="js/lib/jquery.js"></script>
+	<script type="text/javascript" src="js/lib/bootstrap.js"></script>
+	<script type="text/javascript" src="js/lib/underscore.js"></script>
+	<script type="text/javascript" src="js/lib/leaflet.js"></script>
+	<script type="text/javascript" src="js/lib/leaflet-providers.js"></script>
+	<script type="text/javascript" src="js/lib/leaflet.infoButton.js"></script>
 
 
 
@@ -45,83 +45,84 @@
 
 <body>
 
-  <div class="container-fluid">
-    <div class="row content" id="full-page">
-      <div class="col-sm-6 col-md-5 col-lg-5 col-xl-5  sidenav" id="legend">
-        <!-- put the sidebar here-->
-        <h3>FSU College of Medicine<br>Group Care Search Demo</h3>
+	<div class="container-fluid">
+		<div class="row content" id="full-page">
+			<div class="col-sm-6 col-md-5 col-lg-5 col-xl-5  sidenav" id="legend">
+				<!-- put the sidebar here-->
+				<h3>FSU College of Medicine<br>Group Care Search Demo</h3>
 
-        <div id="search-box">
-          <div id="geocoder_box" class="geocoder">
-            <form class="form-inline">
-              <!-- OLD Search bar and submit button -->
-              <!-- <div id="search-bar">
+				<div id="search-box">
+					<div id="geocoder_box" class="geocoder">
+						<form class="form-inline">
+							<!-- OLD Search bar and submit button -->
+							<!-- <div id="search-bar">
               <input type="text" id="geocoder-input" class="form-control" placeholder="Enter an address...">
               <button type="button" id="ESRI-Search" class="btn">Search</button>
             </div> -->
-              <div class="input-group mb-3">
-                <input type="text" id="geocoder-input" class="form-control" placeholder="Enter an address...">
-                <div class="input-group-append">
-                  <button type="button" id="ESRI-Search" class="btn"><i class="fas fa-search"></i></button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
+							<div class="input-group mb-3">
+								<input type="text" id="geocoder-input" class="form-control" placeholder="Enter an address...">
+								<div class="input-group-append">
+									<button type="button" id="ESRI-Search" class="btn"><i class="fas fa-search"></i></button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
 
-        <div>Search radius:</div>
-        <div class="form">
-          <select id="radius-selected" name="radius">
-            <option value="5">5 miles</option>
-            <option value="10">10 miles</option>
-            <option value="25">25 miles</option>
-            <option value="50">50 miles</option>
-          </select>
-        </div>
+				<div>Search radius:</div>
+				<div class="form">
+					<select id="radius-selected" name="radius">
+						<option value="5">5 miles</option>
+						<option value="10">10 miles</option>
+						<option value="25">25 miles</option>
+						<option value="50">50 miles</option>
+					</select>
+				</div>
 
-        <h3>Results</h3>
-        <p><span id="json_one_results_title"><span id="json_one_results">0</span> <span id="json_one_title">providers</span></span>
-          are within the given radius.</p>
+				<h3>Results</h3>
+				<p><span id="json_one_results_title"><span id="json_one_results">0</span> <span id="json_one_title">providers</span></span>
+					are within the given radius.</p>
 
-        <div class="table-responsive">
-          <table class="table fixed">
-            <thead>
-              <tr>
-                <th>Company Name</th>
-              </tr>
-            </thead>
-            <tbody id="results-table">
-            </tbody>
-          </table>
-        </div>
-        <div id='about-section'>
-          <h3>About</h3>
-          <p>This demo counts the number of group care facilities within a radius of a given point and displays them on
-            a
-            map
-            using <a href="https://leafletjs.com/" target="_blank">Leaflet</a>.</p>
-          <p>To use, enter an address and then enter a radius. Under results will be the number of markers within the
-            given
-            radius. You can also drag the marker on the map; the number will update automatically.</p>
-          <p>More information regarding the original code is available <a href="http://csessig.wordpress.com/2014/06/22/leaflet-solution-counting-markers-within-a-radius/"
-              target="_blank">here</a>. Code was originally used <a href="http://wcfcourier.com/app/special/ia-mental-health-public/"
-              target="_blank">here</a>.</p>
-          <p>This project is sponsored by:<br><br><a href="https://www.sagerx.com/" target="_blank"><img alt="Sage Therapeutics"
-                src="images/logo-sagerx.svg">
-            </a></p>
-        </div>
-      </div>
+				<div class="table-responsive">
+					<table class="table fixed">
+						<thead>
+							<tr>
+								<th>Company Name</th>
+							</tr>
+						</thead>
+						<tbody id="results-table">
+						</tbody>
+					</table>
+				</div>
+				<div id='about-section'>
+					<h3>About</h3>
+					<p>This demo counts the number of group care facilities within a radius of a given point and displays them on
+						a
+						map
+						using <a href="https://leafletjs.com/" target="_blank">Leaflet</a>.</p>
+					<p>To use, enter an address and then enter a radius. Under results will be the number of markers within the
+						given
+						radius. You can also drag the marker on the map; the number will update automatically.</p>
+					<p>More information regarding the original code is available <a href="http://csessig.wordpress.com/2014/06/22/leaflet-solution-counting-markers-within-a-radius/"
+						 target="_blank">here</a>. Code was originally used <a href="http://wcfcourier.com/app/special/ia-mental-health-public/"
+						 target="_blank">here</a>.</p>
+					<p>This project is sponsored by:<br><br><a href="https://www.sagerx.com/" target="_blank"><img alt="Sage Therapeutics"
+							 src="images/logo-sagerx.svg">
+						</a></p>
+				</div>
+			</div>
 
-      <!-- Map -->
-      <div class="col-sm-6 col-md-7 col-lg-7 col-xl-7" id="map">
-      </div>
+			<!-- Map -->
+			<div class="col-sm-6 col-md-7 col-lg-7 col-xl-7" id="map">
+			</div>
 
-    </div>
-  </div>
+		</div>
+	</div>
 
-  <!-- JS: Custom -->
-  <script type="text/javascript" src="js/group_care.json"></script>
-  <script type="text/javascript" src="js/script.js"></script>
+	<!-- JS: Custom -->
+	<script type="text/javascript" src="js/group_care.json"></script>
+	<script type="text/javascript" src="js/script.js"></script>
+	<script type="text/javascript" src="js/map_logic.js"></script>
 
 </body>
 
