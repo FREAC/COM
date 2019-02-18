@@ -11,6 +11,10 @@ function milesToMeters(miles) {
     return miles * 1069.344;
 };
 
+function getMiles(meters) {
+    return meters * 0.000621371192;
+}
+
 // This figures out how many points are within our circle
 function pointsInCircle(circle, meters_user_set) {
     if (circle !== undefined) {
@@ -65,7 +69,8 @@ function pointsInCircle(circle, meters_user_set) {
             table.appendChild(tr);
             tableResults[i] = {
                 id: i,
-                name: results[i].name
+                name: results[i].name,
+                distance: getMiles(results[i].dist)
             }
         }
 
@@ -77,8 +82,10 @@ function pointsInCircle(circle, meters_user_set) {
                 {
                     title: "Name",
                     field: "name",
-                    width: 150
-                }
+                }, {
+                    title: "Distance (miles)",
+                    field: "distance",
+                },
             ],
             rowClick: function (e, row) { //trigger an alert message when the row is clicked
                 alert("Row " + row.getData().id + " Clicked!!!!");
