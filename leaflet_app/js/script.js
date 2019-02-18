@@ -155,6 +155,7 @@ function geocodeAddress(address) {
     var params = 'f=json&sourceCountry=USA&searchExtent=-88.5,33,-79,23.5&outFields=location&SingleLine=';
     var queryString = params + address;
     $.get(url, queryString, function (data) {
+        console.log(data);
         var coords = data.candidates[0].location;
         var location = {
             lng: coords.x,
@@ -164,8 +165,17 @@ function geocodeAddress(address) {
     });
 }
 
+// when submit button clicked, geocodeAddresses
 $('#ESRI-Search').on('click', function () {
     geocodeAddress($('#geocoder-input').val());
+});
+
+// when enter button clicked, geocodeAddresses
+$('#geocoder-input').keypress(function (event) {
+    if (event.keyCode == 13) {
+        event.preventDefault();
+        geocodeAddress($('#geocoder-input').val());
+    }
 });
 
 $('select').change(function () {
@@ -234,9 +244,6 @@ var map = new L.Map('map', {
         [33, -79]
     ]
 });
-
-// // Add canvas layer to map
-// map.addLayer(ciLayer);
 
 // Add base layer to group
 map.addLayer(basemap);

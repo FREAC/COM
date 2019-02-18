@@ -30,11 +30,12 @@ body {
 /* Legend */
 #legend {
   padding: 0px 2%;
-  z-index: 7;
+  z-index: 1;
   height: 100%;
-  top: 0;
+  /* top: 0; */
   background-color: #EEE;
   position: absolute;
+  overflow-y: scroll;
 }
 
 #json_one_results {
@@ -45,7 +46,7 @@ body {
 .fixed tbody {
   display: block;
   overflow: auto;
-  height: 200px;
+  max-height: 200px;
   width: 100%;
 }
 
@@ -64,14 +65,122 @@ body {
   height: 100%;
 }
 
+#results-table {
+  overflow-y: scroll;
+}
+
+/* Put the submit button inside of the search bar */
+
+#search-bar {
+  position: relative;
+}
+
+#geocoder-input {
+  width: 100%
+}
+
+#ESRI-Search {
+  position: absolute;
+  width: 25%;
+  height: 100%;
+}
+
+
+
 /* On small screens, set height to 'auto' for sidenav and grid */
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 767px) and (orientation: portrait) {
   .sidenav {
     height: auto;
     padding: 15px;
+    position: relative;
+    width: 100%;
+    bottom: 10px;
+  }
+
+  #legend {
+    padding: 0px 2%;
+    /* z-index: 7; */
+    height: 40%;
+    /* background-color: #EEE; */
+    position: absolute;
+    bottom: 0px;
+    overflow-y: scroll;
+
+  }
+
+  /* Map */
+  #map {
+    /* width: 100%; */
+    height: 60%;
+    position: absolute;
+    z-index: -1;
+    /* cursor: default; */
+    bottom: 0;
   }
 
   .row.content {
     height: auto;
   }
+
+  #geocoder_box {
+    position: absolute;
+    left: 15%;
+    top: 2%
+  }
+
+  /* prevent about from showing when in mobile view */
+  #about-section {
+    display: none;
+  }
+
+
+}
+
+/* On small screens, set height to 'auto' for sidenav and grid */
+@media screen and (max-width: 812px) and (orientation: landscape) {
+  .sidenav {
+    height: auto;
+    padding: 15px;
+    position: relative;
+    width: 100%;
+    bottom: 10px;
+  }
+
+  #legend {
+    padding: 0px 2%;
+    /* z-index: 7; */
+    height: 100%;
+    /* background-color: #EEE; */
+    /* position: absolute; */
+    bottom: 0px;
+    overflow-y: scroll;
+
+  }
+
+  /* Map */
+  #map {
+    width: 60%;
+    height: 100%;
+    position: absolute;
+    z-index: -1;
+    bottom: 0px;
+  }
+
+  .row.content {
+    height: auto;
+  }
+
+  #geocoder_box {
+    position: absolute;
+    left: 60%;
+    top: 2%;
+    width: 175px;
+  }
+
+  /* prevent about from showing when in mobile view */
+  #about-section {
+    display: none;
+  }
+
+
 }
