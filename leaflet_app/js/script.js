@@ -46,7 +46,9 @@ function pointsInCircle(circle, meters_user_set) {
                 counter_points_in_circle += 1;
                 results.push({
                     name: layer._popup._content,
-                    dist: distance_from_layer_circle
+                    dist: distance_from_layer_circle,
+                    latitude: layer_lat_long.lat,
+                    longitude: layer_lat_long.lng,
                 });
             }
         });
@@ -63,10 +65,13 @@ function pointsInCircle(circle, meters_user_set) {
             tableResults[i] = {
                 id: i,
                 name: results[i].name,
-                distance: getMiles(results[i].dist)
+                distance: getMiles(results[i].dist),
+                lat: results[i].latitude,
+                lng: results[i].longitude
             }
         }
 
+        // insert new dynamic table based on the results of the circle
         new Tabulator("#results-table", {
             height: 200, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
             data: tableResults, //assign data to table
@@ -81,7 +86,8 @@ function pointsInCircle(circle, meters_user_set) {
                 },
             ],
             rowClick: function (e, row) { //trigger an alert message when the row is clicked
-                alert("Row " + row.getData().id + " Clicked!!!!");
+                // set the view to the lat,lon point of the row that was clicked
+                map.setView(new L.LatLng(row.getData().lat, row.getData().lng), 12);
             },
         });
 
