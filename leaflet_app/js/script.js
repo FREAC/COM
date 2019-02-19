@@ -56,17 +56,10 @@ function pointsInCircle(circle, meters_user_set) {
             return a.dist - b.dist;
         });
 
-        const table = document.getElementById('results-table')
         const tableResults = [];
-        table.innerHTML = '';
-        for (let i = 0; i < counter_points_in_circle; i++) {
-            const tr = document.createElement('tr');
-            const td = document.createElement('td');
-            const text = document.createTextNode(results[i].name);
 
-            td.appendChild(text);
-            tr.appendChild(td);
-            table.appendChild(tr);
+        for (let i = 0; i < counter_points_in_circle; i++) {
+
             tableResults[i] = {
                 id: i,
                 name: results[i].name,
@@ -74,7 +67,7 @@ function pointsInCircle(circle, meters_user_set) {
             }
         }
 
-        var tabtable = new Tabulator("#example-table", {
+        new Tabulator("#results-table", {
             height: 200, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
             data: tableResults, //assign data to table
             layout: "fitColumns", //fit columns to width of table (optional)
