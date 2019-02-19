@@ -66,7 +66,8 @@ body {
 }
 
 #results-table {
-  overflow-y: scroll;
+  overflow-y: hidden;
+  margin-bottom: 2%;
 }
 
 /* Put the submit button inside of the search bar */
