@@ -5,6 +5,7 @@ let circle;
 // Marker in the middle of the circle
 let search_marker;
 
+let row_marker
 
 // Convert miles to meters to set radius of circle
 function milesToMeters(miles) {
@@ -42,6 +43,7 @@ function pointsInCircle(circle, meters_user_set) {
 
             // See if meters is within raduis
             // The user has selected
+            console.log(layer);
             if (distance_from_layer_circle <= meters_user_set) {
                 counter_points_in_circle += 1;
                 results.push({
@@ -49,6 +51,7 @@ function pointsInCircle(circle, meters_user_set) {
                     dist: distance_from_layer_circle,
                     latitude: layer_lat_long.lat,
                     longitude: layer_lat_long.lng,
+                    // countyName: layer
                 });
             }
         });
@@ -68,6 +71,7 @@ function pointsInCircle(circle, meters_user_set) {
                 distance: getMiles(results[i].dist),
                 lat: results[i].latitude,
                 lng: results[i].longitude
+                // link: results[i].countyName
             }
         }
 
@@ -76,6 +80,7 @@ function pointsInCircle(circle, meters_user_set) {
             height: 200, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
             data: tableResults, //assign data to table
             layout: "fitColumns", //fit columns to width of table (optional)
+            selectable: 1,
             columns: [ //Define Table Columns
                 {
                     title: "Name",
@@ -85,9 +90,27 @@ function pointsInCircle(circle, meters_user_set) {
                     field: "distance",
                 },
             ],
-            rowClick: function (e, row) { //trigger an alert message when the row is clicked
-                // set the view to the lat,lon point of the row that was clicked
-                map.setView(new L.LatLng(row.getData().lat, row.getData().lng), 12);
+            rowClick: function (e, row) { //trigger a response when the row is clicked
+                // identify lat and lng
+                const lat = row.getData().lat;
+                const lng = row.getData().lng;
+
+                // set the view to the lat,lng point of the row that was clicked
+                map.setView(new L.LatLng(lat, lng), 12);
+
+                // if a marker is already present on the map, remove it
+                if (row_marker) {
+                    map.removeLayer(row_marker);
+                }
+                // Set market location
+                const marker_location = new L.LatLng(lat, lng);
+
+                // set the row_marker variable to our location and style
+                row_marker = L.circleMarker(marker_location, markerStyle(4, "#FF0000", "#FF0000", 1, 1));
+
+                // add marker to the map
+                map.addLayer(row_marker);
+
             },
         });
 
@@ -124,7 +147,8 @@ function geocodePlaceMarkersOnMap(location, z = 10) {
         color: '#2BBED8',
         fillColor: '#2BBED8',
         fillOpacity: 0.1,
-        clickable: false
+        clickable: false,
+        interactive: false
     }).addTo(map);
 
     // Remove marker if one is already on map
