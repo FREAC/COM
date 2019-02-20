@@ -93,9 +93,9 @@ function pointsInCircle(circle, meters_user_set) {
                     field: "link",
                     formatter: "link",
                     formatterParams: {
-                        labelField:"link",
-                        urlPrefix:"https://www.google.com/search?q=",
-                        target:"_blank",
+                        labelField: "link",
+                        urlPrefix: "https://www.google.com/search?q=",
+                        target: "_blank",
                     }
                 }
             ],
@@ -264,7 +264,7 @@ _.each(json_data, function (num) {
 
     // Add to our marker
     const marker_location = new L.LatLng(dataLat, dataLong);
-    const layer_marker = L.circleMarker(marker_location, markerStyle(4, "#ED9118", "#FFFFFF", 1, .8))
+    const layer_marker = L.circleMarker(marker_location, markerStyle(4, "#ED9118", "#FFFFFF", 1, num['CountyCode'] / 100))
         .bindPopup(num['CompanyNam']);
 
     // Build the data
