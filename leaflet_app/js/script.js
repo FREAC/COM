@@ -264,13 +264,16 @@ _.each(json_data, function (num) {
 
     // Add to our marker
     const marker_location = new L.LatLng(dataLat, dataLong);
-
-
-
     const layer_marker = L.circleMarker(marker_location, markerStyle(4, "#ED9118", "#FFFFFF", 1, .8))
         .bindPopup(num['CompanyNam']);
 
-    layer_marker.data = {'CompanyName':num['CompanyNam'], 'CountyName':num['CountyName']};
+    // Build the data
+    layer_marker.data = {
+        'CompanyName': num['CompanyNam'],
+        'CountyName': num['CountyName'],
+        'CountyCode': num['CountyCode'],
+        'CountyNum': num['CountyNumb']
+    };
 
     // Add events to marker
     layer_marker.on({
