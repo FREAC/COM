@@ -47,11 +47,11 @@ function pointsInCircle(circle, meters_user_set) {
             if (distance_from_layer_circle <= meters_user_set) {
                 counter_points_in_circle += 1;
                 results.push({
-                    name: layer._popup._content,
+                    name: layer.data.CompanyName,
                     dist: distance_from_layer_circle,
                     latitude: layer_lat_long.lat,
                     longitude: layer_lat_long.lng,
-                    // countyName: layer
+                    countyName: layer.data.CountyName
                 });
             }
         });
@@ -70,8 +70,8 @@ function pointsInCircle(circle, meters_user_set) {
                 name: results[i].name,
                 distance: getMiles(results[i].dist),
                 lat: results[i].latitude,
-                lng: results[i].longitude
-                // link: results[i].countyName
+                lng: results[i].longitude,
+                link: results[i].countyName
             }
         }
 
@@ -88,7 +88,16 @@ function pointsInCircle(circle, meters_user_set) {
                 }, {
                     title: "Distance (miles)",
                     field: "distance",
-                },
+                }, {
+                    title: "Link",
+                    field: "link",
+                    formatter: "link",
+                    formatterParams: {
+                        labelField:"link",
+                        urlPrefix:"https://www.google.com/search?q=",
+                        target:"_blank",
+                    }
+                }
             ],
             rowClick: function (e, row) { //trigger a response when the row is clicked
                 // identify lat and lng
@@ -256,8 +265,12 @@ _.each(json_data, function (num) {
     // Add to our marker
     const marker_location = new L.LatLng(dataLat, dataLong);
 
+
+
     const layer_marker = L.circleMarker(marker_location, markerStyle(4, "#ED9118", "#FFFFFF", 1, .8))
         .bindPopup(num['CompanyNam']);
+
+    layer_marker.data = {'CompanyName':num['CompanyNam'], 'CountyName':num['CountyName']};
 
     // Add events to marker
     layer_marker.on({
