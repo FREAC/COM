@@ -43,7 +43,6 @@ function pointsInCircle(circle, meters_user_set) {
 
             // See if meters is within raduis
             // The user has selected
-            console.log(layer);
             if (distance_from_layer_circle <= meters_user_set) {
                 counter_points_in_circle += 1;
                 results.push({
@@ -229,6 +228,19 @@ function geocodeAddress(address) {
 $('#ESRI-Search').on('click', function () {
     geocodeAddress($('#geocoder-input').val());
 });
+
+var options = {
+    url: "/leaflet_app/js/data/group_care.json",
+
+    getValue: "CompanyNam",
+
+    list: {
+        match: {
+            enabled: true
+        }
+    }
+};
+$('#geocoder-input').easyAutocomplete(options);
 
 // when enter button clicked, geocodeAddresses
 $('#geocoder-input').keypress(function (event) {
