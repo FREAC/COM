@@ -258,41 +258,44 @@ function markerStyle(radius, fillColor, color, weight, fillOpacity) {
 // This loops through the data in our JSON file
 // And puts it on the map
 
-_.each(json_data, function (num) {
-    const dataLat = num['Latitude'];
-    const dataLong = num['Longitude'];
+$.get("./js/data/group_care.json", function (json_data) {
 
-    // Add to our marker
-    const marker_location = new L.LatLng(dataLat, dataLong);
-    const layer_marker = L.circleMarker(marker_location, markerStyle(4, "#ED9118", "#FFFFFF", 1, num['CountyCode'] / 100))
-        .bindPopup(num['CompanyNam']);
+    _.each(json_data, function (num) {
+        const dataLat = num['Latitude'];
+        const dataLong = num['Longitude'];
 
-    // Build the data
-    layer_marker.data = {
-        'CompanyName': num['CompanyNam'],
-        'CountyName': num['CountyName'],
-        'CountyCode': num['CountyCode'],
-        'CountyNum': num['CountyNumb']
-    };
+        // Add to our marker
+        const marker_location = new L.LatLng(dataLat, dataLong);
+        const layer_marker = L.circleMarker(marker_location, markerStyle(4, "#ED9118", "#FFFFFF", 1, num['CountyCode'] / 100))
+            .bindPopup(num['CompanyNam']);
 
-    // Add events to marker
-    layer_marker.on({
-        // What happens when mouse hovers markers
-        mouseover: function (e) {
-            const layer_marker = e.target;
-            layer_marker.setStyle(markerStyle(4, "#2BBED8", "#2BBED8", 1, 1));
+        // Build the data
+        layer_marker.data = {
+            'CompanyName': num['CompanyNam'],
+            'CountyName': num['CountyName'],
+            'CountyCode': num['CountyCode'],
+            'CountyNum': num['CountyNumb']
+        };
 
-        },
-        // What happens when mouse leaves the marker
-        mouseout: function (e) {
-            const layer_marker = e.target;
-            layer_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
+        // Add events to marker
+        layer_marker.on({
+            // What happens when mouse hovers markers
+            mouseover: function (e) {
+                const layer_marker = e.target;
+                layer_marker.setStyle(markerStyle(4, "#2BBED8", "#2BBED8", 1, 1));
 
-        }
-    });
-    json_group.addLayer(layer_marker);
-    // Close for loop
-}, this);
+            },
+            // What happens when mouse leaves the marker
+            mouseout: function (e) {
+                const layer_marker = e.target;
+                layer_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
+
+            }
+        });
+        json_group.addLayer(layer_marker);
+        // Close for loop
+    }, this);
+});
 
 // Base map
 let basemap = L.tileLayer.provider('OpenStreetMap.Mapnik');
