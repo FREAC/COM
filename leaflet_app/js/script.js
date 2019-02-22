@@ -209,11 +209,6 @@ function geocodeAddress(address) {
     });
 }
 
-// when submit button clicked, geocodeAddresses
-$('#ESRI-Search').on('click', function () {
-    geocodeAddress($('#geocoder-input').val());
-});
-
 // search a JSON object for value
 function search(nameKey, myArray) {
     for (var i = 0; i < myArray.length; i++) {
@@ -246,6 +241,12 @@ function zoomToLocation(lat, lng) {
     // add marker to the map
     map.addLayer(row_marker);
 }
+
+// when submit button clicked, geocodeAddresses
+$('#ESRI-Search').on('click', function () {
+    geocodeAddress($('#geocoder-input').val());
+});
+
 $('#name-search').on('click', async function () {
 
     let result;
