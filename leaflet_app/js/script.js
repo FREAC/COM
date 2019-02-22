@@ -229,6 +229,34 @@ $('#ESRI-Search').on('click', function () {
     geocodeAddress($('#geocoder-input').val());
 });
 
+function search(nameKey, myArray) {
+    for (var i = 0; i < myArray.length; i++) {
+        if (myArray[i].CompanyNam === nameKey) {
+            return myArray[i];
+        }
+    }
+}
+
+$('#name-search').on('click', async function () {
+
+    // if a marker is already present on the map, remove it
+    if (row_marker) {
+        map.removeLayer(row_marker);
+    }
+    let result;
+    const val = document.getElementById("geocoder-input").value;
+    const json_data = await $.get("./js/data/group_care.json", function (json_data) {
+        result = search(val, json_data);
+    });
+
+    map.setView(new L.LatLng(result['Latitude'], result['Longitude']), 12);
+
+    const marker_location = new L.LatLng(result['Latitude'], result['Longitude']);
+    const marker = L.circleMarker(marker_location, markerStyle(4, "#FF0000", "#FF0000", 1, 1));
+    marker.bubblingMouseEvents = true;
+    map.addLayer(marker)
+});
+
 var options = {
     url: "/leaflet_app/js/data/group_care.json",
 
