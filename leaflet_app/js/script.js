@@ -103,25 +103,7 @@ function pointsInCircle(circle, meters_user_set) {
                 const lat = row.getData().lat;
                 const lng = row.getData().lng;
 
-                // set the view to the lat,lng point of the row that was clicked
-                map.setView(new L.LatLng(lat, lng), 12);
-
-                // if a marker is already present on the map, remove it
-                if (row_marker) {
-                    map.removeLayer(row_marker);
-                }
-                // Set market location
-                const marker_location = new L.LatLng(lat, lng);
-
-                // set the row_marker variable to our location and style
-                row_marker = L.circleMarker(marker_location, markerStyle(4, "#FF0000", "#FF0000", 1, 1));
-
-                //allow for the user to click the point under the marker
-                row_marker.options.interactive = false;
-
-                // add marker to the map
-                map.addLayer(row_marker);
-
+                zoomToLocation(lat, lng);
             },
         });
 
@@ -232,6 +214,7 @@ $('#ESRI-Search').on('click', function () {
     geocodeAddress($('#geocoder-input').val());
 });
 
+// search a JSON object for value
 function search(nameKey, myArray) {
     for (var i = 0; i < myArray.length; i++) {
         if (myArray[i].CompanyNam === nameKey) {
@@ -240,24 +223,39 @@ function search(nameKey, myArray) {
     }
 }
 
-$('#name-search').on('click', async function () {
-
+// general function that will take in lat and lon
+// then will zoom to and highlight desired feature
+function zoomToLocation(lat, lng) {
     // if a marker is already present on the map, remove it
     if (row_marker) {
         map.removeLayer(row_marker);
     }
+
+    // zoom to desired location
+    map.setView(new L.LatLng(lat, lng), 12);
+
+    // Set marker location
+    const marker_location = new L.LatLng(lat, lng);
+
+    // set the row_marker variable to our location and style
+    row_marker = L.circleMarker(marker_location, markerStyle(4, "#FF0000", "#FF0000", 1, 1));
+
+    //allow for the user to click the point under the marker
+    row_marker.options.interactive = false;
+
+    // add marker to the map
+    map.addLayer(row_marker);
+}
+$('#name-search').on('click', async function () {
+
     let result;
     const val = document.getElementById("geocoder-input").value;
     const json_data = await $.get("./js/data/group_care.json", function (json_data) {
         result = search(val, json_data);
     });
 
-    map.setView(new L.LatLng(result['Latitude'], result['Longitude']), 12);
-
-    const marker_location = new L.LatLng(result['Latitude'], result['Longitude']);
-    const marker = L.circleMarker(marker_location, markerStyle(4, "#FF0000", "#FF0000", 1, 1));
-    marker.options.interactive = false;
-    map.addLayer(marker)
+    // zoom to location of company
+    zoomToLocation(result['Latitude'], result['Longitude']);
 });
 
 var options = {
