@@ -5,11 +5,16 @@ let circle;
 // Marker in the middle of the circle
 let search_marker;
 
+let row_marker
 
 // Convert miles to meters to set radius of circle
 function milesToMeters(miles) {
     return miles * 1069.344;
 };
+
+function getMiles(meters) {
+    return meters * 0.000621371192;
+}
 
 // This figures out how many points are within our circle
 function pointsInCircle(circle, meters_user_set) {
@@ -41,8 +46,11 @@ function pointsInCircle(circle, meters_user_set) {
             if (distance_from_layer_circle <= meters_user_set) {
                 counter_points_in_circle += 1;
                 results.push({
-                    name: layer._popup._content,
-                    dist: distance_from_layer_circle
+                    name: layer.data.CompanyName,
+                    dist: distance_from_layer_circle,
+                    latitude: layer_lat_long.lat,
+                    longitude: layer_lat_long.lng,
+                    countyName: layer.data.CountyName
                 });
             }
         });
@@ -52,17 +60,67 @@ function pointsInCircle(circle, meters_user_set) {
             return a.dist - b.dist;
         });
 
-        const table = document.getElementById('results-table')
-        table.innerHTML = '';
-        for (let i = 0; i < counter_points_in_circle; i++) {
-            const tr = document.createElement('tr');
-            const td = document.createElement('td');
-            const text = document.createTextNode(results[i].name);
+        const tableResults = [];
 
-            td.appendChild(text);
-            tr.appendChild(td);
-            table.appendChild(tr);
+        for (let i = 0; i < counter_points_in_circle; i++) {
+
+            tableResults[i] = {
+                id: i,
+                name: results[i].name,
+                distance: getMiles(results[i].dist),
+                lat: results[i].latitude,
+                lng: results[i].longitude,
+                link: results[i].countyName
+            }
         }
+
+        // insert new dynamic table based on the results of the circle
+        new Tabulator("#results-table", {
+            height: 200, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+            data: tableResults, //assign data to table
+            layout: "fitColumns", //fit columns to width of table (optional)
+            selectable: 1,
+            columns: [ //Define Table Columns
+                {
+                    title: "Name",
+                    field: "name",
+                }, {
+                    title: "Distance (miles)",
+                    field: "distance",
+                }, {
+                    title: "Link",
+                    field: "link",
+                    formatter: "link",
+                    formatterParams: {
+                        labelField: "link",
+                        urlPrefix: "https://www.google.com/search?q=",
+                        target: "_blank",
+                    }
+                }
+            ],
+            rowClick: function (e, row) { //trigger a response when the row is clicked
+                // identify lat and lng
+                const lat = row.getData().lat;
+                const lng = row.getData().lng;
+
+                // set the view to the lat,lng point of the row that was clicked
+                map.setView(new L.LatLng(lat, lng), 12);
+
+                // if a marker is already present on the map, remove it
+                if (row_marker) {
+                    map.removeLayer(row_marker);
+                }
+                // Set market location
+                const marker_location = new L.LatLng(lat, lng);
+
+                // set the row_marker variable to our location and style
+                row_marker = L.circleMarker(marker_location, markerStyle(4, "#FF0000", "#FF0000", 1, 1));
+
+                // add marker to the map
+                map.addLayer(row_marker);
+
+            },
+        });
 
         // If we have just one result, we'll change the wording
         // So it reflects the category's singular form
@@ -97,7 +155,8 @@ function geocodePlaceMarkersOnMap(location, z = 10) {
         color: '#2BBED8',
         fillColor: '#2BBED8',
         fillOpacity: 0.1,
-        clickable: false
+        clickable: false,
+        interactive: false
     }).addTo(map);
 
     // Remove marker if one is already on map
@@ -170,6 +229,19 @@ $('#ESRI-Search').on('click', function () {
     geocodeAddress($('#geocoder-input').val());
 });
 
+var options = {
+    url: "/leaflet_app/js/data/group_care.json",
+
+    getValue: "CompanyNam",
+
+    list: {
+        match: {
+            enabled: true
+        }
+    }
+};
+$('#geocoder-input').easyAutocomplete(options);
+
 // when enter button clicked, geocodeAddresses
 $('#geocoder-input').keypress(function (event) {
     if (event.keyCode == 13) {
@@ -198,34 +270,44 @@ function markerStyle(radius, fillColor, color, weight, fillOpacity) {
 // This loops through the data in our JSON file
 // And puts it on the map
 
-_.each(json_data, function (num) {
-    const dataLat = num['Latitude'];
-    const dataLong = num['Longitude'];
+$.get("./js/data/group_care.json", function (json_data) {
 
-    // Add to our marker
-    const marker_location = new L.LatLng(dataLat, dataLong);
+    _.each(json_data, function (num) {
+        const dataLat = num['Latitude'];
+        const dataLong = num['Longitude'];
 
-    const layer_marker = L.circleMarker(marker_location, markerStyle(4, "#ED9118", "#FFFFFF", 1, .8))
-        .bindPopup(num['CompanyNam']);
+        // Add to our marker
+        const marker_location = new L.LatLng(dataLat, dataLong);
+        const layer_marker = L.circleMarker(marker_location, markerStyle(4, "#ED9118", "#FFFFFF", 1, num['CountyCode'] / 100))
+            .bindPopup(num['CompanyNam']);
 
-    // Add events to marker
-    layer_marker.on({
-        // What happens when mouse hovers markers
-        mouseover: function (e) {
-            const layer_marker = e.target;
-            layer_marker.setStyle(markerStyle(4, "#2BBED8", "#2BBED8", 1, 1));
+        // Build the data
+        layer_marker.data = {
+            'CompanyName': num['CompanyNam'],
+            'CountyName': num['CountyName'],
+            'CountyCode': num['CountyCode'],
+            'CountyNum': num['CountyNumb']
+        };
 
-        },
-        // What happens when mouse leaves the marker
-        mouseout: function (e) {
-            const layer_marker = e.target;
-            layer_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
+        // Add events to marker
+        layer_marker.on({
+            // What happens when mouse hovers markers
+            mouseover: function (e) {
+                const layer_marker = e.target;
+                layer_marker.setStyle(markerStyle(4, "#2BBED8", "#2BBED8", 1, 1));
 
-        }
-    });
-    json_group.addLayer(layer_marker);
-    // Close for loop
-}, this);
+            },
+            // What happens when mouse leaves the marker
+            mouseout: function (e) {
+                const layer_marker = e.target;
+                layer_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
+
+            }
+        });
+        json_group.addLayer(layer_marker);
+        // Close for loop
+    }, this);
+});
 
 // Base map
 let basemap = L.tileLayer.provider('OpenStreetMap.Mapnik');
