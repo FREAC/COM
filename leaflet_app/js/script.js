@@ -116,6 +116,9 @@ function pointsInCircle(circle, meters_user_set) {
                 // set the row_marker variable to our location and style
                 row_marker = L.circleMarker(marker_location, markerStyle(4, "#FF0000", "#FF0000", 1, 1));
 
+                //allow for the user to click the point under the marker
+                row_marker.options.interactive = false;
+
                 // add marker to the map
                 map.addLayer(row_marker);
 
@@ -253,7 +256,7 @@ $('#name-search').on('click', async function () {
 
     const marker_location = new L.LatLng(result['Latitude'], result['Longitude']);
     const marker = L.circleMarker(marker_location, markerStyle(4, "#FF0000", "#FF0000", 1, 1));
-    marker.bubblingMouseEvents = true;
+    marker.options.interactive = false;
     map.addLayer(marker)
 });
 
