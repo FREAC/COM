@@ -102,8 +102,14 @@ function pointsInCircle(circle, meters_user_set) {
                 // identify lat and lng
                 const lat = row.getData().lat;
                 const lng = row.getData().lng;
+                const z = map.getZoom();
 
-                zoomToLocation(lat, lng);
+                if (z < 12) {
+                    zoomToLocation(lat, lng);
+
+                } else {
+                    zoomToLocation(lat, lng, z);
+                }
             },
         });
 
@@ -220,14 +226,14 @@ function search(nameKey, myArray) {
 
 // general function that will take in lat and lon
 // then will zoom to and highlight desired feature
-function zoomToLocation(lat, lng) {
+function zoomToLocation(lat, lng, z = 12) {
     // if a marker is already present on the map, remove it
     if (row_marker) {
         map.removeLayer(row_marker);
     }
 
-    // zoom to desired location
-    map.setView(new L.LatLng(lat, lng), 12);
+    // set view to location
+    map.setView(new L.LatLng(lat, lng), z);
 
     // Set marker location
     const marker_location = new L.LatLng(lat, lng);
@@ -256,7 +262,14 @@ $('#name-search').on('click', async function () {
     });
 
     // zoom to location of company
-    zoomToLocation(result['Latitude'], result['Longitude']);
+
+    const z = map.getZoom();
+    if (z < 12) {
+        zoomToLocation(result['Latitude'], result['Longitude']);
+
+    } else {
+        zoomToLocation(result['Latitude'], result['Longitude'], z);
+    }
 });
 
 var options = {
