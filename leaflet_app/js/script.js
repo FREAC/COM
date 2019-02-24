@@ -204,6 +204,7 @@ function geocodeAddress(address) {
     const url = 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates';
     const params = 'f=json&sourceCountry=USA&searchExtent=-88.5,33,-79,23.5&outFields=location&SingleLine=';
     const queryString = params + address;
+    console.log(queryString);
     $.get(url, queryString, function (data) {
         console.log(data);
         const coords = data.candidates[0].location;
@@ -249,40 +250,68 @@ function zoomToLocation(lat, lng, z = 12) {
 }
 
 // when submit button clicked, geocodeAddresses
-$('#ESRI-Search').on('click', function () {
-    geocodeAddress($('#geocoder-input').val());
-});
-
-$('#name-search').on('click', async function () {
-
+$('#ESRI-Search').on('click', async function () {
+    // geocodeAddress($('#geocoder-input').val());
     let result;
     const val = document.getElementById("geocoder-input").value;
     const json_data = await $.get("./js/data/group_care.json", function (json_data) {
         result = search(val, json_data);
     });
 
-    // zoom to location of company
+    if (result !== undefined) {
+        // zoom to location of company
 
-    const z = map.getZoom();
-    if (z < 12) {
-        zoomToLocation(result['Latitude'], result['Longitude']);
+        const z = map.getZoom();
+        if (z < 12) {
+            zoomToLocation(result['Latitude'], result['Longitude']);
 
+        } else {
+            zoomToLocation(result['Latitude'], result['Longitude'], z);
+        }
     } else {
-        zoomToLocation(result['Latitude'], result['Longitude'], z);
+        geocodeAddress($('#geocoder-input').val());
+
     }
+
+
 });
+
+// $('#name-search').on('click', async function () {
+
+//     let result;
+//     const val = document.getElementById("geocoder-input").value;
+//     const json_data = await $.get("./js/data/group_care.json", function (json_data) {
+//         result = search(val, json_data);
+//     });
+
+//     // zoom to location of company
+
+//     const z = map.getZoom();
+//     if (z < 12) {
+//         zoomToLocation(result['Latitude'], result['Longitude']);
+
+//     } else {
+//         zoomToLocation(result['Latitude'], result['Longitude'], z);
+//     }
+// });
 
 var options = {
     url: "/leaflet_app/js/data/group_care.json",
 
-    getValue: "CompanyNam",
-
+    getValue: function (element) {
+        return $(element).prop("CompanyNam") + " " + $(element).prop("CompleteSt");
+    },
     list: {
         match: {
             enabled: true
+        },
+        onClickEvent: function () {
+            var newvalue = jQuery("#geocoder-input").getSelectedItemData().CompanyNam;
+            jQuery("#geocoder-input").val(newvalue);
         }
     }
 };
+
 $('#geocoder-input').easyAutocomplete(options);
 
 // when enter button clicked, geocodeAddresses
