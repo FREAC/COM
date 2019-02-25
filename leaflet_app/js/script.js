@@ -211,9 +211,7 @@ function geocodeAddress(address) {
     const url = 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates';
     const params = 'f=json&sourceCountry=USA&searchExtent=-88.5,33,-79,23.5&outFields=location&SingleLine=';
     const queryString = params + address;
-    console.log(queryString);
     $.get(url, queryString, function (data) {
-        console.log(data);
         const coords = data.candidates[0].location;
         const location = {
             lng: coords.x,
@@ -302,25 +300,6 @@ $('#ESRI-Search').on('click', async function () {
 
 
 });
-
-// $('#name-search').on('click', async function () {
-
-//     let result;
-//     const val = document.getElementById("geocoder-input").value;
-//     const json_data = await $.get("./js/data/group_care.json", function (json_data) {
-//         result = search(val, json_data);
-//     });
-
-//     // zoom to location of company
-
-//     const z = map.getZoom();
-//     if (z < 12) {
-//         zoomToLocation(result['Latitude'], result['Longitude']);
-
-//     } else {
-//         zoomToLocation(result['Latitude'], result['Longitude'], z);
-//     }
-// });
 
 // Options for the autocomplete plugin
 var options = {
