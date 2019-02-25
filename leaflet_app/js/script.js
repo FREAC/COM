@@ -324,10 +324,10 @@ $('#ESRI-Search').on('click', async function () {
 
 // Options for the autocomplete plugin
 var options = {
-    url: "/leaflet_app/js/data/group_care.json",
+    url: "./js/data/group_care.json",
     // set multiple fields as searchable values by adding them to properties
     getValue: function (element) {
-        return $(element).prop("CompanyNam") + " " + $(element).prop("CompleteSt");
+        return $(element).prop("CompanyNam") + "<br>" + $(element).prop("CompleteSt");
     },
     list: {
         match: {
@@ -413,7 +413,7 @@ $.get("./js/data/group_care.json", function (json_data) {
                     name: e.sourceTarget.data['CompanyName'],
                     distance: 0,
                     lat: e.latlng['lat'],
-                    lng: e.latlng['lat'],
+                    lng: e.latlng['lng'],
                     link: e.sourceTarget.data['CountyName'],
                 }]
 
