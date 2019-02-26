@@ -16,6 +16,49 @@ function getMiles(meters) {
     return meters * 0.000621371192;
 }
 
+// create a reusable Tabulator object
+function insertTabulator(data) {
+    // insert new dynamic table based on the results of the circle
+    new Tabulator("#results-table", {
+        height: 200, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+        data: data, //assign data to table
+        layout: "fitColumns", //fit columns to width of table (optional)
+        selectable: 1,
+        columns: [ //Define Table Columns
+            {
+                title: "Name",
+                field: "name",
+            }, {
+                title: "Distance (miles)",
+                field: "distance",
+            }, {
+                title: "Link",
+                field: "link",
+                formatter: "link",
+                formatterParams: {
+                    labelField: "link",
+                    urlPrefix: "https://www.google.com/search?q=",
+                    target: "_blank",
+                }
+            }
+        ],
+        rowClick: function (e, row) { //trigger a response when the row is clicked
+            // identify lat and lng
+            const lat = row.getData().lat;
+            const lng = row.getData().lng;
+            const z = map.getZoom();
+
+            // if too far away, zoom in
+            if (z < 12) {
+                zoomToLocation(lat, lng);
+                // if close enough, don't zoom in
+            } else {
+                zoomToLocation(lat, lng, z);
+            }
+        },
+    });
+}
+
 // This figures out how many points are within our circle
 function pointsInCircle(circle, meters_user_set) {
     if (circle !== undefined) {
@@ -60,67 +103,22 @@ function pointsInCircle(circle, meters_user_set) {
             return a.dist - b.dist;
         });
 
+        // A container to hold the query results
         const tableResults = [];
 
+        // for every point in circle, add a tableResults object
         for (let i = 0; i < counter_points_in_circle; i++) {
-
-            tableResults[i] = {
+            tableResults.push({
                 id: i,
-                name: results[i].name,
-                distance: getMiles(results[i].dist),
-                lat: results[i].latitude,
-                lng: results[i].longitude,
-                link: results[i].countyName
-            }
+                name: results[i]['name'],
+                distance: getMiles(results[i]['dist']),
+                lat: results[i]['latitude'],
+                lng: results[i]['longitude'],
+                link: results[i]['countyName']
+            });
         }
-
-        // insert new dynamic table based on the results of the circle
-        new Tabulator("#results-table", {
-            height: 200, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
-            data: tableResults, //assign data to table
-            layout: "fitColumns", //fit columns to width of table (optional)
-            selectable: 1,
-            columns: [ //Define Table Columns
-                {
-                    title: "Name",
-                    field: "name",
-                }, {
-                    title: "Distance (miles)",
-                    field: "distance",
-                }, {
-                    title: "Link",
-                    field: "link",
-                    formatter: "link",
-                    formatterParams: {
-                        labelField: "link",
-                        urlPrefix: "https://www.google.com/search?q=",
-                        target: "_blank",
-                    }
-                }
-            ],
-            rowClick: function (e, row) { //trigger a response when the row is clicked
-                // identify lat and lng
-                const lat = row.getData().lat;
-                const lng = row.getData().lng;
-
-                // set the view to the lat,lng point of the row that was clicked
-                map.setView(new L.LatLng(lat, lng), 12);
-
-                // if a marker is already present on the map, remove it
-                if (row_marker) {
-                    map.removeLayer(row_marker);
-                }
-                // Set market location
-                const marker_location = new L.LatLng(lat, lng);
-
-                // set the row_marker variable to our location and style
-                row_marker = L.circleMarker(marker_location, markerStyle(4, "#FF0000", "#FF0000", 1, 1));
-
-                // add marker to the map
-                map.addLayer(row_marker);
-
-            },
-        });
+        // add tabulator object to screen
+        insertTabulator(tableResults);
 
         // If we have just one result, we'll change the wording
         // So it reflects the category's singular form
@@ -214,7 +212,6 @@ function geocodeAddress(address) {
     const params = 'f=json&sourceCountry=USA&searchExtent=-88.5,33,-79,23.5&outFields=location&SingleLine=';
     const queryString = params + address;
     $.get(url, queryString, function (data) {
-        console.log(data);
         const coords = data.candidates[0].location;
         const location = {
             lng: coords.x,
@@ -224,22 +221,106 @@ function geocodeAddress(address) {
     });
 }
 
-// when submit button clicked, geocodeAddresses
-$('#ESRI-Search').on('click', function () {
-    geocodeAddress($('#geocoder-input').val());
+// search a JSON object for value
+function search(nameKey, myArray) {
+    for (var i = 0; i < myArray.length; i++) {
+        if (myArray[i].CompanyNam === nameKey) {
+            return myArray[i];
+        }
+    }
+}
+
+// general function that will take in lat and lon
+// then will zoom to and highlight desired feature
+function zoomToLocation(lat, lng, z = 12) {
+    // if a marker is already present on the map, remove it
+    if (row_marker) {
+        map.removeLayer(row_marker);
+    }
+
+    // set view to location
+    map.setView(new L.LatLng(lat, lng), z);
+
+    // Set marker location
+    const marker_location = new L.LatLng(lat, lng);
+
+    // set the row_marker variable to our location and style
+    row_marker = L.circleMarker(marker_location, markerStyle(4, "#FF0000", "#FF0000", 1, 1));
+
+    //allow for the user to click the point under the marker
+    row_marker.options.interactive = false;
+
+    // add marker to the map
+    map.addLayer(row_marker);
+}
+
+// when submit button clicked, search names and addresses
+$('#ESRI-Search').on('click', async function () {
+    const val = document.getElementById("geocoder-input").value;
+    let results;
+
+    // Remove marker if one is already on map
+    if (search_marker) {
+        map.removeLayer(search_marker);
+    }
+
+    // Get json data and search it
+    const json_data = await $.get("./js/data/group_care.json", function (json_data) {
+        results = search(val, json_data);
+    });
+
+    // If there are any results returned from the search,
+    // Add it to the tableResults object array
+    if (results !== undefined) {
+
+        const tableResults = [{
+            id: 1,
+            name: results['CompanyNam'],
+            distance: 0,
+            lat: results['Latitude'],
+            lng: results['Longitude'],
+            link: results['CountyName'],
+        }]
+
+        // Insert tabulator object 
+        insertTabulator(tableResults);
+        // Zoom to location of company
+        const z = map.getZoom();
+        if (z < 12) {
+            // If it's too far away, zoom in
+            zoomToLocation(results['Latitude'], results['Longitude']);
+            // otherwise, stay at current zoom
+        } else {
+            zoomToLocation(results['Latitude'], results['Longitude'], z);
+        }
+    } else {
+        geocodeAddress($('#geocoder-input').val());
+
+    }
+
+
 });
 
+// Options for the autocomplete plugin
 var options = {
-    url: "/leaflet_app/js/data/group_care.json",
-
-    getValue: "CompanyNam",
-
+    url: "./js/data/group_care.json",
+    // set multiple fields as searchable values by adding them to properties
+    getValue: function (element) {
+        return $(element).prop("CompanyNam");// (how to add more fields)+ "<br>" + $(element).prop("CompleteSt");
+    },
     list: {
         match: {
             enabled: true
+        },
+        onClickEvent: function () {
+            // when suggestion clicked, add company name to the search bar
+            var newvalue = jQuery("#geocoder-input").getSelectedItemData().CompanyNam;
+            jQuery("#geocoder-input").val(newvalue);
         }
     }
 };
+
+//event for when the autocomplete is happening
 $('#geocoder-input').easyAutocomplete(options);
 
 // when enter button clicked, geocodeAddresses
@@ -250,13 +331,13 @@ $('#geocoder-input').keypress(function (event) {
     }
 });
 
+// when search radius changes, chang circle size and re-query
 $('select').change(function () {
     changeCircleRadius();
 });
 
 // This sets the marker styles for any of the circleMarker symbols 
 // inserted in setStyle, so any renderer that uses setStyle can use this function
-
 function markerStyle(radius, fillColor, color, weight, fillOpacity) {
     return {
         radius: radius,
@@ -302,6 +383,20 @@ $.get("./js/data/group_care.json", function (json_data) {
                 const layer_marker = e.target;
                 layer_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
 
+            },
+            // What happens when the marker is clicked
+            click: function (e) {
+                // on marker click, add data to table
+                const tableResults = [{
+                    id: 1,
+                    name: e.sourceTarget.data['CompanyName'],
+                    distance: 0,
+                    lat: e.latlng['lat'],
+                    lng: e.latlng['lng'],
+                    link: e.sourceTarget.data['CountyName'],
+                }]
+
+                insertTabulator(tableResults)
             }
         });
         json_group.addLayer(layer_marker);
@@ -332,6 +427,10 @@ map.addLayer(json_group);
 
 //Right-clicking the map triggers the search function
 map.on('contextmenu', function (e) {
+    // Remove marker if one is already on map
+    if (search_marker) {
+        map.removeLayer(search_marker);
+    }
     const z = map.getZoom();
     if (z < 10) {
         geocodePlaceMarkersOnMap(e.latlng);
