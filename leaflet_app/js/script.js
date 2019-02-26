@@ -306,7 +306,7 @@ var options = {
     url: "./js/data/group_care.json",
     // set multiple fields as searchable values by adding them to properties
     getValue: function (element) {
-        return $(element).prop("CompanyNam") + "<br>" + $(element).prop("CompleteSt");
+        return $(element).prop("CompanyNam");// (how to add more fields)+ "<br>" + $(element).prop("CompleteSt");
     },
     list: {
         match: {
