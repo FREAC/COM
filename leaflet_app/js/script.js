@@ -212,12 +212,22 @@ function geocodeAddress(address) {
     const params = 'f=json&sourceCountry=USA&searchExtent=-88.5,33,-79,23.5&outFields=location&SingleLine=';
     const queryString = params + address;
     $.get(url, queryString, function (data) {
-        const coords = data.candidates[0].location;
-        const location = {
-            lng: coords.x,
-            lat: coords.y
-        };
-        geocodePlaceMarkersOnMap(location);
+        if (data.candidates.length !== 0) {
+            if ($('#geocoder-input').hasClass('is-invalid')) {
+                $('#geocoder-input').removeClass('is-invalid');
+            }
+            const coords = data.candidates[0].location;
+            const location = {
+                lng: coords.x,
+                lat: coords.y
+            };
+            geocodePlaceMarkersOnMap(location);
+        } else {
+            // change color of text to bootstrap warning
+            $('#geocoder-input').addClass("is-invalid");
+            console.log('changing color')
+        }
+
     });
 }
 
