@@ -351,16 +351,25 @@ function markerStyle(radius, fillColor, color, weight, fillOpacity) {
 // This loops through the data in our JSON file
 // And puts it on the map
 
+
 $.get("./js/data/group_care.json", function (json_data) {
 
     _.each(json_data, function (num) {
         const dataLat = num['Latitude'];
         const dataLong = num['Longitude'];
 
+        const popup = L.popup()
+            .setContent(
+                `
+                <p><strong>Company Name: </strong> ${num['CompanyNam']}</p>
+                <p><strong>Company Link: </strong><a href='https://www.google.com/search?q= + ${num['CountyName']}' target="_blank">${num['CountyName']}</a></p>
+                `
+            );
+
         // Add to our marker
         const marker_location = new L.LatLng(dataLat, dataLong);
         const layer_marker = L.circleMarker(marker_location, markerStyle(4, "#ED9118", "#FFFFFF", 1, num['CountyCode'] / 100))
-            .bindPopup(num['CompanyNam']);
+            .bindPopup(popup);
 
         // Build the data
         layer_marker.data = {
@@ -385,19 +394,19 @@ $.get("./js/data/group_care.json", function (json_data) {
 
             },
             // What happens when the marker is clicked
-            click: function (e) {
-                // on marker click, add data to table
-                const tableResults = [{
-                    id: 1,
-                    name: e.sourceTarget.data['CompanyName'],
-                    distance: 0,
-                    lat: e.latlng['lat'],
-                    lng: e.latlng['lng'],
-                    link: e.sourceTarget.data['CountyName'],
-                }]
+            // click: function (e) {
+            //     // on marker click, add data to table
+            //     const tableResults = [{
+            //         id: 1,
+            //         name: e.sourceTarget.data['CompanyName'],
+            //         distance: 0,
+            //         lat: e.latlng['lat'],
+            //         lng: e.latlng['lng'],
+            //         link: e.sourceTarget.data['CountyName'],
+            //     }]
 
-                insertTabulator(tableResults)
-            }
+            //     insertTabulator(tableResults)
+            // }
         });
         json_group.addLayer(layer_marker);
         // Close for loop
