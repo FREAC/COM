@@ -5,9 +5,7 @@ let circle;
 // Marker in the middle of the circle
 let search_marker;
 
-let row_marker;
-
-let click_marker;
+let selection_marker;
 
 let table;
 
@@ -253,8 +251,8 @@ function search(nameKey, myArray) {
 // then will zoom to and highlight desired feature
 function zoomToLocation(lat, lng, z = 12) {
     // if a marker is already present on the map, remove it
-    if (row_marker) {
-        map.removeLayer(row_marker);
+    if (selection_marker) {
+        map.removeLayer(selection_marker);
     }
 
     // set view to location
@@ -263,14 +261,14 @@ function zoomToLocation(lat, lng, z = 12) {
     // Set marker location
     const marker_location = new L.LatLng(lat, lng);
 
-    // set the row_marker variable to our location and style
-    row_marker = L.circleMarker(marker_location, markerStyle(4, "#FF0000", "#FF0000", 1, 1));
+    // set the selection_marker variable to our location and style
+    selection_marker = L.circleMarker(marker_location, markerStyle(4, "#FF0000", "#FF0000", 1, 1));
 
     //allow for the user to click the point under the marker
-    row_marker.options.interactive = false;
+    selection_marker.options.interactive = false;
 
     // add marker to the map
-    map.addLayer(row_marker);
+    map.addLayer(selection_marker);
 }
 
 // when submit button clicked, search names and addresses
@@ -423,17 +421,17 @@ $.get("./js/data/group_care.json", function (json_data) {
             // What happens when the marker is clicked
             click: function (e) {
                 // if there is no click marker yet, assign one
-                if (click_marker === undefined) {
-                    click_marker = e.target;
-                    click_marker.setStyle(markerStyle(4, "#FF0000", "#FF0000", 1, .8));
+                if (selection_marker === undefined) {
+                    selection_marker = e.target;
+                    selection_marker.setStyle(markerStyle(4, "#FF0000", "#FF0000", 1, .8));
                 } else { // if there is a click marker already
                     // assign old marker back to original color
-                    click_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
+                    selection_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
 
                     // assign new marker to red
                     console.log(e.target);
-                    click_marker = e.target;
-                    click_marker.setStyle(markerStyle(4, "#FF0000", "#FF0000", 1, .8));
+                    selection_marker = e.target;
+                    selection_marker.setStyle(markerStyle(4, "#FF0000", "#FF0000", 1, .8));
                 }
                 // if a tabulator table is already active
                 if ($('#results-table').hasClass('tabulator')) {
@@ -495,8 +493,8 @@ map.on({
     },
     // if the popup closes, remove the associated marker
     popupclose: function (e) {
-        if (click_marker !== undefined) {
-            click_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
+        if (selection_marker !== undefined) {
+            selection_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
         }
     }
 });
