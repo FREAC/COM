@@ -5,7 +5,9 @@ let circle;
 // Marker in the middle of the circle
 let search_marker;
 
-let row_marker
+let row_marker;
+
+let click_marker;
 
 // Convert miles to meters to set radius of circle
 function milesToMeters(miles) {
@@ -398,30 +400,40 @@ $.get("./js/data/group_care.json", function (json_data) {
         layer_marker.on({
             // What happens when mouse hovers markers
             mouseover: function (e) {
-                const layer_marker = e.target;
-                layer_marker.setStyle(markerStyle(4, "#2BBED8", "#2BBED8", 1, 1));
+                // if the moused over marker is not red, 
+                // display the mouseover color change
+                if (e.target.options.fillColor !== "#FF0000") { // marker is not already red (clicked)
+                    const layer_marker = e.target;
+                    layer_marker.setStyle(markerStyle(4, "#2BBED8", "#2BBED8", 1, 1));
+                }
 
             },
             // What happens when mouse leaves the marker
             mouseout: function (e) {
-                const layer_marker = e.target;
-                layer_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
+                // if the marker is not read, change the color back to original marker color
+                // otherwise, leave it be
+                if (e.target.options.fillColor !== "#FF0000") { // marker is not already red (clicked)
+                    const layer_marker = e.target;
+                    layer_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
 
+                }
             },
             // What happens when the marker is clicked
-            // click: function (e) {
-            //     // on marker click, add data to table
-            //     const tableResults = [{
-            //         id: 1,
-            //         name: e.sourceTarget.data['CompanyName'],
-            //         distance: 0,
-            //         lat: e.latlng['lat'],
-            //         lng: e.latlng['lng'],
-            //         link: e.sourceTarget.data['CountyName'],
-            //     }]
+            click: function (e) {
+                // if there is no click marker yet, assign one
+                if (click_marker === undefined) {
+                    click_marker = e.target;
+                    click_marker.setStyle(markerStyle(4, "#FF0000", "#FF0000", 1, .8));
+                } else { // if there is a click marker already
+                    // assign old marker back to original color
+                    click_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
 
-            //     insertTabulator(tableResults)
-            // }
+                    // assign new marker to red
+                    click_marker = e.target;
+                    click_marker.setStyle(markerStyle(4, "#FF0000", "#FF0000", 1, .8));
+                }
+
+            }
         });
         json_group.addLayer(layer_marker);
         // Close for loop
@@ -450,15 +462,24 @@ map.addLayer(basemap);
 map.addLayer(json_group);
 
 //Right-clicking the map triggers the search function
-map.on('contextmenu', function (e) {
-    // Remove marker if one is already on map
-    if (search_marker) {
-        map.removeLayer(search_marker);
-    }
-    const z = map.getZoom();
-    if (z < 10) {
-        geocodePlaceMarkersOnMap(e.latlng);
-    } else {
-        geocodePlaceMarkersOnMap(e.latlng, z);
+map.on({
+    // what happens when right click happens
+    contextmenu: function (e) {
+        // Remove marker if one is already on map
+        if (search_marker) {
+            map.removeLayer(search_marker);
+        }
+        const z = map.getZoom();
+        if (z < 10) {
+            geocodePlaceMarkersOnMap(e.latlng);
+        } else {
+            geocodePlaceMarkersOnMap(e.latlng, z);
+        }
+    },
+    // if the popup closes, remove the associated marker
+    popupclose: function (e) {
+        if (click_marker !== undefined) {
+            click_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
+        }
     }
 });
