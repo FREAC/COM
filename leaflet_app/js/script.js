@@ -9,6 +9,8 @@ let row_marker;
 
 let click_marker;
 
+let table;
+
 // Convert miles to meters to set radius of circle
 function milesToMeters(miles) {
     return miles * 1069.344;
@@ -21,7 +23,7 @@ function getMiles(meters) {
 // create a reusable Tabulator object
 function insertTabulator(data) {
     // insert new dynamic table based on the results of the circle
-    new Tabulator("#results-table", {
+    table = new Tabulator("#results-table", {
         height: 200, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
         data: data, //assign data to table
         layout: "fitColumns", //fit columns to width of table (optional)
@@ -429,10 +431,25 @@ $.get("./js/data/group_care.json", function (json_data) {
                     click_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
 
                     // assign new marker to red
+                    console.log(e.target);
                     click_marker = e.target;
                     click_marker.setStyle(markerStyle(4, "#FF0000", "#FF0000", 1, .8));
                 }
-
+                // if a tabulator table is already active
+                if ($('#results-table').hasClass('tabulator')) {
+                    // get the data that is inside of it
+                    const data = table.getData();
+                    // loop through data to see if clicked feature matches
+                    for (let i in data) {
+                        // if we find a layer match, select it
+                        if (e.target.data.CompanyName === data[i].name) {
+                            // deselect previous row selection
+                            table.deselectRow();
+                            // select new row selection
+                            table.selectRow(i);
+                        }
+                    }
+                }
             }
         });
         json_group.addLayer(layer_marker);
