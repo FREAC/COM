@@ -172,12 +172,6 @@ function geocodePlaceMarkersOnMap(location, z = 10) {
         iconSize: [10, 10],
     });
 
-    // // Create marker
-    // search_marker = L.marker([location.lat, location.lng], {
-    //     // Allow user to drag marker
-    //     draggable: true
-    // });
-
     // Create marker
     search_marker = L.marker([location.lat, location.lng], {
         // Allow user to drag marker
