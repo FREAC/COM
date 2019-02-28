@@ -358,9 +358,12 @@ $('#geocoder-input').keypress(function (event) {
 });
 
 // when search radius changes, chang circle size and re-query
-$('select').change(function () {
+$('#radius-selected').change(function () {
     changeCircleRadius();
 });
+
+// =$(json).filter(function (i,n){return n.website==='yahoo'});
+
 
 // This sets the marker styles for any of the circleMarker symbols 
 // inserted in setStyle, so any renderer that uses setStyle can use this function
@@ -462,6 +465,19 @@ $.get("./js/data/group_care.json", function (json_data) {
         json_group.addLayer(layer_marker);
         // Close for loop
     }, this);
+
+    // alert for greater than 80 checkbox
+    const lessOrEqualTo80 = $('#lessOrEqualTo80');
+
+    greaterThan80.on('click', function () {
+        console.log('filter for features')
+    });
+    // alert for less than 60 checkbox
+    const lessOrEqualTo45 = $('#lessOrEqualTo45');
+
+    lessOrEqualTo45.on('click', function () {
+        console.log('filter for features')
+    });
 });
 
 // Base map
