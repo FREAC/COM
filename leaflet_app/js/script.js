@@ -2,6 +2,8 @@
 const json_group = new L.FeatureGroup();
 // This is the circle on the map that will be determine how many markers are around
 let circle;
+// this is the icon in the middle of the circle
+let circleIcon;
 // Marker in the middle of the circle
 let search_marker;
 
@@ -164,10 +166,23 @@ function geocodePlaceMarkersOnMap(location, z = 10) {
         map.removeLayer(search_marker);
     }
 
+    //custom icon to go inside the circle
+    circleIcon = L.icon({
+        iconUrl: './css/lib/images/circleIcon.png',
+        iconSize: [10, 10],
+    });
+
+    // // Create marker
+    // search_marker = L.marker([location.lat, location.lng], {
+    //     // Allow user to drag marker
+    //     draggable: true
+    // });
+
     // Create marker
     search_marker = L.marker([location.lat, location.lng], {
         // Allow user to drag marker
-        draggable: true
+        draggable: true,
+        icon: circleIcon
     });
 
     // Reset map view on marker drag
@@ -323,7 +338,7 @@ var options = {
     url: "./js/data/group_care.json",
     // set multiple fields as searchable values by adding them to properties
     getValue: function (element) {
-        return $(element).prop("CompanyNam");// (how to add more fields)+ "<br>" + $(element).prop("CompleteSt");
+        return $(element).prop("CompanyNam"); // (how to add more fields)+ "<br>" + $(element).prop("CompleteSt");
     },
     list: {
         match: {
