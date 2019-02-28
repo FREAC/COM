@@ -169,7 +169,7 @@ function geocodePlaceMarkersOnMap(location, z = 10) {
     //custom icon to go inside the circle
     circleIcon = L.icon({
         iconUrl: './css/lib/images/circleIcon.png',
-        iconSize: [10, 10],
+        iconSize: [8, 8],
     });
 
     // Create marker
