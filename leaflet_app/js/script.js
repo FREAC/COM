@@ -2,10 +2,14 @@
 const json_group = new L.FeatureGroup();
 // This is the circle on the map that will be determine how many markers are around
 let circle;
+// this is the icon in the middle of the circle
+let circleIcon;
 // Marker in the middle of the circle
 let search_marker;
 
-let row_marker
+let selection_marker;
+
+let table;
 
 // Convert miles to meters to set radius of circle
 function milesToMeters(miles) {
@@ -19,7 +23,7 @@ function getMiles(meters) {
 // create a reusable Tabulator object
 function insertTabulator(data) {
     // insert new dynamic table based on the results of the circle
-    new Tabulator("#results-table", {
+    table = new Tabulator("#results-table", {
         height: 200, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
         data: data, //assign data to table
         layout: "fitColumns", //fit columns to width of table (optional)
@@ -162,10 +166,17 @@ function geocodePlaceMarkersOnMap(location, z = 10) {
         map.removeLayer(search_marker);
     }
 
+    //custom icon to go inside the circle
+    circleIcon = L.icon({
+        iconUrl: './css/lib/images/circleIcon.png',
+        iconSize: [8, 8],
+    });
+
     // Create marker
     search_marker = L.marker([location.lat, location.lng], {
         // Allow user to drag marker
-        draggable: true
+        draggable: true,
+        icon: circleIcon
     });
 
     // Reset map view on marker drag
@@ -212,12 +223,27 @@ function geocodeAddress(address) {
     const params = 'f=json&sourceCountry=USA&searchExtent=-88.5,33,-79,23.5&outFields=location&SingleLine=';
     const queryString = params + address;
     $.get(url, queryString, function (data) {
-        const coords = data.candidates[0].location;
-        const location = {
-            lng: coords.x,
-            lat: coords.y
-        };
-        geocodePlaceMarkersOnMap(location);
+        if (data.candidates.length !== 0) {
+            // if the is-invalid class is present, remove it
+            if ($('#geocoder-input').hasClass('is-invalid')) {
+                $('#geocoder-input').removeClass('is-invalid');
+                // hide invalide address message
+                $('.invalid-feedback').hide();
+
+            }
+            const coords = data.candidates[0].location;
+            const location = {
+                lng: coords.x,
+                lat: coords.y
+            };
+            geocodePlaceMarkersOnMap(location);
+        } else {
+            // change color of text to bootstrap is-invalid class to show user that their input was invalid
+            $('#geocoder-input').addClass("is-invalid");
+            // add invalid address message
+            $('.invalid-feedback').show();
+        }
+
     });
 }
 
@@ -234,8 +260,8 @@ function search(nameKey, myArray) {
 // then will zoom to and highlight desired feature
 function zoomToLocation(lat, lng, z = 12) {
     // if a marker is already present on the map, remove it
-    if (row_marker) {
-        map.removeLayer(row_marker);
+    if (selection_marker) {
+        map.removeLayer(selection_marker);
     }
 
     // set view to location
@@ -244,14 +270,14 @@ function zoomToLocation(lat, lng, z = 12) {
     // Set marker location
     const marker_location = new L.LatLng(lat, lng);
 
-    // set the row_marker variable to our location and style
-    row_marker = L.circleMarker(marker_location, markerStyle(4, "#FF0000", "#FF0000", 1, 1));
+    // set the selection_marker variable to our location and style
+    selection_marker = L.circleMarker(marker_location, markerStyle(4, "#FF0000", "#FF0000", 1, 1));
 
     //allow for the user to click the point under the marker
-    row_marker.options.interactive = false;
+    selection_marker.options.interactive = false;
 
     // add marker to the map
-    map.addLayer(row_marker);
+    map.addLayer(selection_marker);
 }
 
 // when submit button clicked, search names and addresses
@@ -306,7 +332,7 @@ var options = {
     url: "./js/data/group_care.json",
     // set multiple fields as searchable values by adding them to properties
     getValue: function (element) {
-        return $(element).prop("CompanyNam");// (how to add more fields)+ "<br>" + $(element).prop("CompleteSt");
+        return $(element).prop("CompanyNam"); // (how to add more fields)+ "<br>" + $(element).prop("CompleteSt");
     },
     list: {
         match: {
@@ -332,9 +358,12 @@ $('#geocoder-input').keypress(function (event) {
 });
 
 // when search radius changes, chang circle size and re-query
-$('select').change(function () {
+$('#radius-selected').change(function () {
     changeCircleRadius();
 });
+
+// =$(json).filter(function (i,n){return n.website==='yahoo'});
+
 
 // This sets the marker styles for any of the circleMarker symbols 
 // inserted in setStyle, so any renderer that uses setStyle can use this function
@@ -351,16 +380,25 @@ function markerStyle(radius, fillColor, color, weight, fillOpacity) {
 // This loops through the data in our JSON file
 // And puts it on the map
 
+
 $.get("./js/data/group_care.json", function (json_data) {
 
     _.each(json_data, function (num) {
         const dataLat = num['Latitude'];
         const dataLong = num['Longitude'];
 
+        const popup = L.popup()
+            .setContent(
+                `
+                <p><strong>Company Name: </strong> ${num['CompanyNam']}</p>
+                <p><strong>Company Link: </strong><a href='https://www.google.com/search?q= + ${num['CountyName']}' target="_blank">${num['CountyName']}</a></p>
+                `
+            );
+
         // Add to our marker
         const marker_location = new L.LatLng(dataLat, dataLong);
         const layer_marker = L.circleMarker(marker_location, markerStyle(4, "#ED9118", "#FFFFFF", 1, num['CountyCode'] / 100))
-            .bindPopup(num['CompanyNam']);
+            .bindPopup(popup);
 
         // Build the data
         layer_marker.data = {
@@ -374,34 +412,72 @@ $.get("./js/data/group_care.json", function (json_data) {
         layer_marker.on({
             // What happens when mouse hovers markers
             mouseover: function (e) {
-                const layer_marker = e.target;
-                layer_marker.setStyle(markerStyle(4, "#2BBED8", "#2BBED8", 1, 1));
+                // if the moused over marker is not red, 
+                // display the mouseover color change
+                if (e.target.options.fillColor !== "#FF0000") { // marker is not already red (clicked)
+                    const layer_marker = e.target;
+                    layer_marker.setStyle(markerStyle(4, "#2BBED8", "#2BBED8", 1, 1));
+                }
 
             },
             // What happens when mouse leaves the marker
             mouseout: function (e) {
-                const layer_marker = e.target;
-                layer_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
+                // if the marker is not read, change the color back to original marker color
+                // otherwise, leave it be
+                if (e.target.options.fillColor !== "#FF0000") { // marker is not already red (clicked)
+                    const layer_marker = e.target;
+                    layer_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
 
+                }
             },
             // What happens when the marker is clicked
             click: function (e) {
-                // on marker click, add data to table
-                const tableResults = [{
-                    id: 1,
-                    name: e.sourceTarget.data['CompanyName'],
-                    distance: 0,
-                    lat: e.latlng['lat'],
-                    lng: e.latlng['lng'],
-                    link: e.sourceTarget.data['CountyName'],
-                }]
+                // if there is no click marker yet, assign one
+                if (selection_marker === undefined) {
+                    selection_marker = e.target;
+                    selection_marker.setStyle(markerStyle(4, "#FF0000", "#FF0000", 1, .8));
+                } else { // if there is a click marker already
+                    // assign old marker back to original color
+                    selection_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
 
-                insertTabulator(tableResults)
+                    // assign new marker to red
+                    console.log(e.target);
+                    selection_marker = e.target;
+                    selection_marker.setStyle(markerStyle(4, "#FF0000", "#FF0000", 1, .8));
+                }
+                // if a tabulator table is already active
+                if ($('#results-table').hasClass('tabulator')) {
+                    // get the data that is inside of it
+                    const data = table.getData();
+                    // loop through data to see if clicked feature matches
+                    for (let i in data) {
+                        // if we find a layer match, select it
+                        if (e.target.data.CompanyName === data[i].name) {
+                            // deselect previous row selection
+                            table.deselectRow();
+                            // select new row selection
+                            table.selectRow(i);
+                        }
+                    }
+                }
             }
         });
         json_group.addLayer(layer_marker);
         // Close for loop
     }, this);
+
+    // alert for greater than 80 checkbox
+    const lessOrEqualTo80 = $('#lessOrEqualTo80');
+
+    greaterThan80.on('click', function () {
+        console.log('filter for features')
+    });
+    // alert for less than 60 checkbox
+    const lessOrEqualTo45 = $('#lessOrEqualTo45');
+
+    lessOrEqualTo45.on('click', function () {
+        console.log('filter for features')
+    });
 });
 
 // Base map
@@ -426,15 +502,24 @@ map.addLayer(basemap);
 map.addLayer(json_group);
 
 //Right-clicking the map triggers the search function
-map.on('contextmenu', function (e) {
-    // Remove marker if one is already on map
-    if (search_marker) {
-        map.removeLayer(search_marker);
-    }
-    const z = map.getZoom();
-    if (z < 10) {
-        geocodePlaceMarkersOnMap(e.latlng);
-    } else {
-        geocodePlaceMarkersOnMap(e.latlng, z);
+map.on({
+    // what happens when right click happens
+    contextmenu: function (e) {
+        // Remove marker if one is already on map
+        if (search_marker) {
+            map.removeLayer(search_marker);
+        }
+        const z = map.getZoom();
+        if (z < 10) {
+            geocodePlaceMarkersOnMap(e.latlng);
+        } else {
+            geocodePlaceMarkersOnMap(e.latlng, z);
+        }
+    },
+    // if the popup closes, remove the associated marker
+    popupclose: function (e) {
+        if (selection_marker !== undefined) {
+            selection_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
+        }
     }
 });
