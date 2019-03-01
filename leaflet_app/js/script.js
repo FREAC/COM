@@ -1,5 +1,5 @@
 // We'll append our markers to this global variable
-const json_group = new L.FeatureGroup([]);
+const json_group = new L.FeatureGroup();
 //This is our selection group
 const selection_group = new L.FeatureGroup();
 // This is the circle on the map that will be determine how many markers are around
@@ -381,7 +381,8 @@ function markerStyle(radius, fillColor, color, weight, fillOpacity) {
 
 // This loops through the data in our JSON file
 // And puts it on the map
-function markerLogic(num) {
+function markerLogic(num, targetLayer) {
+    // console.log(num);
     const dataLat = num['Latitude'];
     const dataLong = num['Longitude'];
 
@@ -460,17 +461,19 @@ function markerLogic(num) {
             }
         }
     });
-    json_group.addLayer(layer_marker);
+    targetLayer.addLayer(layer_marker);
 
     // Close for loop
 }
 
-function setup() {
+async function setup() {
+    selection_group.clearLayers();
     $.get("./js/data/group_care.json", function (json_data) {
 
         _.each(json_data, function (num) {
-            markerLogic(num)
+            markerLogic(num, json_group)
         }, this);
+        map.addLayer(json_group)
 
     });
 }
@@ -478,17 +481,29 @@ function setup() {
 setup();
 
 async function filterFunction(e, filterCond) {
-    await json_group.clearLayers();
+    console.log(e.target.id);
+    await map.removeLayer(json_group);
     if (e.target.checked) {
         // Get json data and search it
-        const json_data = await $.get("./js/data/group_care.json", function (json_data) {
-            _.each(json_data, function (num) {
-                if (num['CountyCode'] <= filterCond) {
-                    //console.log('yes');
-                    markerLogic(num);
-                }
-            }, this);
-        });
+        // const json_data = await $.get("./js/data/group_care.json", function (json_data) {
+        //     _.each(json_data, function (num) {
+        //         if (num['CountyCode'] <= filterCond) {
+        //             //console.log('yes');
+        //             markerLogic(num, selection_group);
+        //         }
+        //     }, this);
+        // });
+        for (layer in json_group._layers) {
+            const targetLayer = json_group._layers[layer];
+
+            targetLayer.data['Latitude'] = targetLayer._latlng.lat;
+            targetLayer.data['Longitude'] = targetLayer._latlng.lng;
+
+            if (targetLayer.data.CountyCode <= filterCond) {
+                markerLogic(targetLayer.data, selection_group);
+            }
+
+        }
     } else {
         setup();
     }
@@ -498,8 +513,8 @@ async function filterFunction(e, filterCond) {
 // alert for greater than 80 checkbox
 const lessOrEqualTo80 = $('#lessOrEqualTo80');
 
-lessOrEqualTo80.on('change', async function (e) {
-    filterFunction(e, 80);
+lessOrEqualTo80.on('change', function (e) {
+    filterFunction(e, 45);
 });
 // alert for less than 60 checkbox
 const lessOrEqualTo45 = $('#lessOrEqualTo45');
@@ -525,8 +540,9 @@ const map = new L.Map('map', {
 
 // Add base layer to group
 map.addLayer(basemap);
-// Add our markers in our JSON file on the map
-map.addLayer(json_group);
+// Add our selection markers in our JSON file on the map
+map.addLayer(selection_group);
+
 
 //Right-clicking the map triggers the search function
 map.on({
