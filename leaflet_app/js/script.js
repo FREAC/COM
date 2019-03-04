@@ -440,7 +440,6 @@ function markerLogic(num, targetLayer) {
                 selection_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
 
                 // assign new marker to red
-                console.log(e.target);
                 selection_marker = e.target;
                 selection_marker.setStyle(markerStyle(4, "#FF0000", "#FF0000", 1, .8));
             }
