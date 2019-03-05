@@ -382,10 +382,10 @@ function markerStyle(radius, fillColor, color, weight, fillOpacity) {
 // This loops through the data in our JSON file
 // And puts it on the map
 function markerLogic(num, targetLayer) {
-    // console.log(num);
     const dataLat = num['Latitude'];
     const dataLong = num['Longitude'];
 
+    // set the popup content
     const popup = L.popup()
         .setContent(
             `
@@ -466,6 +466,8 @@ function markerLogic(num, targetLayer) {
     // Close for loop
 }
 
+// initial setup function to loop through json that
+// assigns marker and add to map
 async function setup() {
     selection_group.clearLayers();
     $.get("./js/data/group_care.json", function (json_data) {
@@ -477,25 +479,32 @@ async function setup() {
 
     });
 }
-
+// call initial setup function to add points to map
 setup();
 
+// this performs dynamic filtering when the user wants to limit their search
+// set up event handler to watch when any checkboxes are checked
 $("#checkboxes input[type='checkbox']").change(async function (event) {
+
+    // assign button ids to variables
     const privateSchool = $('#privateSchool');
     const publicSchool = $('#publicSchool');
 
-    console.log(privateSchool[0].checked)
-    console.log(publicSchool[0].checked)
-
+    // set up cases for checkbox combinations
     if ((privateSchool[0].checked === true) && (publicSchool[0].checked === true)) {
         await map.removeLayer(json_group);
+        selection_group.clearLayers();
         await map.removeLayer(selection_group);
+
+        // for each feature in our json
         for (layer in json_group._layers) {
+            // current target layer that we're looking at
             const targetLayer = json_group._layers[layer];
 
+            // extract latitude and longitude
             targetLayer.data['Latitude'] = targetLayer._latlng.lat;
             targetLayer.data['Longitude'] = targetLayer._latlng.lng;
-
+            // if EITHER meets the condition, add it to the map
             if ((targetLayer.data.Category === "Public School") || (targetLayer.data.Category === "Private School")) {
                 markerLogic(targetLayer.data, selection_group);
             }
@@ -504,18 +513,23 @@ $("#checkboxes input[type='checkbox']").change(async function (event) {
         // Add our selection markers in our JSON file on the map
         map.addLayer(selection_group);
 
-
-        console.log('Both of these are checked');
+        // if only one of the checkboxes is checked,
+        // target only that checkbox
     } else if ((privateSchool[0].checked === true) || (publicSchool[0].checked == true)) {
+
+        // remove/clear both layers from map
         await map.removeLayer(json_group);
-        await map.removeLayer(selection_group);
+        selection_group.clearLayers();
         if (privateSchool[0].checked === true) {
+            // for each feature in our json
             for (layer in json_group._layers) {
                 const targetLayer = json_group._layers[layer];
 
+                // extract latitude and longitude
                 targetLayer.data['Latitude'] = targetLayer._latlng.lat;
                 targetLayer.data['Longitude'] = targetLayer._latlng.lng;
 
+                // if the feature has a matching attribute, add it to the map
                 if (targetLayer.data.Category === "Private School") {
                     markerLogic(targetLayer.data, selection_group);
                 }
@@ -525,12 +539,16 @@ $("#checkboxes input[type='checkbox']").change(async function (event) {
             map.addLayer(selection_group);
 
         } else if (publicSchool[0].checked === true) {
+
+            // for each feature in our json
             for (layer in json_group._layers) {
                 const targetLayer = json_group._layers[layer];
 
+                // extract latitude and longitude
                 targetLayer.data['Latitude'] = targetLayer._latlng.lat;
                 targetLayer.data['Longitude'] = targetLayer._latlng.lng;
 
+                // if the feature has a matching attribute, add it to the map
                 if (targetLayer.data.Category === "Public School") {
                     markerLogic(targetLayer.data, selection_group);
                 }
@@ -538,16 +556,13 @@ $("#checkboxes input[type='checkbox']").change(async function (event) {
             }
             // Add our selection markers in our JSON file on the map
             map.addLayer(selection_group);
-
         }
 
-        console.log('only one of these are checked');
     } else {
-        await map.removeLayer(json_group);
-        await map.removeLayer(selection_group);
-
-
-        setup();
+        // clear the selection layer
+        selection_group.clearLayers();
+        // add the full layer back to the map
+        map.addLayer(json_group);
     }
 });
 
