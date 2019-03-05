@@ -379,6 +379,11 @@ function markerStyle(radius, fillColor, color, weight, fillOpacity) {
     };
 }
 
+// assign opacity (to a marker)
+function assignOpacity(num) {
+    return num / 100;
+}
+
 // This loops through the data in our JSON file
 // And puts it on the map
 function markerLogic(num, targetLayer) {
@@ -396,7 +401,7 @@ function markerLogic(num, targetLayer) {
 
     // Add to our marker
     const marker_location = new L.LatLng(dataLat, dataLong);
-    const layer_marker = L.circleMarker(marker_location, markerStyle(4, "#ED9118", "#FFFFFF", 1, num['CountyCode'] / 100))
+    const layer_marker = L.circleMarker(marker_location, markerStyle(4, "#ED9118", "#FFFFFF", 1, assignOpacity(num['CountyCode'])))
         .bindPopup(popup);
 
     // Build the data
@@ -426,7 +431,9 @@ function markerLogic(num, targetLayer) {
             // otherwise, leave it be
             if (e.target.options.fillColor !== "#FF0000") { // marker is not already red (clicked)
                 const layer_marker = e.target;
-                layer_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
+
+                const opacityVar = e.target.data.CountyCode;
+                layer_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, assignOpacity(opacityVar)));
 
             }
         },
