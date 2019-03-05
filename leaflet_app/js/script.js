@@ -404,7 +404,8 @@ function markerLogic(num, targetLayer) {
         'CompanyName': num['CompanyNam'],
         'CountyName': num['CountyName'],
         'CountyCode': num['CountyCode'],
-        'CountyNum': num['CountyNumb']
+        'CountyNum': num['CountyNumb'],
+        'Category': num['ProgramSub']
     };
 
     // Add events to marker
@@ -479,48 +480,77 @@ async function setup() {
 
 setup();
 
-async function filterFunction(e, filterCond) {
-    console.log(e.target.id);
-    await map.removeLayer(json_group);
-    if (e.target.checked) {
-        // Get json data and search it
-        // const json_data = await $.get("./js/data/group_care.json", function (json_data) {
-        //     _.each(json_data, function (num) {
-        //         if (num['CountyCode'] <= filterCond) {
-        //             //console.log('yes');
-        //             markerLogic(num, selection_group);
-        //         }
-        //     }, this);
-        // });
+$("#checkboxes input[type='checkbox']").change(async function (event) {
+    const privateSchool = $('#privateSchool');
+    const publicSchool = $('#publicSchool');
+
+    console.log(privateSchool[0].checked)
+    console.log(publicSchool[0].checked)
+
+    if ((privateSchool[0].checked === true) && (publicSchool[0].checked === true)) {
+        await map.removeLayer(json_group);
+        await map.removeLayer(selection_group);
         for (layer in json_group._layers) {
             const targetLayer = json_group._layers[layer];
 
             targetLayer.data['Latitude'] = targetLayer._latlng.lat;
             targetLayer.data['Longitude'] = targetLayer._latlng.lng;
 
-            if (targetLayer.data.CountyCode <= filterCond) {
+            if ((targetLayer.data.Category === "Public School") || (targetLayer.data.Category === "Private School")) {
                 markerLogic(targetLayer.data, selection_group);
             }
 
         }
+        // Add our selection markers in our JSON file on the map
+        map.addLayer(selection_group);
+
+
+        console.log('Both of these are checked');
+    } else if ((privateSchool[0].checked === true) || (publicSchool[0].checked == true)) {
+        await map.removeLayer(json_group);
+        await map.removeLayer(selection_group);
+        if (privateSchool[0].checked === true) {
+            for (layer in json_group._layers) {
+                const targetLayer = json_group._layers[layer];
+
+                targetLayer.data['Latitude'] = targetLayer._latlng.lat;
+                targetLayer.data['Longitude'] = targetLayer._latlng.lng;
+
+                if (targetLayer.data.Category === "Private School") {
+                    markerLogic(targetLayer.data, selection_group);
+                }
+
+            }
+            // Add our selection markers in our JSON file on the map
+            map.addLayer(selection_group);
+
+        } else if (publicSchool[0].checked === true) {
+            for (layer in json_group._layers) {
+                const targetLayer = json_group._layers[layer];
+
+                targetLayer.data['Latitude'] = targetLayer._latlng.lat;
+                targetLayer.data['Longitude'] = targetLayer._latlng.lng;
+
+                if (targetLayer.data.Category === "Public School") {
+                    markerLogic(targetLayer.data, selection_group);
+                }
+
+            }
+            // Add our selection markers in our JSON file on the map
+            map.addLayer(selection_group);
+
+        }
+
+        console.log('only one of these are checked');
     } else {
+        await map.removeLayer(json_group);
+        await map.removeLayer(selection_group);
+
+
         setup();
     }
-}
-
-
-// alert for greater than 80 checkbox
-const lessOrEqualTo80 = $('#lessOrEqualTo80');
-
-lessOrEqualTo80.on('change', function (e) {
-    filterFunction(e, 45);
 });
-// alert for less than 60 checkbox
-const lessOrEqualTo45 = $('#lessOrEqualTo45');
 
-lessOrEqualTo45.on('change', function (e) {
-    filterFunction(e, 45);
-});
 // Base map
 let basemap = L.tileLayer.provider('OpenStreetMap.Mapnik');
 
@@ -539,8 +569,6 @@ const map = new L.Map('map', {
 
 // Add base layer to group
 map.addLayer(basemap);
-// Add our selection markers in our JSON file on the map
-map.addLayer(selection_group);
 
 
 //Right-clicking the map triggers the search function
