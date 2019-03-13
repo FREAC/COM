@@ -2,12 +2,10 @@ import base64
 import csv
 import json
 import os
-import pyodbc
 import re
 import urllib.parse as parse
 
 import requests
-import shapefile
 
 
 class Geocoder:
@@ -23,6 +21,7 @@ class Geocoder:
     def find(self, data):
 
         json_response = self.geocode_string(data)
+        print(json_response)
 
         try:
             results = json_response['Response']['View'][0]['Result']
@@ -119,6 +118,7 @@ class Access:
 
     def __init__(self):
 
+        import pyodbc
         self.mdb_path = r'D:\Projects\COM\Address_Test.mdb'
         self.conn = pyodbc.connect(r'Driver={{Microsoft Access Driver (*.mdb, *.accdb)}};DBQ={};'.format(self.mdb_path))
 
@@ -156,19 +156,23 @@ class Cleaner:
 
         clean_data = []
         for item in data:
-            item = self._po_box_regex(item)
+            item = self._remove_po_box(item)
             item = list(self._remove_none(item))
             clean_data.append(' '.join(item).strip().replace(',', '').replace('  ', ' '))
         return list(dict.fromkeys(clean_data))
 
     @staticmethod
-    def _po_box_regex(data):
+    def _remove_po_box(data):
 
-        pobox_pattern = re.compile(r'P[\.]?(OST)?\s?O[\.]?(FFICE)?\s((BOX)|(DRAWER))', re.IGNORECASE)
+        po_box_pattern = re.compile(r'(P[\.]?(OST)?\s?O[\.]?(FFICE)?\s((BOX)|(DRAWER))\s\d*)(.*)', re.IGNORECASE)
         for i, address_field in enumerate(data):
             if address_field:
-                if pobox_pattern.search(address_field):
-                    data[i] = None
+                m = po_box_pattern.search(address_field)
+                if m:
+                    if m.group(7):
+                        data[i] = m.group(7).lstrip()
+                    else:
+                        data[i] = None
         return data
 
     @staticmethod
@@ -210,6 +214,7 @@ def date2string(d):
 
 
 def shp2json(fname, json_fname=None, fields=None):
+    import shapefile
     with shapefile.Reader(fname) as shp:
 
         records = shp.iterRecords()
