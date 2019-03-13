@@ -50,6 +50,8 @@ class Cleaner:
 class AddressData(Cleaner):
 
     def __init__(self, input_text, fields=None):
+
+        self.warning_num = 100
         self.input_text = input_text
         self.fields = fields
 
@@ -58,6 +60,11 @@ class AddressData(Cleaner):
             data = self.clean_data(new_data)
         except FileNotFoundError:
             data = [input_text]
+
+        if len(data) > self.warning_num:
+            s = input('Geocoding more than {} records. Please enter "Y" to continue: s'.format(self.warning_num)).lower()
+            if s is not 'y':
+                data = []
         self.data = data
 
     def get_data(self):
@@ -75,6 +82,7 @@ class AddressData(Cleaner):
 class Geocoder(AddressData):
 
     def __init__(self, infile, outfile='HERE.csv', fields=None, fl=False):
+
         super().__init__(infile, fields)
         self.outfile = outfile
         self.FL = fl
