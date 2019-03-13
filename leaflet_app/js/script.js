@@ -381,7 +381,7 @@ function markerStyle(radius, fillColor, color, weight, fillOpacity) {
 // And puts it on the map
 
 
-$.get("./js/data/group_care.json", function (json_data) {
+$.get("./js/data/group_care.zip", function (json_data) {
 
     _.each(json_data, function (num) {
         const dataLat = num['Latitude'];
