@@ -1,5 +1,7 @@
 // We'll append our markers to this global variable
 const json_group = new L.FeatureGroup();
+//This is our selection group
+const selection_group = new L.FeatureGroup();
 // This is the circle on the map that will be determine how many markers are around
 let circle;
 // this is the icon in the middle of the circle
@@ -377,107 +379,198 @@ function markerStyle(radius, fillColor, color, weight, fillOpacity) {
     };
 }
 
+// assign opacity (to a marker)
+function assignOpacity(num) {
+    return num / 100;
+}
+
 // This loops through the data in our JSON file
 // And puts it on the map
+function markerLogic(num, targetLayer) {
+    const dataLat = num['Latitude'];
+    const dataLong = num['Longitude'];
 
+    // set the popup content
+    const popup = L.popup()
+        .setContent(
+            `
+        <p><strong>Company Name: </strong> ${num['CompanyNam']}</p>
+        <p><strong>Company Link: </strong><a href='https://www.google.com/search?q= + ${num['CountyName']}' target="_blank">${num['CountyName']}</a></p>
+        `
+        );
 
-$.get("./js/data/group_care.zip", function (json_data) {
+    // Add to our marker
+    const marker_location = new L.LatLng(dataLat, dataLong);
+    const layer_marker = L.circleMarker(marker_location, markerStyle(4, "#ED9118", "#FFFFFF", 1, assignOpacity(num['CountyCode'])))
+        .bindPopup(popup);
 
-    _.each(json_data, function (num) {
-        const dataLat = num['Latitude'];
-        const dataLong = num['Longitude'];
+    // Build the data
+    layer_marker.data = {
+        'CompanyName': num['CompanyNam'],
+        'CountyName': num['CountyName'],
+        'CountyCode': num['CountyCode'],
+        'CountyNum': num['CountyNumb'],
+        'Category': num['ProgramSub']
+    };
 
-        const popup = L.popup()
-            .setContent(
-                `
-                <p><strong>Company Name: </strong> ${num['CompanyNam']}</p>
-                <p><strong>Company Link: </strong><a href='https://www.google.com/search?q= + ${num['CountyName']}' target="_blank">${num['CountyName']}</a></p>
-                `
-            );
+    // Add events to marker
+    layer_marker.on({
+        // What happens when mouse hovers markers
+        mouseover: function (e) {
+            // if the moused over marker is not red, 
+            // display the mouseover color change
+            if (e.target.options.fillColor !== "#FF0000") { // marker is not already red (clicked)
+                const layer_marker = e.target;
+                layer_marker.setStyle(markerStyle(4, "#2BBED8", "#2BBED8", 1, 1));
+            }
 
-        // Add to our marker
-        const marker_location = new L.LatLng(dataLat, dataLong);
-        const layer_marker = L.circleMarker(marker_location, markerStyle(4, "#ED9118", "#FFFFFF", 1, num['CountyCode'] / 100))
-            .bindPopup(popup);
+        },
+        // What happens when mouse leaves the marker
+        mouseout: function (e) {
+            // if the marker is not read, change the color back to original marker color
+            // otherwise, leave it be
+            if (e.target.options.fillColor !== "#FF0000") { // marker is not already red (clicked)
+                const layer_marker = e.target;
 
-        // Build the data
-        layer_marker.data = {
-            'CompanyName': num['CompanyNam'],
-            'CountyName': num['CountyName'],
-            'CountyCode': num['CountyCode'],
-            'CountyNum': num['CountyNumb']
-        };
+                const opacityVar = e.target.data.CountyCode;
+                layer_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, assignOpacity(opacityVar)));
 
-        // Add events to marker
-        layer_marker.on({
-            // What happens when mouse hovers markers
-            mouseover: function (e) {
-                // if the moused over marker is not red, 
-                // display the mouseover color change
-                if (e.target.options.fillColor !== "#FF0000") { // marker is not already red (clicked)
-                    const layer_marker = e.target;
-                    layer_marker.setStyle(markerStyle(4, "#2BBED8", "#2BBED8", 1, 1));
-                }
+            }
+        },
+        // What happens when the marker is clicked
+        click: function (e) {
+            // if there is no click marker yet, assign one
+            if (selection_marker === undefined) {
+                selection_marker = e.target;
+                selection_marker.setStyle(markerStyle(4, "#FF0000", "#FF0000", 1, .8));
+            } else { // if there is a click marker already
+                // assign old marker back to original color
+                selection_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
 
-            },
-            // What happens when mouse leaves the marker
-            mouseout: function (e) {
-                // if the marker is not read, change the color back to original marker color
-                // otherwise, leave it be
-                if (e.target.options.fillColor !== "#FF0000") { // marker is not already red (clicked)
-                    const layer_marker = e.target;
-                    layer_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
-
-                }
-            },
-            // What happens when the marker is clicked
-            click: function (e) {
-                // if there is no click marker yet, assign one
-                if (selection_marker === undefined) {
-                    selection_marker = e.target;
-                    selection_marker.setStyle(markerStyle(4, "#FF0000", "#FF0000", 1, .8));
-                } else { // if there is a click marker already
-                    // assign old marker back to original color
-                    selection_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
-
-                    // assign new marker to red
-                    console.log(e.target);
-                    selection_marker = e.target;
-                    selection_marker.setStyle(markerStyle(4, "#FF0000", "#FF0000", 1, .8));
-                }
-                // if a tabulator table is already active
-                if ($('#results-table').hasClass('tabulator')) {
-                    // get the data that is inside of it
-                    const data = table.getData();
-                    // loop through data to see if clicked feature matches
-                    for (let i in data) {
-                        // if we find a layer match, select it
-                        if (e.target.data.CompanyName === data[i].name) {
-                            // deselect previous row selection
-                            table.deselectRow();
-                            // select new row selection
-                            table.selectRow(i);
-                        }
+                // assign new marker to red
+                selection_marker = e.target;
+                selection_marker.setStyle(markerStyle(4, "#FF0000", "#FF0000", 1, .8));
+            }
+            // if a tabulator table is already active
+            if ($('#results-table').hasClass('tabulator')) {
+                // get the data that is inside of it
+                const data = table.getData();
+                // loop through data to see if clicked feature matches
+                for (let i in data) {
+                    // if we find a layer match, select it
+                    if (e.target.data.CompanyName === data[i].name) {
+                        // deselect previous row selection
+                        table.deselectRow();
+                        // select new row selection
+                        table.selectRow(i);
                     }
                 }
             }
-        });
-        json_group.addLayer(layer_marker);
-        // Close for loop
-    }, this);
-
-    // alert for greater than 80 checkbox
-    const lessOrEqualTo80 = $('#lessOrEqualTo80');
-
-    greaterThan80.on('click', function () {
-        console.log('filter for features')
+        }
     });
-    // alert for less than 60 checkbox
-    const lessOrEqualTo45 = $('#lessOrEqualTo45');
+    targetLayer.addLayer(layer_marker);
 
-    lessOrEqualTo45.on('click', function () {
-        console.log('filter for features')
+    // Close for loop
+}
+
+// initial setup function to loop through json that
+// assigns marker and add to map
+async function setup() {
+    selection_group.clearLayers();
+    $.get("./js/data/group_care.json", function (json_data) {
+
+        _.each(json_data, function (num) {
+            markerLogic(num, json_group)
+        }, this);
+        map.addLayer(json_group)
+
     });
+}
+// call initial setup function to add points to map
+setup();
+
+// this performs dynamic filtering when the user wants to limit their search
+// set up event handler to watch when any checkboxes are checked
+$("#checkboxes input[type='checkbox']").change(async function (event) {
+
+    // assign button ids to variables
+    const privateSchool = $('#privateSchool');
+    const publicSchool = $('#publicSchool');
+
+    // set up cases for checkbox combinations
+    if ((privateSchool[0].checked === true) && (publicSchool[0].checked === true)) {
+        await map.removeLayer(json_group);
+        selection_group.clearLayers();
+        await map.removeLayer(selection_group);
+
+        // for each feature in our json
+        for (layer in json_group._layers) {
+            // current target layer that we're looking at
+            const targetLayer = json_group._layers[layer];
+
+            // extract latitude and longitude
+            targetLayer.data['Latitude'] = targetLayer._latlng.lat;
+            targetLayer.data['Longitude'] = targetLayer._latlng.lng;
+            // if EITHER meets the condition, add it to the map
+            if ((targetLayer.data.Category === "Public School") || (targetLayer.data.Category === "Private School")) {
+                markerLogic(targetLayer.data, selection_group);
+            }
+
+        }
+        // Add our selection markers in our JSON file on the map
+        map.addLayer(selection_group);
+
+        // if only one of the checkboxes is checked,
+        // target only that checkbox
+    } else if ((privateSchool[0].checked === true) || (publicSchool[0].checked == true)) {
+
+        // remove/clear both layers from map
+        await map.removeLayer(json_group);
+        selection_group.clearLayers();
+        if (privateSchool[0].checked === true) {
+            // for each feature in our json
+            for (layer in json_group._layers) {
+                const targetLayer = json_group._layers[layer];
+
+                // extract latitude and longitude
+                targetLayer.data['Latitude'] = targetLayer._latlng.lat;
+                targetLayer.data['Longitude'] = targetLayer._latlng.lng;
+
+                // if the feature has a matching attribute, add it to the map
+                if (targetLayer.data.Category === "Private School") {
+                    markerLogic(targetLayer.data, selection_group);
+                }
+
+            }
+            // Add our selection markers in our JSON file on the map
+            map.addLayer(selection_group);
+
+        } else if (publicSchool[0].checked === true) {
+
+            // for each feature in our json
+            for (layer in json_group._layers) {
+                const targetLayer = json_group._layers[layer];
+
+                // extract latitude and longitude
+                targetLayer.data['Latitude'] = targetLayer._latlng.lat;
+                targetLayer.data['Longitude'] = targetLayer._latlng.lng;
+
+                // if the feature has a matching attribute, add it to the map
+                if (targetLayer.data.Category === "Public School") {
+                    markerLogic(targetLayer.data, selection_group);
+                }
+
+            }
+            // Add our selection markers in our JSON file on the map
+            map.addLayer(selection_group);
+        }
+
+    } else {
+        // clear the selection layer
+        selection_group.clearLayers();
+        // add the full layer back to the map
+        map.addLayer(json_group);
+    }
 });
 
 // Base map
@@ -498,8 +591,7 @@ const map = new L.Map('map', {
 
 // Add base layer to group
 map.addLayer(basemap);
-// Add our markers in our JSON file on the map
-map.addLayer(json_group);
+
 
 //Right-clicking the map triggers the search function
 map.on({
