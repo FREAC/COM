@@ -44,6 +44,7 @@
 ### How to interpret the output:
 
 A single input address can have multiple rows of potential matches.
+
 Relevance and match quality is reported on a scale of 0.0 (low) to 1.0 (high). 
 
 Column Name | Explanation
