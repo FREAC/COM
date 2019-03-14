@@ -11,14 +11,14 @@
 1. In a separate Python file, import `HERE.py` as a module.
 2. Create a `Geocoder()` object and specify the input CSV file.
 3. CSV files containing more than one address must be approved by the user before they are geocoded.
-    1. To approve the geocoding process, press `Y` followed by the `Enter` key.
-    2. To stop the geocoding process, press any other key followed by the `Enter` key.
+    1. To approve the geocoding process, press `Y` at the prompt, followed by the `Enter` key.
+    2. To stop the geocoding process, press any other key at the prompt, followed by the `Enter` key.
 
 `Geocoder(infile, outfile='HERE.csv', fields=None, fl=False)`
 
-- `infile`: the CSV file containing address data to be geocoded
+- `infile`: a CSV file containing the address data to be geocoded
   - The input file must be in CSV format and must contain headers
-  - Optionally, a single address in string format can be provided instead of a file
+  - Optionally, a single address in string format can be provided instead of a file name
 
 - `outfile`: the name of the output CSV file containing the geocoded data
   - The default file name is __HERE.csv__
@@ -35,10 +35,10 @@
 >>> import HERE
 # Create a Geocoder object using a CSV file as input
 >>> Geocoder('my_addresses.csv', outfile='my_geocoded_addresses.csv')
-# Create a Geocoder object and limiting the fields to use
+# Create a Geocoder object and specify the fields to use
 >>> Geocoder('my_addresses.csv', fields=['STREET', 'CITY'])
-# Create a Geocoder object using a single address
->>> Geocoder('296 Champions Way Tallahassee FL 32304')
+# Create a Geocoder object using a single address as input and limit results to Florida
+>>> Geocoder('296 Champions Way Tallahassee FL 32304', fl=True)
 ```
 
 ### How to interpret the output:
