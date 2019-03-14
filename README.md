@@ -9,8 +9,8 @@
 ### How to use the HERE Geocoder:
 
 1. In a separate Python file, import `HERE.py` as a module.
-2. Create a `Geocoder()` object.
-3. Input CSV files containing more than one address must be approved by the user before they are geocoded.
+2. Create a `Geocoder()` object and specify the input CSV file.
+3. CSV files containing more than one address must be approved by the user before they are geocoded.
     1. To approve the geocoding process, press `Y` followed by the `Enter` key.
     2. To stop the geocoding process, press any other key followed by the `Enter` key.
 
