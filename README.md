@@ -21,6 +21,7 @@
   - Optionally, a single address in string format can be provided instead of a file name
 
 - `outfile`: the name of the output CSV file containing the geocoded data
+  - If a full path is not provided, the output file will be created in the same location as the `HERE.py` file
   - The default file name is __HERE.csv__
 
 - `fields`: the fields of the input CSV file containing the address data to geocode
