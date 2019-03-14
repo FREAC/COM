@@ -51,7 +51,7 @@ class AddressData(Cleaner):
 
     def __init__(self, input_text, fields=None):
 
-        self.warning_num = 100
+        self.warning_num = 1
         self.input_text = input_text
         self.fields = fields
 
@@ -61,8 +61,10 @@ class AddressData(Cleaner):
         except FileNotFoundError:
             data = [input_text]
 
-        if len(data) > self.warning_num:
-            s = input('Geocoding more than {} records. Please enter "Y" to continue: s'.format(self.warning_num)).lower()
+        count = len(data)
+
+        if count > self.warning_num:
+            s = input('{} records will be geocoded. Continue? Enter [Y]es or [N]o: '.format(count)).lower()
             if s is not 'y':
                 data = []
         self.data = data
