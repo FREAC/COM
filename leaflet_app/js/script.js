@@ -567,6 +567,8 @@ $("#checkboxes input[type='checkbox']").change(async function (event) {
 });
 
 function clearSelections() {
+    $('.leaflet-control-locate').removeClass("active following")
+
     // Remove marker if one is already on map
     if (search_marker) {
         map.removeLayer(search_marker);
