@@ -145,14 +145,11 @@ function pointsInCircle(circle, meters_user_set) {
 
 // This places marker, circle on map
 function geocodePlaceMarkersOnMap(location, z = 10) {
+    // Clear any current selections that are on the map
+    clearSelections();
 
     // Center the map on the result
     map.setView(new L.LatLng(location.lat, location.lng), z);
-
-    // Remove circle if one is already on map
-    if (circle) {
-        map.removeLayer(circle);
-    }
 
     // Create circle around marker with our selected radius
     circle = L.circle([location.lat, location.lng], milesToMeters($('#radius-selected').val()), {
@@ -162,11 +159,6 @@ function geocodePlaceMarkersOnMap(location, z = 10) {
         clickable: false,
         interactive: false
     }).addTo(map);
-
-    // Remove marker if one is already on map
-    if (search_marker) {
-        map.removeLayer(search_marker);
-    }
 
     //custom icon to go inside the circle
     circleIcon = L.icon({
@@ -220,6 +212,7 @@ function changeCircleRadius(e) {
 
 // This uses the ESRI geocoder
 function geocodeAddress(address) {
+
 
     const url = 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates';
     const params = 'f=json&sourceCountry=USA&searchExtent=-88.5,33,-79,23.5&outFields=location&SingleLine=';
@@ -573,6 +566,19 @@ $("#checkboxes input[type='checkbox']").change(async function (event) {
     }
 });
 
+function clearSelections() {
+    // Remove marker if one is already on map
+    if (search_marker) {
+        map.removeLayer(search_marker);
+    }
+    if (circle) {
+        map.removeLayer(circle);
+    }
+    if (selection_marker) {
+        map.removeLayer(selection_marker);
+    }
+}
+
 // Base map
 let basemap = L.tileLayer.provider('OpenStreetMap.Mapnik');
 
@@ -597,16 +603,33 @@ map.addLayer(basemap);
 map.on({
     // what happens when right click happens
     contextmenu: function (e) {
-        // Remove marker if one is already on map
-        if (search_marker) {
-            map.removeLayer(search_marker);
-        }
+
+        // locate.stop();
+
+
+
+        $('.leaflet-control-locate').removeClass("active following")
+
+
+        // // Remove marker if one is already on map
+        // if (search_marker) {
+        //     map.removeLayer(search_marker);
+        // }
+        // if (selection_marker) {
+        //     map.removeLayer(selection_marker);
+
+        // }
+        clearSelections();
+        // disable location if it's currently active
+
         const z = map.getZoom();
         if (z < 10) {
             geocodePlaceMarkersOnMap(e.latlng);
         } else {
             geocodePlaceMarkersOnMap(e.latlng, z);
         }
+
+
     },
     // if the popup closes, remove the associated marker
     popupclose: function (e) {
