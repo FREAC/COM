@@ -1,0 +1,50 @@
+Input,Relevance,MatchLevel,MQ_PostalCode,MQ_City,MQ_Street,MQ_HouseNumber,MQ_Unit,County,PostalCode,City,Street,HouseNumber,Unit,Longitude,Latitude
+10645 63rd Avenue Edmonton AB T6H 1P7,1.0,houseNumber,1.0,1.0,[0.95],1.0,None,Alberta,T6H 1P7,Edmonton,63 Ave NW,10645,None,-113.50707,53.4999
+10645 63rd Avenue Edmonton AB T6H 1P7,1.0,houseNumber,1.0,1.0,[0.95],1.0,None,Alberta,T6H 1P7,Edmonton,63 Ave NW,10645,None,-113.50707,53.4999
+10645 63rd Avenue Edmonton AB T6H 1P7,1.0,houseNumber,1.0,1.0,[0.95],1.0,None,Alberta,T6H 1P7,Edmonton,63 Ave NW,10645,None,-113.50707,53.4999
+810 Box 53 FPO AE 9619,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None
+Nome AK 99762,1.0,postalCode,1.0,1.0,None,None,None,Nome,99762,Nome,None,None,None,-165.40567,64.50067
+10645 63rd Avenue Edmonton AB T6H 1P7,1.0,houseNumber,1.0,1.0,[0.95],1.0,None,Alberta,T6H 1P7,Edmonton,63 Ave NW,10645,None,-113.50707,53.4999
+810 Box 53 FPO AE 9619,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None
+Nome AK 99762,1.0,postalCode,1.0,1.0,None,None,None,Nome,99762,Nome,None,None,None,-165.40567,64.50067
+Auburn AL 36831,1.0,postalCode,1.0,1.0,None,None,None,Lee,36831,Auburn,None,None,None,-85.47712,32.61253
+Auburn AL 36831-0409,1.0,postalCode,1.0,1.0,None,None,None,Lee,36831,Auburn,None,None,None,-85.47712,32.61253
+545 W. Main Street Dothan AL 36303,0.96,houseNumber,0.82,1.0,[1.0],1.0,None,Houston,36301,Dothan,W Main St,545,None,-85.3993179,31.2248833
+415 N McKinley Street Suite 610 Little Rock AR 72205,1.0,houseNumber,1.0,1.0,[1.0],1.0,None,Pulaski,72205,Little Rock,N McKinley St,415,None,-92.34467,34.75553
+Suite 610 415 N McKinley Street Little Rock AR 72205,1.0,houseNumber,1.0,1.0,[1.0],1.0,None,Pulaski,72205,Little Rock,N McKinley St,415,None,-92.34467,34.75553
+Suite 610 415 N McKinley Street Little Rock AR 72205,1.0,houseNumber,1.0,1.0,[1.0],1.0,None,Pulaski,72205,Little Rock,N McKinley St,415,None,-92.34467,34.75553
+4,1.0,postalCode,1.0,None,None,None,None,None,4,None,None,None,None,-76.78396,17.98067
+1,1.0,postalCode,1.0,None,None,None,None,Kingston,1,Kingston,None,None,None,-76.78087,17.93876
+5,1.0,postalCode,1.0,None,None,None,None,St Andrew,5,Kingston,None,None,None,-76.78628,17.99717
+ ,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None
+N,1.0,city,None,1.0,None,None,None,New Territories,None,North,None,None,None,114.13835,22.49408
+ ,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None
+M,1.0,county,None,None,None,None,None,München (Stadt),None,None,None,None,None,11.57755,48.13642
+c,1.0,county,None,None,None,None,None,Chemnitz,None,None,None,None,None,12.92087,50.83669
+K,1.0,county,None,None,None,None,None,Köln,None,None,None,None,None,6.95517,50.94168
+K,1.0,county,None,None,None,None,None,Klagenfurt,None,None,None,None,None,14.31041,46.62057
+i,1.0,state,None,None,None,None,None,None,None,None,None,None,None,-71.41199,41.82388
+i,1.0,state,None,None,None,None,None,None,None,None,None,None,None,-157.85788,21.30493
+n,1.0,city,None,1.0,None,None,None,New Territories,None,North,None,None,None,114.13835,22.49408
+l,1.0,county,None,None,None,None,None,Leipzig (Stadt),None,None,None,None,None,12.38594,51.3452
+l,1.0,county,None,None,None,None,None,Leipzig (Landkreis),None,None,None,None,None,12.49493,51.12227
+l,1.0,county,None,None,None,None,None,Linz,None,None,None,None,None,14.28813,48.30424
+e,1.0,country,None,None,None,None,None,None,None,None,None,None,None,-176.1754,-13.27785
+y,1.0,city,None,1.0,None,None,None,Somme,80190,Y,None,None,None,2.99361,49.80519
+ ,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None
+S,1.0,state,None,None,None,None,None,None,None,None,None,None,None,35.36757,33.56253
+t,1.0,city,None,1.0,None,None,None,Elburg,8084 HB,'t Harde,None,None,None,5.88358,52.41577
+t,1.0,city,None,1.0,None,None,None,Schagen,1756,'t Zand,None,None,None,4.75674,52.83549
+t,1.0,city,None,1.0,None,None,None,Houten,3997 MK,'t Goy,None,None,None,5.22104,52.00215
+t,1.0,city,None,1.0,None,None,None,Oldebroek,8095 RC,'t Loo,None,None,None,5.95399,52.44532
+t,1.0,city,None,1.0,None,None,None,Hollands Kroon,1735 GE,'t Veld,None,None,None,4.8583,52.73902
+t,1.0,city,None,1.0,None,None,None,Venlo,5916,'t Ven,None,None,None,6.19206,51.38624
+t,1.0,city,None,1.0,None,None,None,Loppersum,9915,'t Zandt,None,None,None,6.77204,53.36968
+t,1.0,city,None,1.0,None,None,None,Haaren,5076 TB,'t Eind,None,None,None,5.23597,51.59676
+t,1.0,city,None,1.0,None,None,None,Heerhugowaard,1703 RV,'t Kruis,None,None,None,4.84312,52.65264
+t,1.0,city,None,1.0,None,None,None,Oldambt,9942,'t Waar,None,None,None,6.95277,53.22491
+r,1.0,county,None,None,None,None,None,Regensburg (Landkreis),None,None,None,None,None,12.12801,49.12391
+r,1.0,county,None,None,None,None,None,Regensburg (Stadt),None,None,None,None,None,12.10173,49.01492
+e,1.0,country,None,None,None,None,None,None,None,None,None,None,None,-176.1754,-13.27785
+e,1.0,country,None,None,None,None,None,None,None,None,None,None,None,-176.1754,-13.27785
+415 N McKinley Street Little Rock AR 72205,1.0,houseNumber,1.0,1.0,[1.0],1.0,None,Pulaski,72205,Little Rock,N McKinley St,415,None,-92.34467,34.75553
