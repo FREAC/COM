@@ -13,69 +13,6 @@ let selection_marker;
 
 let table;
 
-// Convert miles to meters to set radius of circle
-function milesToMeters(miles) {
-    return miles * 1069.344;
-};
-
-function getMiles(meters) {
-    return meters * 0.000621371192;
-}
-
-// This uses the ESRI geocoder
-function geocodeAddress(address) {
-
-    const url = 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates';
-    const params = 'f=json&sourceCountry=USA&searchExtent=-88.5,33,-79,23.5&outFields=location&SingleLine=';
-    const queryString = params + address;
-    $.get(url, queryString, function (data) {
-        if (data.candidates.length !== 0) {
-            // if the is-invalid class is present, remove it
-            if ($('#geocoder-input').hasClass('is-invalid')) {
-                $('#geocoder-input').removeClass('is-invalid');
-                // hide invalide address message
-                $('.invalid-feedback').hide();
-
-            }
-            const coords = data.candidates[0].location;
-            const location = {
-                lng: coords.x,
-                lat: coords.y
-            };
-            geocodePlaceMarkersOnMap(location);
-        } else {
-            // change color of text to bootstrap is-invalid class to show user that their input was invalid
-            $('#geocoder-input').addClass("is-invalid");
-            // add invalid address message
-            $('.invalid-feedback').show();
-        }
-
-    });
-}
-
-// general function that will take in lat and lon
-// then will zoom to and highlight desired feature
-function zoomToLocation(lat, lng, z = 12) {
-    // if a marker is already present on the map, remove it
-    if (selection_marker) {
-        map.removeLayer(selection_marker);
-    }
-
-    // set view to location
-    map.setView(new L.LatLng(lat, lng), z);
-
-    // Set marker location
-    const marker_location = new L.LatLng(lat, lng);
-
-    // set the selection_marker variable to our location and style
-    selection_marker = L.circleMarker(marker_location, markerStyle(4, "#FF0000", "#FF0000", 1, 1));
-
-    //allow for the user to click the point under the marker
-    selection_marker.options.interactive = false;
-
-    // add marker to the map
-    map.addLayer(selection_marker);
-}
 
 // when enter button clicked, geocodeAddresses
 $('#geocoder-input').keypress(function (event) {
@@ -89,9 +26,6 @@ $('#geocoder-input').keypress(function (event) {
 $('#radius-selected').change(function () {
     changeCircleRadius();
 });
-
-// =$(json).filter(function (i,n){return n.website==='yahoo'});
-
 
 // initial setup function to loop through json that
 // assigns marker and add to map
@@ -161,15 +95,7 @@ map.on({
 
         $('.leaflet-control-locate').removeClass("active following")
 
-
-        // // Remove marker if one is already on map
-        // if (search_marker) {
-        //     map.removeLayer(search_marker);
-        // }
-        // if (selection_marker) {
-        //     map.removeLayer(selection_marker);
-
-        // }
+        // clear any current selections
         clearSelections();
         // disable location if it's currently active
 

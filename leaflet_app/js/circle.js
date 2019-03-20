@@ -1,3 +1,13 @@
+// Convert miles to meters to set radius of circle
+function milesToMeters(miles) {
+    return miles * 1069.344;
+};
+
+// convert meters back to miles
+function getMiles(meters) {
+    return meters * 0.000621371192;
+}
+
 // This figures out how many points are within our circle
 function pointsInCircle(circle, meters_user_set) {
     if (circle !== undefined) {
