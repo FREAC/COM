@@ -13,20 +13,6 @@ let selection_marker;
 
 let table;
 
-
-// when enter button clicked, geocodeAddresses
-$('#geocoder-input').keypress(function (event) {
-    if (event.keyCode == 13) {
-        event.preventDefault();
-        geocodeAddress($('#geocoder-input').val());
-    }
-});
-
-// when search radius changes, chang circle size and re-query
-$('#radius-selected').change(function () {
-    changeCircleRadius();
-});
-
 // initial setup function to loop through json that
 // assigns marker and add to map
 async function setup() {
@@ -57,6 +43,19 @@ function clearSelections() {
         map.removeLayer(selection_marker);
     }
 }
+
+// when enter button clicked, geocodeAddresses
+$('#geocoder-input').keypress(function (event) {
+    if (event.keyCode == 13) {
+        event.preventDefault();
+        geocodeAddress($('#geocoder-input').val());
+    }
+});
+
+// when search radius changes, chang circle size and re-query
+$('#radius-selected').change(function () {
+    changeCircleRadius();
+});
 
 // Base map
 let basemap = L.tileLayer.provider('OpenStreetMap.Mapnik');
