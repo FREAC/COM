@@ -1,4 +1,4 @@
-// Add locate functionality
+// create locate control object
 const locate = L.control.locate({
     strings: {
         title: "Location"
@@ -10,12 +10,10 @@ const locate = L.control.locate({
     },
     drawCircle: false,
     drawMarker: false
-}).addTo(map);
+});
 
-console.log(locate);
-
-
-map.on('locationfound', function (event) {
+// when location is found, zoom to the location
+function locateZoom(event) {
     // start the locate control
     locate.start();
 
@@ -38,4 +36,4 @@ map.on('locationfound', function (event) {
     locate.stop();
     $('.leaflet-control-locate').addClass("active following")
 
-});
+}
