@@ -17,18 +17,6 @@ function clearSelections() {
     }
 }
 
-// when enter button clicked, geocodeAddresses
-$('#geocoder-input').keypress(function (event) {
-    if (event.keyCode == 13) {
-        event.preventDefault();
-        geocodeAddress($('#geocoder-input').val());
-    }
-});
-
-// when search radius changes, chang circle size and re-query
-$('#radius-selected').change(function () {
-    changeCircleRadius();
-});
 
 // Map
 const map = new L.Map('map', {
@@ -58,6 +46,18 @@ map.on('locationfound', function (event) {
     locateZoom(event);
 });
 
+// when enter button clicked, geocodeAddresses
+$('#geocoder-input').keypress(function (event) {
+    if (event.keyCode == 13) {
+        event.preventDefault();
+        geocodeAddress($('#geocoder-input').val());
+    }
+});
+
+// when search radius changes, chang circle size and re-query
+$('#radius-selected').change(function () {
+    changeCircleRadius();
+});
 
 //Right-clicking the map triggers the search function
 map.on({
