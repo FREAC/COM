@@ -1,45 +1,18 @@
-// We'll append our markers to this global variable
-const json_group = new L.FeatureGroup();
-//This is our selection group
-const selection_group = new L.FeatureGroup();
-// This is the circle on the map that will be determine how many markers are around
-let circle;
-// this is the icon in the middle of the circle
-let circleIcon;
-// Marker in the middle of the circle
-let search_marker;
-
-let selection_marker;
-
-let table;
-
-// initial setup function to loop through json that
-// assigns marker and add to map
-async function setup() {
-    selection_group.clearLayers();
-    $.get("./js/data/group_care.json", function (json_data) {
-
-        _.each(json_data, function (num) {
-            markerLogic(num, json_group)
-        }, this);
-        map.addLayer(json_group)
-
-    });
-}
-// call initial setup function to add points to map
-setup();
-
+// clear all current selections on map
 function clearSelections() {
+
+    // make so the locate no longer appears active
     $('.leaflet-control-locate').removeClass("active following")
 
-    // Remove marker if one is already on map
-    if (search_marker) {
+    if (search_marker) { // Remove marker if one is already on map
+
         map.removeLayer(search_marker);
     }
-    if (circle) {
+    if (circle) { // Remove marker if one is already on map
         map.removeLayer(circle);
     }
-    if (selection_marker) {
+    if (selection_marker) { // Remove selection if one is already on map
+
         map.removeLayer(selection_marker);
     }
 }
@@ -57,9 +30,6 @@ $('#radius-selected').change(function () {
     changeCircleRadius();
 });
 
-// Base map
-let basemap = L.tileLayer.provider('OpenStreetMap.Mapnik');
-
 // Map
 const map = new L.Map('map', {
     renderer: L.canvas(),
@@ -73,11 +43,17 @@ const map = new L.Map('map', {
     ]
 });
 
+// Base map
+let basemap = L.tileLayer.provider('OpenStreetMap.Mapnik');
+
 // Add base layer to group
 map.addLayer(basemap);
 
 //Add locate control
 locate.addTo(map);
+
+// when the event button is clicked, and location found
+// zoom to location and draw circle
 map.on('locationfound', function (event) {
     locateZoom(event);
 });
@@ -88,16 +64,14 @@ map.on({
     // what happens when right click happens
     contextmenu: function (e) {
 
-        // locate.stop();
-
-
-
+        // remove the locate class to make it look inactive
         $('.leaflet-control-locate').removeClass("active following")
 
         // clear any current selections
         clearSelections();
         // disable location if it's currently active
 
+        // draw circle where right click happened
         const z = map.getZoom();
         if (z < 10) {
             geocodePlaceMarkersOnMap(e.latlng);
