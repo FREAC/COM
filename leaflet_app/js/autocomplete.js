@@ -13,6 +13,11 @@ const options = {
             // when suggestion clicked, add company name to the search bar
             var newvalue = jQuery("#geocoder-input").getSelectedItemData().CompanyNam;
             jQuery("#geocoder-input").val(newvalue);
+        },
+        onChooseEvent: function () {
+            var index = $("#geocoder-input").getSelectedItemData().CompanyNam;
+
+            $("#geocoder-input").val(index).trigger("change");
         }
     }
 };

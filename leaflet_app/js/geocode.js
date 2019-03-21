@@ -1,4 +1,3 @@
-
 // This uses the ESRI geocoder
 function geocodeAddress(address) {
 
@@ -12,7 +11,6 @@ function geocodeAddress(address) {
                 $('#geocoder-input').removeClass('is-invalid');
                 // hide invalide address message
                 $('.invalid-feedback').hide();
-
             }
             const coords = data.candidates[0].location;
             const location = {

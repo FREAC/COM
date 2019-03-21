@@ -50,9 +50,17 @@ map.on('locationfound', function (event) {
 $('#geocoder-input').keypress(function (event) {
     if (event.keyCode == 13) {
         event.preventDefault();
-        geocodeAddress($('#geocoder-input').val());
+        executeSearchBar();
     }
 });
+
+$('#geocoder-input').change(function (event) {
+    event.preventDefault();
+    executeSearchBar();
+});
+
+// when submit button clicked, search names and addresses
+$('#ESRI-Search').on('click', executeSearchBar);
 
 // when search radius changes, chang circle size and re-query
 $('#radius-selected').change(function () {

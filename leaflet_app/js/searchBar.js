@@ -50,5 +50,3 @@ async function executeSearchBar() {
 
     }
 }
-// when submit button clicked, search names and addresses
-$('#ESRI-Search').on('click', executeSearchBar);
