@@ -47,8 +47,10 @@ $('#radius-selected').change(function () {
     changeCircleRadius();
 });
 
-$("#checkboxes input[type='checkbox']").change(function (event) {
-    filterLocations(event);
+$("#checkboxes input[type='checkbox']").change(async function (event) {
+    await filterLocations(event);
+
+    pointsInCircle(circle, milesToMeters($('#radius-selected').val()), activeLayer);
 });
 
 
