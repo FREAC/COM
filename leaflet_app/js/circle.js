@@ -9,7 +9,7 @@ function getMiles(meters) {
 }
 
 // This figures out how many points are within our circle
-function pointsInCircle(circle, meters_user_set) {
+function pointsInCircle(circle, meters_user_set, groupLayer) {
     if (circle !== undefined) {
         // Only run if we have an address entered
         // Lat, long of circle
@@ -27,7 +27,7 @@ function pointsInCircle(circle, meters_user_set) {
         const results = [];
 
         // Loop through each point in JSON file
-        json_group.eachLayer(function (layer) {
+        groupLayer.eachLayer(function (layer) {
 
             // Lat, long of current point
             layer_lat_long = layer.getLatLng();
@@ -89,7 +89,7 @@ function pointsInCircle(circle, meters_user_set) {
 };
 
 // This places marker, circle on map
-function geocodePlaceMarkersOnMap(location, z = 10) {
+function geocodePlaceMarkersOnMap(location, z = 10, activeLayer = json_group) {
     // Clear any current selections that are on the map
     clearSelections();
 
@@ -124,7 +124,7 @@ function geocodePlaceMarkersOnMap(location, z = 10) {
         circle.setLatLng(event.target.getLatLng());
 
         // This will determine how many markers are within the circle
-        pointsInCircle(circle, milesToMeters($('#radius-selected').val()));
+        pointsInCircle(circle, milesToMeters($('#radius-selected').val()), activeLayer);
 
         // Redraw: Leaflet function
         circle.redraw();
@@ -138,7 +138,7 @@ function geocodePlaceMarkersOnMap(location, z = 10) {
 
     // This will determine how many markers are within the circle
     // Called when points are initially loaded
-    pointsInCircle(circle, milesToMeters($('#radius-selected').val()));
+    pointsInCircle(circle, milesToMeters($('#radius-selected').val()), activeLayer);
 }
 
 // Change circle radius when changed on page
@@ -146,7 +146,7 @@ function changeCircleRadius(e) {
     // Determine which geocode box is filled
     // And fire click event
     // This will determine how many markers are within the circle
-    pointsInCircle(circle, milesToMeters($('#radius-selected').val()))
+    pointsInCircle(circle, milesToMeters($('#radius-selected').val()), activeLayer)
     // Set radius of circle only if we already have one on the map
     if (circle) {
         circle.setRadius(milesToMeters($('#radius-selected').val()));

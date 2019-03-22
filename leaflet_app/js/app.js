@@ -1,23 +1,3 @@
-// clear all current selections on map
-function clearSelections() {
-
-    // make so the locate no longer appears active
-    $('.leaflet-control-locate').removeClass("active following")
-
-    if (search_marker) { // Remove marker if one is already on map
-
-        map.removeLayer(search_marker);
-    }
-    if (circle) { // Remove marker if one is already on map
-        map.removeLayer(circle);
-    }
-    if (selection_marker) { // Remove selection if one is already on map
-
-        map.removeLayer(selection_marker);
-    }
-}
-
-
 // Map
 const map = new L.Map('map', {
     renderer: L.canvas(),
@@ -67,6 +47,11 @@ $('#radius-selected').change(function () {
     changeCircleRadius();
 });
 
+$("#checkboxes input[type='checkbox']").change(function (event) {
+    filterLocations(event);
+});
+
+
 //Right-clicking the map triggers the search function
 map.on({
     // what happens when right click happens
@@ -82,9 +67,9 @@ map.on({
         // draw circle where right click happened
         const z = map.getZoom();
         if (z < 10) {
-            geocodePlaceMarkersOnMap(e.latlng);
+            geocodePlaceMarkersOnMap(e.latlng, activeLayer);
         } else {
-            geocodePlaceMarkersOnMap(e.latlng, z);
+            geocodePlaceMarkersOnMap(e.latlng, z, activeLayer);
         }
 
 

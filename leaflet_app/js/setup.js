@@ -13,6 +13,8 @@ let selection_marker;
 // array to store table in
 let table;
 
+let activeLayer;
+
 // initial setup function to loop through json that
 // assigns marker and add to map
 async function setup() {
@@ -25,6 +27,38 @@ async function setup() {
         map.addLayer(json_group)
 
     });
+}
+
+// return activelayer
+function checkActiveLayer() {
+    if (_.isEmpty(selection_group._layers) === false) {
+        console.log('json-group is active');
+
+        return json_group;
+    } else {
+        console.log('selection-group is active');
+
+        return selection_group;
+    }
+}
+
+// clear all current selections on map
+function clearSelections() {
+
+    // make so the locate no longer appears active
+    $('.leaflet-control-locate').removeClass("active following")
+
+    if (search_marker) { // Remove marker if one is already on map
+
+        map.removeLayer(search_marker);
+    }
+    if (circle) { // Remove marker if one is already on map
+        map.removeLayer(circle);
+    }
+    if (selection_marker) { // Remove selection if one is already on map
+
+        map.removeLayer(selection_marker);
+    }
 }
 
 // run the setup to query the file 
