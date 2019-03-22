@@ -21,7 +21,7 @@ $("#checkboxes input[type='checkbox']").change(async function (event) {
             targetLayer.data['Latitude'] = targetLayer._latlng.lat;
             targetLayer.data['Longitude'] = targetLayer._latlng.lng;
             // if EITHER meets the condition, add it to the map
-            if ((targetLayer.data.Category === "Public School") || (targetLayer.data.Category === "Private School")) {
+            if ((targetLayer.data.Category === "Public School") && (targetLayer.data.Category === "Private School")) {
                 markerLogic(targetLayer.data, selection_group);
             }
 
