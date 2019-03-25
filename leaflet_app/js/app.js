@@ -48,6 +48,7 @@ $('#radius-selected').change(function () {
 });
 
 $("#checkboxes input[type='checkbox']").change(async function (event) {
+    // when any checkbox inside the div "checkboxes" changes, run this function
     await filterLocations(event);
 
     pointsInCircle(circle, milesToMeters($('#radius-selected').val()), activeLayer);
