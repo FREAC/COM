@@ -37,11 +37,11 @@ function markerLogic(num, targetLayer) {
 
     // Build the data
     layer_marker.data = {
-        'CompanyName': num['CompanyNam'],
+        'CompanyNam': num['CompanyNam'],
         'CountyName': num['CountyName'],
         'CountyCode': num['CountyCode'],
-        'CountyNum': num['CountyNumb'],
-        'Category': num['ProgramSub']
+        'CountyNumb': num['CountyNumb'],
+        'ProgramSub': num['ProgramSub']
     };
 
     // Add events to marker
@@ -89,7 +89,7 @@ function markerLogic(num, targetLayer) {
                 // loop through data to see if clicked feature matches
                 for (let i in data) {
                     // if we find a layer match, select it
-                    if (e.target.data.CompanyName === data[i].name) {
+                    if (e.target.data.CompanyNam === data[i].name) {
                         // deselect previous row selection
                         table.deselectRow();
                         // select new row selection
@@ -99,6 +99,7 @@ function markerLogic(num, targetLayer) {
             }
         }
     });
+    // add the marker onto the targetLayer
     targetLayer.addLayer(layer_marker);
 
     // Close for loop
