@@ -1,4 +1,5 @@
 function setAutocomplete(json_data) { // Options for the autocomplete plugin
+    console.log(json_data);
     const options = {
         // url: "./js/data/group_care.json",
         data: json_data,
@@ -25,4 +26,19 @@ function setAutocomplete(json_data) { // Options for the autocomplete plugin
 
     //event for when the autocomplete is happening
     $('#geocoder-input').easyAutocomplete(options);
+}
+
+// refactor the feature group to make an array of features from the group layer
+function configureAutocomplete(featureGroup) {
+    let layers = featureGroup._layers;
+
+    const data_group = [];
+
+    for (let point in layers) {
+        data_group.push(layers[point].data);
+
+    }
+
+    console.log(data_group);
+    setAutocomplete(data_group);
 }
