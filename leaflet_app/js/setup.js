@@ -25,6 +25,8 @@ async function setup() {
             markerLogic(num, json_group)
         }, this);
         map.addLayer(json_group)
+        //instantiate autocomplete for initial data
+        setAutocomplete(json_data);
 
     });
 }
