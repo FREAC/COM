@@ -22,16 +22,18 @@ async function filterLocations(event) {
             // extract latitude and longitude
             targetLayer.data['Latitude'] = targetLayer._latlng.lat;
             targetLayer.data['Longitude'] = targetLayer._latlng.lng;
-            targetLayer.data['CompanyNam'] = targetLayer.data.CompanyName;
+            targetLayer.data['CompanyNam'] = targetLayer.data.CompanyNam;
 
             // if EITHER meets the condition, add it to the map
-            if ((targetLayer.data.Category === "Public School") && (targetLayer.data.Category === "Private School")) {
+            if ((targetLayer.data.ProgramSub === "Public School") && (targetLayer.data.ProgramSub === "Private School")) {
                 markerLogic(targetLayer.data, selection_group);
             }
 
         }
         // Add our selection markers in our JSON file on the map
         map.addLayer(selection_group);
+
+        configureAutocomplete(selection_group);
 
         // set active layer
         activeLayer = selection_group;
@@ -51,39 +53,53 @@ async function filterLocations(event) {
                 // extract latitude and longitude
                 targetLayer.data['Latitude'] = targetLayer._latlng.lat;
                 targetLayer.data['Longitude'] = targetLayer._latlng.lng;
-                targetLayer.data['CompanyNam'] = targetLayer.data.CompanyName;
+                targetLayer.data['CompanyNam'] = targetLayer.data.CompanyNam;
 
                 // if the feature has a matching attribute, add it to the map
-                if (targetLayer.data.Category === "Private School") {
+                if (targetLayer.data.ProgramSub === "Private School") {
                     markerLogic(targetLayer.data, selection_group);
                 }
 
             }
             // Add our selection markers in our JSON file on the map
             map.addLayer(selection_group);
+
+            configureAutocomplete(selection_group);
 
             // set active layer
             activeLayer = selection_group;
 
         } else if (publicSchool[0].checked === true) {
 
+            console.log(json_group._layers[65]);
+
+
             // for each feature in our json
             for (layer in json_group._layers) {
                 const targetLayer = json_group._layers[layer];
+                // console.log(targetLayer);
 
                 // extract latitude and longitude
                 targetLayer.data['Latitude'] = targetLayer._latlng.lat;
                 targetLayer.data['Longitude'] = targetLayer._latlng.lng;
-                targetLayer.data['CompanyNam'] = targetLayer.data.CompanyName;
+                targetLayer.data['CompanyNam'] = targetLayer.data.CompanyNam;
+                targetLayer.data['CountyNum'] = targetLayer.data.CountyNumb;
+                // targetLayer.data['ProgramSub'] = targetLayer.data.ProgramSub;
+
 
                 // if the feature has a matching attribute, add it to the map
-                if (targetLayer.data.Category === "Public School") {
+                if (targetLayer.data.ProgramSub === "Public School") {
+
                     markerLogic(targetLayer.data, selection_group);
                 }
 
             }
+
+
             // Add our selection markers in our JSON file on the map
             map.addLayer(selection_group);
+
+            configureAutocomplete(selection_group);
 
             // set active layer
             activeLayer = selection_group;
@@ -94,6 +110,8 @@ async function filterLocations(event) {
         selection_group.clearLayers();
         // add the full layer back to the map
         map.addLayer(json_group);
+
+        configureAutocomplete(json_group);
 
         // set active layer
         activeLayer = json_group;
