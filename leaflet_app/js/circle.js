@@ -39,7 +39,6 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
             // See if meters is within raduis
             // The user has selected
             if (distance_from_layer_circle <= meters_user_set) {
-                console.log(layer.data);
                 counter_points_in_circle += 1;
                 results.push({
                     name: layer.data.CompanyNam,
@@ -50,8 +49,6 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
                 });
             }
         });
-
-        console.log(results);
 
         //Sort the list by increasing distance from point
         results.sort(function (a, b) {
@@ -73,8 +70,6 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
             });
         }
         // add tabulator object to screen
-        console.log(tableResults);
-
         insertTabulator(tableResults);
 
         // If we have just one result, we'll change the wording
