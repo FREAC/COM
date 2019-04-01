@@ -27,17 +27,33 @@ map.on('locationfound', function (event) {
 });
 
 // when enter button clicked, geocodeAddresses
-$('#geocoder-input').keypress(function (event) {
-    if (event.keyCode == 13) {
-        event.preventDefault();
-        executeSearchBar();
+// $('geocoder-input').keypress(function (event) {
+//     if (event.keyCode === 13) {
+//         console.log('is this going to refresh')
+//         event.preventDefault();
+//         event.stopPropagation();
+//         // executeSearchBar();
+//     }
+// });
+
+$("form").submit(function (e) {
+    console.log(e);
+    e.preventDefault();
+
+    if ($("input:first").val() !== '') {
+        console.log('it is not empty');
+        return;
     }
+
+    // e.stopPropagation();
 });
 
-$('#geocoder-input').change(function (event) {
-    event.preventDefault();
-    executeSearchBar();
-});
+// $('#geocoder-input').change(function (event) {
+//     event.preventDefault();
+//     // executeSearchBar();
+//     console.log("helloooooo");
+
+// });
 
 // when submit button clicked, search names and addresses
 $('#ESRI-Search').on('click', executeSearchBar);

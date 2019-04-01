@@ -1,5 +1,4 @@
 function setAutocomplete(json_data) { // Options for the autocomplete plugin
-    console.log(json_data);
     const options = {
         // url: "./js/data/group_care.json",
         data: json_data,
@@ -13,13 +12,27 @@ function setAutocomplete(json_data) { // Options for the autocomplete plugin
             },
             onClickEvent: function () {
                 // when suggestion clicked, add company name to the search bar
-                var newvalue = jQuery("#geocoder-input").getSelectedItemData().CompanyNam;
-                jQuery("#geocoder-input").val(newvalue);
+                var newValue = jQuery("#geocoder-input").getSelectedItemData().CompanyNam;
+                jQuery("#geocoder-input").val(newValue);
+                executeSearchBar();
             },
             onChooseEvent: function () {
-                var index = $("#geocoder-input").getSelectedItemData().CompanyNam;
+                console.log('hi!');
 
-                $("#geocoder-input").val(index).trigger("change");
+                var newValue = $("#geocoder-input").getSelectedItemData().CompanyNam;
+
+                if (newValue) {
+                    console.log('hello my old friend');
+                    // $("#geocoder-input").val(newValue).trigger("change");
+                    executeSearchBar();
+
+                } else {
+                    console.log('no result found');
+                    // change color of text to bootstrap is-invalid class to show user that their input was invalid
+                    $('#geocoder-input').addClass("invalid-feedback");
+                    // add invalid address message
+                    $('.invalid-feedback').show();
+                }
             }
         }
     };
