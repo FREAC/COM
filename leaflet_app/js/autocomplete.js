@@ -20,39 +20,36 @@ function setAutocomplete(json_data) { // Options for the autocomplete plugin
                 var newValue = $("#geocoder-input").getSelectedItemData().CompanyNam;
 
                 if (newValue) {
-                    $('#geocoder-input').removeClass("invalid-feedback");
-
-                    $('.invalid-feedback').hide();
+                    // results were found!
+                    isNotInvalid();
 
                     // $("#geocoder-input").val(newValue).trigger("change");
                     executeSearchBar();
 
                 } else {
-                    console.log('no result found');
-                    // change color of text to bootstrap is-invalid class to show user that their input was invalid
-                    $('#geocoder-input').addClass("invalid-feedback");
-                    // add invalid address message
-                    $('.invalid-feedback').show();
+                    // results were not found
+                    isInvalid();
                 }
             }
         }
     };
 
-    //event for when the autocomplete is happening
+    // event for when the autocomplete is happening
     $('#geocoder-input').easyAutocomplete(options);
 }
 
 // refactor the feature group to make an array of features from the group layer
 function configureAutocomplete(featureGroup) {
+    // get into "layers" (features object)
     let layers = featureGroup._layers;
 
     const data_group = [];
 
     for (let point in layers) {
+        // push each point data (location) to data group array
         data_group.push(layers[point].data);
-
     }
 
-    console.log(data_group);
+    // run the autocomplete on this group
     setAutocomplete(data_group);
 }

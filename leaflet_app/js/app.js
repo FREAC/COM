@@ -40,12 +40,17 @@ $("form").submit(function (e) {
     console.log(e);
     e.preventDefault();
 
-    if ($("input:first").val() !== '') {
+    // if ($("input:first").val() !== '') {
+    //     executeSearchBar();
+    //     return;
+    // }
+
+    if ($("#geocoder-input").val() !== '') {
         executeSearchBar();
         return;
+    } else {
+        isInvalid();
     }
-
-    // e.stopPropagation();
 });
 
 // $('#geocoder-input').change(function (event) {

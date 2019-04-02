@@ -63,6 +63,25 @@ function clearSelections() {
     }
 }
 
+// functions to handle the styling of invalid or valid inputs to the search bar
+function isInvalid() {
+    if (!$('#geocoder-input').hasClass("is-invalid")) {
+        // change color of text to bootstrap is-invalid class to show user that their input was invalid
+        $('#geocoder-input').addClass("is-invalid");
+        // add invalid address message
+        $('.invalid-feedback').show();
+    }
+}
+
+function isNotInvalid() {
+    // if the is-invalid class is present, remove it
+    if ($('#geocoder-input').hasClass('is-invalid')) {
+        $('#geocoder-input').removeClass('is-invalid');
+        // hide invalide address message
+        $('.invalid-feedback').hide();
+    }
+}
+
 // run the setup to query the file 
 
 setup();
