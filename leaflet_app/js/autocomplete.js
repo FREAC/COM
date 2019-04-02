@@ -17,12 +17,13 @@ function setAutocomplete(json_data) { // Options for the autocomplete plugin
                 executeSearchBar();
             },
             onChooseEvent: function () {
-                console.log('hi!');
-
                 var newValue = $("#geocoder-input").getSelectedItemData().CompanyNam;
 
                 if (newValue) {
-                    console.log('hello my old friend');
+                    $('#geocoder-input').removeClass("invalid-feedback");
+
+                    $('.invalid-feedback').hide();
+
                     // $("#geocoder-input").val(newValue).trigger("change");
                     executeSearchBar();
 

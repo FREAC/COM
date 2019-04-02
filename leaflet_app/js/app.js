@@ -41,7 +41,7 @@ $("form").submit(function (e) {
     e.preventDefault();
 
     if ($("input:first").val() !== '') {
-        console.log('it is not empty');
+        executeSearchBar();
         return;
     }
 

@@ -8,6 +8,8 @@ function geocodeAddress(address) {
         if (data.candidates.length !== 0) {
             // if the is-invalid class is present, remove it
             if ($('#geocoder-input').hasClass('is-invalid')) {
+                console.log('the input waS INVALID');
+
                 $('#geocoder-input').removeClass('is-invalid');
                 // hide invalide address message
                 $('.invalid-feedback').hide();
