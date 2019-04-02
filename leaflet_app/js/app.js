@@ -37,18 +37,14 @@ map.on('locationfound', function (event) {
 // });
 
 $("form").submit(function (e) {
-    console.log(e);
+    // prevent refresh
     e.preventDefault();
 
-    // if ($("input:first").val() !== '') {
-    //     executeSearchBar();
-    //     return;
-    // }
-
+    // if the search bar is not empty, execute a search
     if ($("#geocoder-input").val() !== '') {
         executeSearchBar();
         return;
-    } else {
+    } else { // immediately call the input invalid if nothing is in the search bar
         isInvalid();
     }
 });
