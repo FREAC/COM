@@ -20,21 +20,14 @@ map.addLayer(basemap);
 //Add locate control
 locate.addTo(map);
 
+
+geosearch.addTo(map);
+
 // when the event button is clicked, and location found
 // zoom to location and draw circle
 map.on('locationfound', function (event) {
     locateZoom(event);
 });
-
-// when enter button clicked, geocodeAddresses
-// $('geocoder-input').keypress(function (event) {
-//     if (event.keyCode === 13) {
-//         console.log('is this going to refresh')
-//         event.preventDefault();
-//         event.stopPropagation();
-//         // executeSearchBar();
-//     }
-// });
 
 $("form").submit(function (e) {
     // prevent refresh
@@ -48,13 +41,6 @@ $("form").submit(function (e) {
         isInvalid();
     }
 });
-
-// $('#geocoder-input').change(function (event) {
-//     event.preventDefault();
-//     // executeSearchBar();
-//     console.log("helloooooo");
-
-// });
 
 // when submit button clicked, search names and addresses
 $('#ESRI-Search').on('click', executeSearchBar);
