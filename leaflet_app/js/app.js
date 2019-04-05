@@ -20,21 +20,34 @@ map.addLayer(basemap);
 //Add locate control
 locate.addTo(map);
 
+var care_facilities = L.esri.featureLayer({
+    url: 'https://maps.freac.fsu.edu/arcgis/rest/services/FREAC/group_care/MapServer/0',
+});
+console.log(care_facilities);
+
+var arcgisOnline = L.esri.Geocoding.arcgisOnlineProvider();
+
+var searchControl = L.esri.Geocoding.geosearch({
+    providers: [
+        arcgisOnline,
+        L.esri.Geocoding.mapServiceProvider({
+            label: 'Facilities',
+            url: 'https://maps.freac.fsu.edu/arcgis/rest/services/FREAC/group_care/MapServer',
+            layers: [0],
+            searchFields: ['companynam'],
+            formatSuggestion: function (feature) {
+                return feature.properties.companynam + ' - ' + feature.properties.completest
+            }
+        })
+    ]
+}).addTo(map);
+
 // when the event button is clicked, and location found
 // zoom to location and draw circle
 map.on('locationfound', function (event) {
     locateZoom(event);
 });
 
-// when enter button clicked, geocodeAddresses
-// $('geocoder-input').keypress(function (event) {
-//     if (event.keyCode === 13) {
-//         console.log('is this going to refresh')
-//         event.preventDefault();
-//         event.stopPropagation();
-//         // executeSearchBar();
-//     }
-// });
 
 $("form").submit(function (e) {
     // prevent refresh
@@ -48,13 +61,6 @@ $("form").submit(function (e) {
         isInvalid();
     }
 });
-
-// $('#geocoder-input').change(function (event) {
-//     event.preventDefault();
-//     // executeSearchBar();
-//     console.log("helloooooo");
-
-// });
 
 // when submit button clicked, search names and addresses
 $('#ESRI-Search').on('click', executeSearchBar);
