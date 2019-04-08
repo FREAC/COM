@@ -20,8 +20,20 @@ map.addLayer(basemap);
 //Add locate control
 locate.addTo(map);
 
-
 geosearch.addTo(map);
+
+
+// Call the getContainer routine.
+var htmlObject = geosearch.getContainer();
+// Get the desired parent node.
+var a = document.getElementById('search-box');
+
+// Finally append that node to the new parent, recursively searching out and re-parenting nodes.
+function setParent(el, newParent) {
+    newParent.appendChild(el);
+}
+setParent(htmlObject, a);
+
 
 // when the event button is clicked, and location found
 // zoom to location and draw circle

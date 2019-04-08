@@ -35,7 +35,7 @@ function setAutocomplete(json_data) { // Options for the autocomplete plugin
     };
 
     // event for when the autocomplete is happening
-    $('#geocoder-input').easyAutocomplete(options);
+    // $('#geocoder-input').easyAutocomplete(options);
 }
 
 // refactor the feature group to make an array of features from the group layer
