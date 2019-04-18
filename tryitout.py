@@ -1,9 +1,8 @@
-import ../HERE
+import HERE
 
-path = r'D:\Projects\COM\data\CPEIP_Unique_Sales_Locations.csv'
-addr = '415 N McKinley Street Little Rock AR 72205'
+path = r'D:\Projects\CPP\CPEIP_GeoMap.csv'
 
-HERE.Geocoder(path)
+HERE.Geocoder(path, outfile='CPP.csv', fields=['address', 'city', 'state', 'zip'], fl=True)
 
 
 

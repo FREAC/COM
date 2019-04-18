@@ -35,11 +35,11 @@
 # Import the HERE module
 >>> import HERE
 # Create a Geocoder object using a CSV file as input
->>> Geocoder('my_addresses.csv', outfile='my_geocoded_addresses.csv')
+>>> HERE.Geocoder('my_addresses.csv', outfile='my_geocoded_addresses.csv')
 # Create a Geocoder object and specify the fields to use
->>> Geocoder('my_addresses.csv', fields=['STREET', 'CITY'])
+>>> HERE.Geocoder('my_addresses.csv', fields=['STREET', 'CITY'])
 # Create a Geocoder object using a single address as input and limit results to Florida
->>> Geocoder('296 Champions Way Tallahassee FL 32304', fl=True)
+>>> HERE.Geocoder('296 Champions Way Tallahassee FL 32304', fl=True)
 ```
 
 ### How to interpret the output:

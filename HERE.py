@@ -10,14 +10,6 @@ import requests
 
 class Cleaner:
 
-    @staticmethod
-    def remove_spaces(string):
-
-        if string:
-            string = string.strip()
-
-        return string
-
     def clean_data(self, data):
 
         clean_data = []
@@ -25,7 +17,7 @@ class Cleaner:
             item = self._remove_po_box(item)
             item = list(self._remove_none(item))
             clean_data.append(' '.join(item).strip().replace(',', '').replace('  ', ' '))
-        return list(dict.fromkeys(clean_data))
+        return clean_data
 
     @staticmethod
     def _remove_po_box(data):
@@ -46,6 +38,14 @@ class Cleaner:
 
         return filter(None, data)
 
+    @staticmethod
+    def remove_spaces(string):
+
+        if string:
+            string = string.strip()
+
+        return string
+
 
 class AddressData(Cleaner):
 
@@ -64,8 +64,8 @@ class AddressData(Cleaner):
         count = len(data)
 
         if count > self.warning_num:
-            s = input('{} records will be geocoded. Continue? Enter [Y]es or [N]o: '.format(count)).lower()
-            if s is not 'y':
+            s = input(f'{count} records will be geocoded. Continue? Enter [Y]es or [N]o: ').lower()
+            if s != 'y':
                 data = []
         self.data = data
 
@@ -83,17 +83,18 @@ class AddressData(Cleaner):
 
 class Geocoder(AddressData):
 
-    def __init__(self, infile, outfile='HERE.csv', fields=None, fl=False):
+    def __init__(self, infile, outfile='HERE.csv', fields=None, fl=False, combine=False):
 
         super().__init__(infile, fields)
         self.outfile = outfile
         self.FL = fl
+        self.combine = combine
         self.app_id = '3peEKduvqXuYDzZZnj0g'
         self.app_code = 'uur4uqOEz0zJZZWRr1kg1w'
         self.additional_data = 'IncludeMicroPointAddresses,true;PreserveUnitDesignators,true'
 
         for address in self.data:
-            print(address)
+            print(f'Geocoding {address}')
             self.find(address)
 
     def find(self, data):
