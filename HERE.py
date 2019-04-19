@@ -261,3 +261,28 @@ def csv2json(fname, json_fname=None, fields=None):
             json.dump(data, outfile, default=date2string)
 
     return json.dumps(data, default=date2string)
+
+
+def clean_csv(infile, outfile):
+
+    with open(infile) as csv_in, open(outfile, 'w') as csv_out:
+        reader = csv.DictReader(csv_in)
+        writer = csv.DictWriter(csv_out, reader.fieldnames, lineterminator='\n')
+        writer.writeheader()
+
+        for row in reader:
+            for k in row:
+                row[k] = row[k].strip()
+                if k == 'phone':
+                    num = re.sub(r'\D', '', row[k])
+
+                    if num:
+                        new_num = '{}-{}-{}'.format(num[:3], num[3:6], num[6:10])
+                        if len(num) > 10:
+                            new_num += ' x{}'.format(num[10:])
+                        row[k] = new_num
+                if k == 'service':
+                    service = re.sub(r'[^\w\,]', "", row[k])
+                    row[k] = service
+
+            writer.writerow(row)
