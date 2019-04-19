@@ -284,5 +284,7 @@ def clean_csv(infile, outfile):
                 if k == 'service':
                     service = re.sub(r'[^\w\,]', "", row[k])
                     row[k] = service
+                if k == 'state':
+                    row[k] = row[k].upper()
 
             writer.writerow(row)
