@@ -49,7 +49,7 @@ class Cleaner:
 
 class AddressData(Cleaner):
 
-    def __init__(self, input_text, fields=None):
+    def __init__(self, input_text, fields):
 
         self.warning_num = 1
         self.input_text = input_text
@@ -76,9 +76,16 @@ class AddressData(Cleaner):
 
             if not self.fields:
                 self.fields = reader.fieldnames
+            else:
+                sf = set(self.fields)
+                srf = set(reader.fieldnames)
+                if not sf.issubset(srf):
+                    difference = sf.difference(srf)
+                    print('The following fields do not exist in the CSV:\n\t{}'.format(', '.join(difference)))
+                    print('All input fields must match before continuing.')
+                    return []
 
-            return [list((self.remove_spaces(row[field]) for field in self.fields if field in row))
-                    for row in reader]
+        return [list((self.remove_spaces(row[field]) for field in self.fields if field in row)) for row in reader]
 
 
 class Geocoder(AddressData):
@@ -283,7 +290,8 @@ def clean_csv(infile, outfile):
                         row[k] = new_num
                 if k == 'service':
                     service = re.sub(r'[^\w\,]', "", row[k])
-                    row[k] = service
+                    name = ["'{}'".format(county.upper()) for county in service.split(',')]
+                    row[k] = ', '.join(name)
                 if k == 'state':
                     row[k] = row[k].upper()
 
