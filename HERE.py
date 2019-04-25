@@ -85,7 +85,7 @@ class AddressData(Cleaner):
                     print('All input fields must match before continuing.')
                     return []
 
-        return [list((self.remove_spaces(row[field]) for field in self.fields if field in row)) for row in reader]
+            return [list((self.remove_spaces(row[field]) for field in self.fields if field in row)) for row in reader]
 
 
 class Geocoder(AddressData):
