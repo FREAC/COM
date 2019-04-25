@@ -71,6 +71,7 @@ class AddressData(Cleaner):
 
     def get_data(self):
 
+        data = []
         with open(self.input_text) as csvfile:
             reader = csv.DictReader(csvfile)
 
@@ -83,19 +84,29 @@ class AddressData(Cleaner):
                     difference = sf.difference(srf)
                     print('The following fields do not exist in the CSV:\n\t{}'.format(', '.join(difference)))
                     print('All input fields must match before continuing.')
-                    return []
+                    return data
 
-        return [list((self.remove_spaces(row[field]) for field in self.fields if field in row)) for row in reader]
+            for row in reader:
+                address = []
+                for field in self.fields:
+                    if field in row:
+                        address.append(self.remove_spaces(row[field]))
+                data.append(address)
+            print(data)
+
+        # [list((self.remove_spaces(row[field]) for field in self.fields if field in row)) for row in reader]
+
+        return data
 
 
 class Geocoder(AddressData):
 
-    def __init__(self, infile, outfile='HERE.csv', fields=None, fl=False, combine=False):
+    def __init__(self, infile, outfile='HERE.csv', fields=None, key=None, fl=False):
 
         super().__init__(infile, fields)
         self.outfile = outfile
+        self.key = key
         self.FL = fl
-        self.combine = combine
         self.app_id = '3peEKduvqXuYDzZZnj0g'
         self.app_code = 'uur4uqOEz0zJZZWRr1kg1w'
         self.additional_data = 'IncludeMicroPointAddresses,true;PreserveUnitDesignators,true'

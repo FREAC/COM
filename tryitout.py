@@ -7,7 +7,7 @@ import HERE
 inpath = 'MMHDP.csv'
 outpath = 'trouble.csv'
 
-HERE.Geocoder(inpath, outfile=outpath, fields=['address', 'Buite', 'City', 'State', 'Zip'])
+HERE.Geocoder(inpath, outfile=outpath, fields=['Address', 'Suite', 'City', 'State', 'Zip'])
 
 # HERE.clean_csv(inpath, d + 'test.csv')
 
