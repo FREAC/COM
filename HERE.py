@@ -14,9 +14,10 @@ class Cleaner:
 
         clean_data = []
         for item in data:
-            item = self._remove_po_box(item)
-            item = list(self._remove_none(item))
-            clean_data.append(' '.join(item).strip().replace(',', '').replace('  ', ' '))
+            address, key = item
+            address = self._remove_po_box(address)
+            address = list(self._remove_none(address))
+            clean_data.append(((' '.join(address).replace(',', '').replace('  ', ' ')), key))
         return clean_data
 
     @staticmethod
@@ -49,11 +50,11 @@ class Cleaner:
 
 class AddressData(Cleaner):
 
-    def __init__(self, input_text, fields):
+    def __init__(self, input_text, fields, key):
 
-        self.warning_num = 1
         self.input_text = input_text
         self.fields = fields
+        self.key = key
 
         try:
             new_data = self.get_data()
@@ -63,7 +64,7 @@ class AddressData(Cleaner):
 
         count = len(data)
 
-        if count > self.warning_num:
+        if count > 1:
             s = input(f'{count} records will be geocoded. Continue? Enter [Y]es or [N]o: ').lower()
             if s != 'y':
                 data = []
@@ -73,59 +74,64 @@ class AddressData(Cleaner):
 
         data = []
         with open(self.input_text) as csvfile:
+
             reader = csv.DictReader(csvfile)
 
             if not self.fields:
-                self.fields = reader.fieldnames
-            else:
-                sf = set(self.fields)
-                srf = set(reader.fieldnames)
-                if not sf.issubset(srf):
-                    difference = sf.difference(srf)
-                    print('The following fields do not exist in the CSV:\n\t{}'.format(', '.join(difference)))
-                    print('All input fields must match before continuing.')
-                    return data
+                self.fields = reader.fieldnames[:]
+            if self.key:
+                self.fields.append(self.key)
+
+            sf = set(self.fields)
+            srf = set(reader.fieldnames)
+
+            if not sf.issubset(srf):
+                difference = sf.difference(srf)
+                print('The following fields do not exist in the CSV:\n\t{}'.format(', '.join(difference)))
+                print('All input fields must match before continuing.')
+                return data
 
             for row in reader:
                 address = []
+                key = None
                 for field in self.fields:
                     if field in row:
-                        address.append(self.remove_spaces(row[field]))
-                data.append(address)
-            print(data)
-
-        # [list((self.remove_spaces(row[field]) for field in self.fields if field in row)) for row in reader]
+                        if field != self.key:
+                            address.append(self.remove_spaces(row[field]))
+                        else:
+                            key = self.remove_spaces(row[field])
+                data.append((address, key))
 
         return data
 
 
 class Geocoder(AddressData):
 
-    def __init__(self, infile, outfile='HERE.csv', fields=None, key=None, fl=False):
+    def __init__(self, infile, outfile='HERE.csv', fields=None, key=None, fl=True):
 
-        super().__init__(infile, fields)
+        super().__init__(infile, fields, key)
         self.outfile = outfile
-        self.key = key
         self.FL = fl
         self.app_id = '3peEKduvqXuYDzZZnj0g'
         self.app_code = 'uur4uqOEz0zJZZWRr1kg1w'
         self.additional_data = 'IncludeMicroPointAddresses,true;PreserveUnitDesignators,true'
 
         for address in self.data:
-            print(f'Geocoding {address}')
+            print(f'Geocoding {address[0]}')
             self.find(address)
 
     def find(self, data):
 
-        json_response = self.geocode_string(data)
+        address, key = data
+        json_response = self.geocode_string(address)
 
         try:
             results = json_response['Response']['View'][0]['Result']
             for result in results:
                 rows = self.format_result(result)
-                self.write_to_csv(data, rows)
+                self.write_to_csv(address, key, rows)
         except IndexError:
-            self.write_to_csv(data)
+            self.write_to_csv(address, key)
 
     def geocode_string(self, address):
 
@@ -192,21 +198,31 @@ class Geocoder(AddressData):
 
         return rows
 
-    def write_to_csv(self, data, rows=[[None] * 15]):
+    def write_to_csv(self, address, key=None, rows=[[None] * 15]):
 
         if not os.path.isfile(self.outfile):
-            header = ['Input', 'Relevance', 'MatchLevel', 'MQ_PostalCode', 'MQ_City', 'MQ_Street', 'MQ_HouseNumber',
-                      'MQ_Unit', 'County', 'PostalCode', 'City', 'Street', 'HouseNumber', 'Unit', 'Longitude',
-                      'Latitude']
-            with open(self.outfile, 'w') as csvfile:
-                line = '{}\n'.format(','.join(str(column) for column in header))
-                csvfile.write(line)
+            self.write_header()
 
         with open(self.outfile, 'a') as csvfile:
             for row in rows:
-                row = [data] + row
+                if self.key:
+                    row = [key, address] + row
+                else:
+                    row = [address] + row
                 line = '{}\n'.format(','.join(str(column) for column in row))
                 csvfile.write(line)
+        return
+
+    def write_header(self):
+
+        header = ['Input', 'Relevance', 'MatchLevel', 'MQ_PostalCode', 'MQ_City', 'MQ_Street', 'MQ_HouseNumber',
+                  'MQ_Unit', 'County', 'PostalCode', 'City', 'Street', 'HouseNumber', 'Unit', 'Longitude',
+                  'Latitude']
+        if self.key:
+            header = [self.key] + header
+        with open(self.outfile, 'w') as csvfile:
+            line = '{}\n'.format(','.join(str(column) for column in header))
+            csvfile.write(line)
         return
 
 

@@ -14,9 +14,9 @@
     1. To approve the geocoding process, press `Y` at the prompt, followed by the `Enter` key.
     2. To stop the geocoding process, press any other key at the prompt, followed by the `Enter` key.
 
-`Geocoder(infile, outfile='HERE.csv', fields=None, fl=False)`
+`Geocoder(infile, outfile='HERE.csv', fields=None, key=None, fl=False)`
 
-- `infile`: a CSV file containing the address data to be geocoded
+- `infile`: *(required)* a CSV file containing the address data to be geocoded
   - The input file must be in CSV format and must contain headers
   - Optionally, a single address in string format can be provided instead of a file name
 
@@ -25,11 +25,16 @@
   - The default file name is __HERE.csv__
 
 - `fields`: the fields of the input CSV file containing the address data to geocode
-  - By default, all fields of the input CSV file are included for geocoding
   - Fields should be strings in list format: `['ADDRESS', 'CITY', 'ZIP']`
+  - Field names must have correct capitalization
+  - By default, all fields of the input CSV file are included for geocoding
+
+- `key`: a field to be included in the output CSV file for reference
+  - The field name must have correct capitalization
+  - The default setting does __not__ include a key
 
 - `fl`: whether to limit the geocoder's results to Florida locations
-  - The default setting does __not__ limit the geocoder's results
+  - The default setting is `True`
 
 ```python
 # Import the HERE module
@@ -38,8 +43,10 @@
 >>> HERE.Geocoder('my_addresses.csv', outfile='my_geocoded_addresses.csv')
 # Create a Geocoder object and specify the fields to use
 >>> HERE.Geocoder('my_addresses.csv', fields=['STREET', 'CITY'])
-# Create a Geocoder object using a single address as input and limit results to Florida
->>> HERE.Geocoder('296 Champions Way Tallahassee FL 32304', fl=True)
+# Create a Geocoder object and specify a reference key for the output
+>>> HERE.Geocoder('my_addresses.csv', fields=['STREET', 'CITY'], key='Agency')
+# Create a Geocoder object using a single address as input and do not limit the results to Florida
+>>> HERE.Geocoder('10th St. & Constitution Ave. NW Washington, D.C. 20560', fl=False)
 ```
 
 ### How to interpret the output:
