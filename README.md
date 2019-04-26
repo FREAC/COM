@@ -27,7 +27,7 @@
 - `fields`: the fields of the input CSV file containing the address data to geocode
   - Fields should be strings in list format: `['ADDRESS', 'CITY', 'ZIP']`
   - Field names must have correct capitalization
-  - By default, all fields of the input CSV file are included for geocoding
+  - By default, __all fields__ of the input CSV file are included for geocoding
 
 - `key`: a field to be included in the output CSV file for reference
   - The field name must have correct capitalization
