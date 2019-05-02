@@ -4,17 +4,7 @@
 <head>
 	<title>Group Care with Leaflet</title>
 	<meta charset="utf-8">
-
-	<!-- Mobile meta tags-->
-	<meta name="HandheldFriendly" content="True">
-	<meta name="MobileOptimized" content="320" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-	<meta name="apple-touch-fullscreen" content="yes" />
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta http-equiv="cleartype" content="on">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-
 
 	<!-- CSS: Libs -->
 	<link rel="stylesheet" href="css/lib/bootstrap.css" />
@@ -25,11 +15,6 @@
 	<link rel="stylesheet" href="css/lib/leaflet.infoButton.css" />
 	<link rel="stylesheet" href="css/lib/easy-autocomplete.min.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.66.1/dist/L.Control.Locate.min.css" />
-
-
-
-	<!-- CSS: Custom -->
-	<link rel="stylesheet" href="css/styles.css" />
 
 	<!-- JS: Libs -->
 	<script type="text/javascript" src="js/lib/jquery.js"></script>
@@ -42,22 +27,18 @@
 	<script type="text/javascript" src="js/lib/jquery.easy-autocomplete.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.66.1/dist/L.Control.Locate.min.js" charset="utf-8"></script>
 
-
-
-
-
-
+	<!-- CSS: Custom -->
+	<link rel="stylesheet" href="css/styles.css" />
 
 </head>
-
 <body>
 
 	<div class="container-fluid">
 		<div class="row content" id="full-page">
 			<div class="col-sm-6 col-md-5 col-lg-5 col-xl-5  sidenav" id="legend">
-				<!-- put the sidebar here-->
-				<h3>FSU College of Medicine<br>Group Care Search Demo</h3>
 
+				<!-- Sidebar-->
+				<h3><br>FSU College of Medicine<br>Group Care Search Demo</h3>
 				<div id="search-box">
 					<div id="geocoder_box" class="geocoder">
 						<form class="form-inline">
@@ -77,20 +58,16 @@
 					<div class="form-check">
 						<input class="form-check-input" type="checkbox" value="" id="privateSchool">
 						<label class="form-check-label" for="lessOrEqualTo80">
-							Private School/Accepts insurance
+							Accepts Insurance
 						</label>
 					</div>
 					<div class="form-check">
 						<input class="form-check-input" type="checkbox" value="" id="publicSchool">
 						<label class="form-check-label" for="lessOrEqualTo45">
-							Public School/Accepts medicare
+							Accepts Medicare
 						</label>
 					</div>
 				</div>
-
-
-
-
 
 				<div>Search radius:</div>
 				<div class="form">
@@ -106,24 +83,16 @@
 				<p><span id="json_one_results_title"><span id="json_one_results">0</span> <span id="json_one_title">providers</span></span>
 					are within the given radius.</p>
 
-
 				<div id="results-table"></div>
 
 				<div id='about-section'>
 					<h3>About</h3>
-					<p>This demo counts the number of group care facilities within a radius of a given point and displays them on
-						a
-						map
-						using <a href="https://leafletjs.com/" target="_blank">Leaflet</a>.</p>
-					<p>To use, enter an address and then enter a radius. Under results will be the number of markers within the
-						given
-						radius. You can also drag the marker on the map; the number will update automatically.</p>
-					<p>More information regarding the original code is available <a href="http://csessig.wordpress.com/2014/06/22/leaflet-solution-counting-markers-within-a-radius/"
-						 target="_blank">here</a>. Code was originally used <a href="http://wcfcourier.com/app/special/ia-mental-health-public/"
-						 target="_blank">here</a>.</p>
-					<p>This project is sponsored by:<br><br><a href="https://www.sagerx.com/" target="_blank"><img alt="Sage Therapeutics"
-							 src="images/logo-sagerx.svg">
-						</a></p>
+					<p>This demo counts the number of group care facilities within a radius of a given point and displays them on a map	using <a href="https://leafletjs.com/" target="_blank">Leaflet</a>.</p>
+					<p>To use, enter an address and then enter a radius. Under results will be the number of markers within the	given radius. You can also drag the marker on the map; the number will update automatically.</p>
+					<p>More information regarding the original code is available <a href="http://csessig.wordpress.com/2014/06/22/leaflet-solution-counting-markers-within-a-radius/" target="_blank">here</a>.
+						Code was originally used <a href="http://wcfcourier.com/app/special/ia-mental-health-public/" target="_blank">here</a>.
+					</p>
+					<p>This project is sponsored by:<br><br><a href="https://www.sagerx.com/" target="_blank"><img alt="Sage Therapeutics" src="images/logo-sagerx.svg"></a></p>
 				</div>
 			</div>
 
@@ -149,5 +118,4 @@
 	<script type="text/javascript" src="js/app.js"></script>
 
 </body>
-
 </html>

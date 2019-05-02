@@ -6,7 +6,7 @@ html {
 }
 
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
   font-size: 13px;
   font-weight: normal;
   line-height: 18px;
@@ -14,7 +14,6 @@ body {
   padding: 0;
   width: 100%;
 }
-
 
 /* Map */
 #map {
@@ -26,14 +25,13 @@ body {
   top: 0;
 }
 
-
 /* Legend */
 #legend {
   padding: 0px 2%;
   z-index: 1;
   height: 100%;
   /* top: 0; */
-  background-color: #EEE;
+  background-color: #CEB888;
   position: absolute;
   overflow-y: scroll;
 }
@@ -60,10 +58,10 @@ body {
 }
 
 /* Set gray background color and 100% height */
-.sidenav {
-  background-color: #f1f1f1;
+/* .sidenav {
+  background-color: #CEB888;
   height: 100%;
-}
+} */
 
 #results-table {
   overflow-y: hidden;
@@ -71,7 +69,6 @@ body {
 }
 
 /* Put the submit button inside of the search bar */
-
 #search-bar {
   position: relative;
 }
@@ -88,13 +85,12 @@ body {
   font-size: 80%;
   color: #dc3545;
 }
+
 #ESRI-Search {
   position: absolute;
   width: 25%;
   height: 100%;
 }
-
-
 
 /* On small screens, set height to 'auto' for sidenav and grid */
 @media screen and (max-width: 767px) and (orientation: portrait) {
@@ -141,8 +137,6 @@ body {
   #about-section {
     display: none;
   }
-
-
 }
 
 /* On small screens, set height to 'auto' for sidenav and grid */
@@ -163,7 +157,6 @@ body {
     /* position: absolute; */
     bottom: 0px;
     overflow-y: scroll;
-
   }
 
   /* Map */
@@ -190,6 +183,4 @@ body {
   #about-section {
     display: none;
   }
-
-
 }
