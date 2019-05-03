@@ -12,34 +12,28 @@ let search_marker;
 let selection_marker;
 // array to store table in
 let table;
-
 let activeLayer;
 
 // initial setup function to loop through json that
 // assigns marker and add to map
 async function setup() {
     selection_group.clearLayers();
-    $.get("./js/data/group_care.json", function (json_data) {
-
+    $.get("./data/COM.json", function (json_data) {
         _.each(json_data, function (num) {
             markerLogic(num, json_group)
         }, this);
         map.addLayer(json_group)
+        activeLayer = json_group;
         //instantiate autocomplete for initial data
         setAutocomplete(json_data);
-
     });
 }
 
 // return activelayer
 function checkActiveLayer() {
     if (_.isEmpty(selection_group._layers) === false) {
-        console.log('json-group is active');
-
         return json_group;
     } else {
-        console.log('selection-group is active');
-
         return selection_group;
     }
 }
@@ -51,14 +45,12 @@ function clearSelections() {
     $('.leaflet-control-locate').removeClass("active following")
 
     if (search_marker) { // Remove marker if one is already on map
-
         map.removeLayer(search_marker);
     }
     if (circle) { // Remove marker if one is already on map
         map.removeLayer(circle);
     }
     if (selection_marker) { // Remove selection if one is already on map
-
         map.removeLayer(selection_marker);
     }
 }
@@ -83,5 +75,4 @@ function isNotInvalid() {
 }
 
 // run the setup to query the file 
-
 setup();

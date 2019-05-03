@@ -17,18 +17,15 @@ async function filterLocations(event) {
             // current target layer that we're looking at
             const targetLayer = json_group._layers[layer];
 
-
-
             // extract latitude and longitude
             targetLayer.data['Latitude'] = targetLayer._latlng.lat;
             targetLayer.data['Longitude'] = targetLayer._latlng.lng;
-            targetLayer.data['CompanyNam'] = targetLayer.data.CompanyNam;
+            targetLayer.data['Agency'] = targetLayer.data.agency;
 
             // if EITHER meets the condition, add it to the map
             if ((targetLayer.data.ProgramSub === "Public School") && (targetLayer.data.ProgramSub === "Private School")) {
                 markerLogic(targetLayer.data, selection_group);
             }
-
         }
         // Add our selection markers in our JSON file on the map
         map.addLayer(selection_group);
@@ -53,13 +50,12 @@ async function filterLocations(event) {
                 // extract latitude and longitude
                 targetLayer.data['Latitude'] = targetLayer._latlng.lat;
                 targetLayer.data['Longitude'] = targetLayer._latlng.lng;
-                targetLayer.data['CompanyNam'] = targetLayer.data.CompanyNam;
+                targetLayer.data['Agency'] = targetLayer.data.agency;
 
                 // if the feature has a matching attribute, add it to the map
                 if (targetLayer.data.ProgramSub === "Private School") {
                     markerLogic(targetLayer.data, selection_group);
                 }
-
             }
             // Add our selection markers in our JSON file on the map
             map.addLayer(selection_group);
@@ -71,30 +67,20 @@ async function filterLocations(event) {
 
         } else if (publicSchool[0].checked === true) {
 
-            console.log(json_group._layers[65]);
-
-
             // for each feature in our json
             for (layer in json_group._layers) {
                 const targetLayer = json_group._layers[layer];
-                // console.log(targetLayer);
 
                 // extract latitude and longitude
                 targetLayer.data['Latitude'] = targetLayer._latlng.lat;
                 targetLayer.data['Longitude'] = targetLayer._latlng.lng;
-                targetLayer.data['CompanyNam'] = targetLayer.data.CompanyNam;
-                targetLayer.data['CountyNum'] = targetLayer.data.CountyNumb;
-                // targetLayer.data['ProgramSub'] = targetLayer.data.ProgramSub;
-
+                targetLayer.data['Agency'] = targetLayer.data.agency;
 
                 // if the feature has a matching attribute, add it to the map
                 if (targetLayer.data.ProgramSub === "Public School") {
-
                     markerLogic(targetLayer.data, selection_group);
                 }
-
             }
-
 
             // Add our selection markers in our JSON file on the map
             map.addLayer(selection_group);
@@ -104,7 +90,6 @@ async function filterLocations(event) {
             // set active layer
             activeLayer = selection_group;
         }
-
     } else {
         // clear the selection layer
         selection_group.clearLayers();

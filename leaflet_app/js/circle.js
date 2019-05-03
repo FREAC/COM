@@ -3,11 +3,6 @@ function milesToMeters(miles) {
     return miles * 1069.344;
 };
 
-// convert meters back to miles
-function getMiles(meters) {
-    return meters * 0.000621371192;
-}
-
 // This figures out how many points are within our circle
 function pointsInCircle(circle, meters_user_set, groupLayer) {
     if (circle !== undefined) {
@@ -41,11 +36,10 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
             if (distance_from_layer_circle <= meters_user_set) {
                 counter_points_in_circle += 1;
                 results.push({
-                    name: layer.data.CompanyNam,
+                    agency: layer.data.Agency,
                     dist: distance_from_layer_circle,
                     latitude: layer_lat_long.lat,
-                    longitude: layer_lat_long.lng,
-                    countyName: layer.data.CountyName
+                    longitude: layer_lat_long.lng
                 });
             }
         });
@@ -62,11 +56,9 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
         for (let i = 0; i < counter_points_in_circle; i++) {
             tableResults.push({
                 id: i,
-                name: results[i]['name'],
-                distance: getMiles(results[i]['dist']),
+                agency: results[i]['agency'],
                 lat: results[i]['latitude'],
-                lng: results[i]['longitude'],
-                link: results[i]['countyName']
+                lng: results[i]['longitude']
             });
         }
         // add tabulator object to screen
@@ -77,7 +69,6 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
         // I.E. facility not facilities
         if (counter_points_in_circle === 1) {
             $('#json_one_title').html(title_singular);
-            // If not one, set to plural form of word
         } else {
             $('#json_one_title').html(title_plural);
         }
@@ -85,7 +76,6 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
         // Set number of results on main page
         $('#json_one_results').html(counter_points_in_circle);
     }
-    // Close pointsInCircle
 };
 
 // This places marker, circle on map

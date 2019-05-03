@@ -8,7 +8,6 @@ function geocodeAddress(address) {
         if (data.candidates.length !== 0) {
             // results were found!
             isNotInvalid();
-
             // pick the top candidate of the geocode match
             const coords = data.candidates[0].location;
             const location = {
@@ -20,6 +19,5 @@ function geocodeAddress(address) {
             // set invalid classes
             isInvalid();
         }
-
     });
 }

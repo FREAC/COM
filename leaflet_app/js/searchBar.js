@@ -17,7 +17,7 @@ async function executeSearchBar() {
     }
 
     // Get json data and search it
-    const json_data = await $.get("./js/data/group_care.json", function (json_data) {
+    const json_data = await $.get("./data/COM.json", function (json_data) {
         results = search(val, json_data);
     });
 
@@ -29,11 +29,11 @@ async function executeSearchBar() {
 
         const tableResults = [{
             id: 1,
-            name: results['CompanyNam'],
+            name: results['Agency'],
             distance: 0,
             lat: results['Latitude'],
             lng: results['Longitude'],
-            link: results['CountyName'],
+            link: results['Agency'],
         }]
 
         // Insert tabulator object 
@@ -49,6 +49,5 @@ async function executeSearchBar() {
         }
     } else {
         geocodeAddress($('#geocoder-input').val());
-
     }
 }

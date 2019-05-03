@@ -12,7 +12,7 @@ const map = new L.Map('map', {
 });
 
 // Base map
-let basemap = L.tileLayer.provider('OpenStreetMap.Mapnik');
+let basemap = L.tileLayer.provider('CartoDB.Voyager');
 
 // Add base layer to group
 map.addLayer(basemap);
@@ -26,16 +26,6 @@ map.on('locationfound', function (event) {
     locateZoom(event);
 });
 
-// when enter button clicked, geocodeAddresses
-// $('geocoder-input').keypress(function (event) {
-//     if (event.keyCode === 13) {
-//         console.log('is this going to refresh')
-//         event.preventDefault();
-//         event.stopPropagation();
-//         // executeSearchBar();
-//     }
-// });
-
 $("form").submit(function (e) {
     // prevent refresh
     e.preventDefault();
@@ -48,13 +38,6 @@ $("form").submit(function (e) {
         isInvalid();
     }
 });
-
-// $('#geocoder-input').change(function (event) {
-//     event.preventDefault();
-//     // executeSearchBar();
-//     console.log("helloooooo");
-
-// });
 
 // when submit button clicked, search names and addresses
 $('#ESRI-Search').on('click', executeSearchBar);
@@ -70,7 +53,6 @@ $("#checkboxes input[type='checkbox']").change(async function (event) {
 
     pointsInCircle(circle, milesToMeters($('#radius-selected').val()), activeLayer);
 });
-
 
 //Right-clicking the map triggers the search function
 map.on({
@@ -91,13 +73,11 @@ map.on({
         } else {
             geocodePlaceMarkersOnMap(e.latlng, z, activeLayer);
         }
-
-
     },
     // if the popup closes, remove the associated marker
     popupclose: function (e) {
         if (selection_marker !== undefined) {
-            selection_marker.setStyle(markerStyle(4, "#ED9118", "#FFFFFF", 1, .8));
+            selection_marker.setStyle(markerStyle("#ED9118", "#FFFFFF", .8));
         }
     }
 });

@@ -6,13 +6,17 @@ html {
 }
 
 body {
-  font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+  font-family: Georgia, 'Times New Roman', Times, serif;
   font-size: 13px;
   font-weight: normal;
   line-height: 18px;
   margin: 0;
   padding: 0;
   width: 100%;
+}
+
+.leaflet-popup-content-wrapper .leaflet-popup-content {
+  font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 /* Map */
@@ -30,8 +34,7 @@ body {
   padding: 0px 2%;
   z-index: 1;
   height: 100%;
-  /* top: 0; */
-  background-color: #CEB888;
+  background-color: rgba(206, 184, 136, 0.5);
   position: absolute;
   overflow-y: scroll;
 }
@@ -56,12 +59,6 @@ body {
 .row.content {
   height: 100%
 }
-
-/* Set gray background color and 100% height */
-/* .sidenav {
-  background-color: #CEB888;
-  height: 100%;
-} */
 
 #results-table {
   overflow-y: hidden;

@@ -13,7 +13,7 @@ function zoomToLocation(lat, lng, z = 12) {
     const marker_location = new L.LatLng(lat, lng);
 
     // set the selection_marker variable to our location and style
-    selection_marker = L.circleMarker(marker_location, markerStyle(4, "#FF0000", "#FF0000", 1, 1));
+    selection_marker = L.circleMarker(marker_location, markerStyle("#FF0000", "#FF0000"));
 
     //allow for the user to click the point under the marker
     selection_marker.options.interactive = false;
