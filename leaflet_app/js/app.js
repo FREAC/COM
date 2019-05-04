@@ -3,7 +3,7 @@ const map = new L.Map('map', {
     renderer: L.canvas(),
     center: new L.LatLng(28.3, -83.1),
     minZoom: 7,
-    maxZoom: 13,
+    maxZoom: 19,
     zoom: 7,
     maxBounds: [
         [23.5, -88.5],
