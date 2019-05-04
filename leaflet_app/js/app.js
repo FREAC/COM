@@ -61,6 +61,7 @@ $('#ESRI-Search').on('click', executeSearchBar);
 
 // when search radius changes, chang circle size and re-query
 $('#radius-selected').change(function () {
+
     changeCircleRadius();
 });
 
