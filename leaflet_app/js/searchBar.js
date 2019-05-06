@@ -36,6 +36,11 @@ async function executeSearchBar() {
             link: results['CountyName'],
         }]
 
+        const location = {
+            lat: results['Latitude'],
+            lng: results['Longitude']
+        }
+
         // Insert tabulator object 
         insertTabulator(tableResults);
         // Zoom to location of company
@@ -43,9 +48,11 @@ async function executeSearchBar() {
         if (z < 12) {
             // If it's too far away, zoom in
             zoomToLocation(results['Latitude'], results['Longitude']);
+            geocodePlaceMarkersOnMap(location, 12, activeLayer)
             // otherwise, stay at current zoom
         } else {
             zoomToLocation(results['Latitude'], results['Longitude'], z);
+            geocodePlaceMarkersOnMap(location, 12, activeLayer)
         }
     } else {
         geocodeAddress($('#geocoder-input').val());
