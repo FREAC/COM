@@ -1,7 +1,7 @@
 // search a JSON object for value
 function search(nameKey, myArray) {
     for (var i = 0; i < myArray.length; i++) {
-        if (myArray[i].CompanyNam === nameKey) {
+        if (myArray[i].Agency === nameKey) {
             return myArray[i];
         }
     }
