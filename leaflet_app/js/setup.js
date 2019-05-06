@@ -38,22 +38,7 @@ function checkActiveLayer() {
     }
 }
 
-// clear all current selections on map
-function clearSelections() {
 
-    // make so the locate no longer appears active
-    $('.leaflet-control-locate').removeClass("active following")
-
-    if (search_marker) { // Remove marker if one is already on map
-        map.removeLayer(search_marker);
-    }
-    if (circle) { // Remove marker if one is already on map
-        map.removeLayer(circle);
-    }
-    if (selection_marker) { // Remove selection if one is already on map
-        map.removeLayer(selection_marker);
-    }
-}
 
 // functions to handle the styling of invalid or valid inputs to the search bar
 function isInvalid() {

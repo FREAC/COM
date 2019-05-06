@@ -1,3 +1,20 @@
+// Colors
+const default_fill_color = "#ED9118";
+const default_outline_color = "#FFFFFF";
+const hover_color = "#2BBED8";
+const selected_color = "#FF0000";
+
+// This sets the marker styles for any of the circleMarker symbols
+function markerStyle(fillColor, strokeColor) {
+    return {
+        fillColor: fillColor,
+        color: strokeColor,
+        fillOpacity: 0.8,
+        radius: 4,
+        weight: 0.8
+    };
+}
+
 // Map
 const map = new L.Map('map', {
     renderer: L.canvas(),
@@ -11,33 +28,30 @@ const map = new L.Map('map', {
     ]
 });
 
-//Right-clicking the map triggers the search function
 map.on({
-    // what happens when right click happens
-    contextmenu: function (e) {
+    contextmenu: function (event) {
 
-        // remove the locate class to make it look inactive
+        clearSelection();
+
         $('.leaflet-control-locate').removeClass("active following")
-
-        // clear any current selections
-        clearSelections();
-        // disable location if it's currently active
 
         // draw circle where right click happened
         const z = map.getZoom();
         if (z < 10) {
-            geocodePlaceMarkersOnMap(e.latlng, activeLayer);
+            geocodePlaceMarkersOnMap(event.latlng, activeLayer);
         } else {
-            geocodePlaceMarkersOnMap(e.latlng, z, activeLayer);
+            geocodePlaceMarkersOnMap(event.latlng, activeLayer,  z);
         }
     },
     // if the popup closes, remove the associated marker
-    popupclose: function (e) {
+    popupclose: function () {
         if (selection_marker !== undefined) {
-            selection_marker.setStyle(markerStyle("#ED9118", "#FFFFFF", .8));
+        selection_marker.setStyle(markerStyle(default_fill_color, default_outline_color));
         }
     }
 });
+
+
 
 // when the event button is clicked, and location found
 // zoom to location and draw circle
@@ -49,13 +63,26 @@ map.on('locationfound', function (event) {
 L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 
 // Locate Button
-L.control.locate({
+const locate = L.control.locate({
     strings: {
         title: "Find my location"
     },
     drawCircle: false,
     drawMarker: false
 }).addTo(map);
+
+
+function clearSelection() {
+    if (search_marker) {
+        map.removeLayer(search_marker);
+    }
+    if (circle) {
+        map.removeLayer(circle);
+    }
+    if (selection_marker) {
+        map.removeLayer(selection_marker);
+    }
+}
 
 
 $("form").submit(function (e) {
@@ -97,13 +124,13 @@ function zoomToLocation(lat, lng, z = 12) {
     }
 
     // set view to location
-    map.setView(new L.LatLng(lat, lng), z);
+    map.flyTo(new L.LatLng(lat, lng), z);
 
     // Set marker location
     const marker_location = new L.LatLng(lat, lng);
 
     // set the selection_marker variable to our location and style
-    selection_marker = L.circleMarker(marker_location, markerStyle("#FF0000", "#FF0000"));
+    selection_marker = L.circleMarker(marker_location, markerStyle(selected_color, selected_color));
 
     //allow for the user to click the point under the marker
     selection_marker.options.interactive = false;
@@ -203,9 +230,7 @@ async function executeSearchBar() {
         // Zoom to location of company
         const z = map.getZoom();
         if (z < 12) {
-            // If it's too far away, zoom in
             zoomToLocation(results['Latitude'], results['Longitude']);
-            // otherwise, stay at current zoom
         } else {
             zoomToLocation(results['Latitude'], results['Longitude'], z);
         }
@@ -266,10 +291,7 @@ function geocodeAddress(address) {
     });
 }
 
-// Convert miles to meters to set radius of circle
-function milesToMeters(miles) {
-    return miles * 1069.344;
-};
+
 
 // This figures out how many points are within our circle
 function pointsInCircle(circle, meters_user_set, groupLayer) {
@@ -347,17 +369,17 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
 };
 
 // This places marker, circle on map
-function geocodePlaceMarkersOnMap(location, z = 10, activeLayer = json_group) {
+function geocodePlaceMarkersOnMap(location, activeLayer = json_group, z = 10) {
     // Clear any current selections that are on the map
-    clearSelections();
+    clearSelection();
 
     // Center the map on the result
     map.setView(new L.LatLng(location.lat, location.lng), z);
 
     // Create circle around marker with our selected radius
     circle = L.circle([location.lat, location.lng], milesToMeters($('#radius-selected').val()), {
-        color: '#2BBED8',
-        fillColor: '#2BBED8',
+        color: hover_color,
+        fillColor: hover_color,
         fillOpacity: 0.1,
         clickable: false,
         interactive: false
@@ -399,6 +421,11 @@ function geocodePlaceMarkersOnMap(location, z = 10, activeLayer = json_group) {
     pointsInCircle(circle, milesToMeters($('#radius-selected').val()), activeLayer);
 }
 
+// Convert miles to meters to set radius of circle
+function milesToMeters(miles) {
+    return miles * 1069.344;
+};
+
 // Change circle radius when changed on page
 function changeCircleRadius(e) {
     // Determine which geocode box is filled
@@ -411,26 +438,11 @@ function changeCircleRadius(e) {
     }
 }
 
-// This sets the marker styles for any of the circleMarker symbols 
-// inserted in setStyle, so any renderer that uses setStyle can use this function
-function markerStyle(fillColor, color, fillOpacity=1, radius=4, weight=1) {
-    return {
-        fillColor: fillColor,
-        color: color,
-        fillOpacity: fillOpacity,
-        radius: radius,
-        weight: weight
-    };
-}
+
 
 // This loops through the data in our JSON file
 // And puts it on the map
 function markerLogic(num, targetLayer) {
-
-    const fill_color = "#ED9118";
-    const outline_color = "#FFFFFF";
-    const hover_color = "#2BBED8";
-    const selected_color = "#FF0000";
 
     const dataLat = num['Latitude'];
     const dataLong = num['Longitude'];
@@ -443,7 +455,7 @@ function markerLogic(num, targetLayer) {
 
     // Add to our marker
     const marker_location = new L.LatLng(dataLat, dataLong);
-    const layer_marker = L.circleMarker(marker_location, markerStyle(fill_color, outline_color))
+    const layer_marker = L.circleMarker(marker_location, markerStyle(default_fill_color, default_outline_color))
         .bindPopup(popup);
 
     // Build the data
@@ -468,7 +480,7 @@ function markerLogic(num, targetLayer) {
             // otherwise, leave it be
             if (e.target.options.fillColor !== selected_color) { // marker is not already red (clicked)
                 const layer_marker = e.target;
-                layer_marker.setStyle(markerStyle(fill_color, outline_color));
+                layer_marker.setStyle(markerStyle(default_fill_color, default_outline_color));
             }
         },
         // What happens when the marker is clicked
@@ -476,14 +488,14 @@ function markerLogic(num, targetLayer) {
             // if there is no click marker yet, assign one
             if (selection_marker === undefined) {
                 selection_marker = e.target;
-                selection_marker.setStyle(markerStyle(selected_color, selected_color, .8));
+                selection_marker.setStyle(markerStyle(selected_color, selected_color));
             } else { // if there is a click marker already
                 // assign old marker back to original color
-                selection_marker.setStyle(markerStyle(fill_color, outline_color, .8));
+                selection_marker.setStyle(markerStyle(default_fill_color, default_outline_color));
 
                 // assign new marker to red
                 selection_marker = e.target;
-                selection_marker.setStyle(markerStyle(selected_color, selected_color, .8));
+                selection_marker.setStyle(markerStyle(selected_color, selected_color));
             }
             // if a tabulator table is already active
             if ($('#results-table').hasClass('tabulator')) {
