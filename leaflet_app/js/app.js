@@ -30,33 +30,18 @@ const map = new L.Map('map', {
 
 map.on({
     contextmenu: function (event) {
-
         clearSelection();
-
-        $('.leaflet-control-locate').removeClass("active following")
-
-        // draw circle where right click happened
-        const z = map.getZoom();
-        if (z < 10) {
+        $('.leaflet-control-locate').removeClass("active following");
+        const zoom = map.getZoom();
+        if (zoom < 10) {
             geocodePlaceMarkersOnMap(event.latlng, activeLayer);
         } else {
-            geocodePlaceMarkersOnMap(event.latlng, activeLayer,  z);
+            geocodePlaceMarkersOnMap(event.latlng, activeLayer,  zoom);
         }
     },
-    // if the popup closes, remove the associated marker
     popupclose: function () {
-        if (selection_marker !== undefined) {
         selection_marker.setStyle(markerStyle(default_fill_color, default_outline_color));
-        }
     }
-});
-
-
-
-// when the event button is clicked, and location found
-// zoom to location and draw circle
-map.on('locationfound', function (event) {
-    locateZoom(event);
 });
 
 // Base map
@@ -72,17 +57,56 @@ const locate = L.control.locate({
 }).addTo(map);
 
 
+// TODO CAN THIS BE ADDED INTO THE ZOOM TO FUNCTIONALITY?
 function clearSelection() {
     if (search_marker) {
         map.removeLayer(search_marker);
     }
-    if (circle) {
-        map.removeLayer(circle);
+    if (searchArea) {
+        map.removeLayer(searchArea);
     }
     if (selection_marker) {
         map.removeLayer(selection_marker);
     }
 }
+
+// when search radius changes, chang circle size and re-query
+$('#radius-selected').change(function () {
+    if (searchArea) {
+        const radius = milesToMeters($('#radius-selected').val());
+        searchArea.setRadius(radius);
+        pointsInCircle(searchArea, radius, activeLayer)
+    }
+});
+
+$('#SearchButton').on('click', executeSearchBar);
+
+// Convert miles to meters to set radius of circle
+function milesToMeters(miles) {
+    return miles * 1069.344;
+};
+
+
+
+
+
+
+
+///////////////////////////////////////
+///////////////////////////////////////
+///////////////////////////////////////
+///////////////////////////////////////
+
+
+
+
+
+// when the event button is clicked, and location found
+// zoom to location and draw circle
+map.on('locationfound', function (event) {
+    locateZoom(event);
+});
+
 
 
 $("form").submit(function (e) {
@@ -98,19 +122,13 @@ $("form").submit(function (e) {
     }
 });
 
-// when submit button clicked, search names and addresses
-$('#ESRI-Search').on('click', executeSearchBar);
 
-// when search radius changes, chang circle size and re-query
-$('#radius-selected').change(function () {
-    changeCircleRadius();
-});
 
 $("#checkboxes input[type='checkbox']").change(async function (event) {
     // when any checkbox inside the div "checkboxes" changes, run this function
     await filterLocations(event);
 
-    pointsInCircle(circle, milesToMeters($('#radius-selected').val()), activeLayer);
+    pointsInCircle(searchArea, milesToMeters($('#radius-selected').val()), activeLayer);
 });
 
 
@@ -377,7 +395,7 @@ function geocodePlaceMarkersOnMap(location, activeLayer = json_group, z = 10) {
     map.setView(new L.LatLng(location.lat, location.lng), z);
 
     // Create circle around marker with our selected radius
-    circle = L.circle([location.lat, location.lng], milesToMeters($('#radius-selected').val()), {
+    searchArea = L.circle([location.lat, location.lng], milesToMeters($('#radius-selected').val()), {
         color: hover_color,
         fillColor: hover_color,
         fillOpacity: 0.1,
@@ -401,13 +419,13 @@ function geocodePlaceMarkersOnMap(location, activeLayer = json_group, z = 10) {
     // Reset map view on marker drag
     search_marker.on('dragend', function (event) {
         map.setView(event.target.getLatLng());
-        circle.setLatLng(event.target.getLatLng());
+        searchArea.setLatLng(event.target.getLatLng());
 
         // This will determine how many markers are within the circle
-        pointsInCircle(circle, milesToMeters($('#radius-selected').val()), activeLayer);
+        pointsInCircle(searchArea, milesToMeters($('#radius-selected').val()), activeLayer);
 
         // Redraw: Leaflet function
-        circle.redraw();
+        searchArea.redraw();
 
         // Clear out address in geocoder
         $('#geocoder-input').val('');
@@ -418,85 +436,55 @@ function geocodePlaceMarkersOnMap(location, activeLayer = json_group, z = 10) {
 
     // This will determine how many markers are within the circle
     // Called when points are initially loaded
-    pointsInCircle(circle, milesToMeters($('#radius-selected').val()), activeLayer);
-}
-
-// Convert miles to meters to set radius of circle
-function milesToMeters(miles) {
-    return miles * 1069.344;
-};
-
-// Change circle radius when changed on page
-function changeCircleRadius(e) {
-    // Determine which geocode box is filled
-    // And fire click event
-    // This will determine how many markers are within the circle
-    pointsInCircle(circle, milesToMeters($('#radius-selected').val()), activeLayer)
-    // Set radius of circle only if we already have one on the map
-    if (circle) {
-        circle.setRadius(milesToMeters($('#radius-selected').val()));
-    }
+    pointsInCircle(searchArea, milesToMeters($('#radius-selected').val()), activeLayer);
 }
 
 
 
-// This loops through the data in our JSON file
-// And puts it on the map
+
+
+
+
+// 
 function markerLogic(num, targetLayer) {
-
-    const dataLat = num['Latitude'];
-    const dataLong = num['Longitude'];
-
+    // Popup template
     const html = `<b>${num['Agency']}</b><br>
                     ${num['HouseNumber']} ${num['Street']} ${num['Unit']}<br>
                     ${num['City']}, ${['State']} ${num['PostalCode']}`;
-    
     const popup = L.popup({closeButton: false}).setContent(html);
-
-    // Add to our marker
-    const marker_location = new L.LatLng(dataLat, dataLong);
-    const layer_marker = L.circleMarker(marker_location, markerStyle(default_fill_color, default_outline_color))
+    // Create marker for point
+    const marker_location = new L.LatLng(num['Latitude'], num['Longitude']);
+    const circle_marker = L.circleMarker(marker_location, markerStyle(default_fill_color, default_outline_color))
         .bindPopup(popup);
-
-    // Build the data
-    layer_marker.data = {
+    // Add data object
+    circle_marker.data = {
         'Agency': num['Agency']
     };
-
-    // Add events to marker
-    layer_marker.on({
-        // What happens when mouse hovers markers
-        mouseover: function (e) {
-            // if the moused over marker is not red, 
-            // display the mouseover color change
-            if (e.target.options.fillColor !== selected_color) { // marker is not already red (clicked)
-                const layer_marker = e.target;
-                layer_marker.setStyle(markerStyle(hover_color, hover_color));
+    // Add events
+    circle_marker.on({
+        mouseover: function (event) {
+            if (event.target.options.fillColor !== selected_color) {
+                event.target.setStyle(markerStyle(hover_color, hover_color));
             }
         },
-        // What happens when mouse leaves the marker
-        mouseout: function (e) {
-            // if the marker is not read, change the color back to original marker color
-            // otherwise, leave it be
-            if (e.target.options.fillColor !== selected_color) { // marker is not already red (clicked)
-                const layer_marker = e.target;
-                layer_marker.setStyle(markerStyle(default_fill_color, default_outline_color));
+        mouseout: function (event) {
+            if (event.target.options.fillColor !== selected_color) {
+                event.target.setStyle(markerStyle(default_fill_color, default_outline_color));
             }
         },
-        // What happens when the marker is clicked
-        click: function (e) {
+        click: function (event) {
             // if there is no click marker yet, assign one
-            if (selection_marker === undefined) {
-                selection_marker = e.target;
-                selection_marker.setStyle(markerStyle(selected_color, selected_color));
-            } else { // if there is a click marker already
+            // if (selection_marker === undefined) {
+            //     selection_marker = event.target;
+            //     selection_marker.setStyle(markerStyle(selected_color, selected_color));
+            // } else { // if there is a click marker already
                 // assign old marker back to original color
                 selection_marker.setStyle(markerStyle(default_fill_color, default_outline_color));
 
                 // assign new marker to red
-                selection_marker = e.target;
+                selection_marker = event.target;
                 selection_marker.setStyle(markerStyle(selected_color, selected_color));
-            }
+            // }
             // if a tabulator table is already active
             if ($('#results-table').hasClass('tabulator')) {
                 // get the data that is inside of it
@@ -504,7 +492,7 @@ function markerLogic(num, targetLayer) {
                 // loop through data to see if clicked feature matches
                 for (let i in data) {
                     // if we find a layer match, select it
-                    if (e.target.data.Agency === data[i].agency) {
+                    if (event.target.data.Agency === data[i].agency) {
                         // deselect previous row selection
                         table.deselectRow();
                         // select new row selection
@@ -514,6 +502,5 @@ function markerLogic(num, targetLayer) {
             }
         }
     });
-    // add the marker onto the targetLayer
-    targetLayer.addLayer(layer_marker);
+    targetLayer.addLayer(circle_marker);
 }

@@ -3,7 +3,7 @@ const json_group = new L.FeatureGroup();
 //This is our selection group
 const selection_group = new L.FeatureGroup();
 // This is the circle on the map that will be determine how many markers are around
-let circle;
+let searchArea;
 // this is the icon in the middle of the circle
 let circleIcon;
 // Marker in the middle of the circle
