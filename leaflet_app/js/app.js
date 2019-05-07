@@ -445,12 +445,12 @@ function geocodePlaceMarkersOnMap(location, activeLayer = json_group, z = 10) {
 
 
 
-// 
+// Assign these properties to each marker in the data
 function markerLogic(num, targetLayer) {
     // Popup template
     const html = `<b>${num['Agency']}</b><br>
                     ${num['HouseNumber']} ${num['Street']} ${num['Unit']}<br>
-                    ${num['City']}, ${['State']} ${num['PostalCode']}`;
+                    ${num['City']}, ${num['State']} ${num['PostalCode']}`;
     const popup = L.popup({closeButton: false}).setContent(html);
     // Create marker for point
     const marker_location = new L.LatLng(num['Latitude'], num['Longitude']);
@@ -474,17 +474,17 @@ function markerLogic(num, targetLayer) {
         },
         click: function (event) {
             // if there is no click marker yet, assign one
-            // if (selection_marker === undefined) {
-            //     selection_marker = event.target;
-            //     selection_marker.setStyle(markerStyle(selected_color, selected_color));
-            // } else { // if there is a click marker already
+            if (selection_marker === undefined) {
+                selection_marker = event.target;
+                selection_marker.setStyle(markerStyle(selected_color, selected_color));
+            } else { // if there is a click marker already
                 // assign old marker back to original color
                 selection_marker.setStyle(markerStyle(default_fill_color, default_outline_color));
 
                 // assign new marker to red
                 selection_marker = event.target;
                 selection_marker.setStyle(markerStyle(selected_color, selected_color));
-            // }
+            }
             // if a tabulator table is already active
             if ($('#results-table').hasClass('tabulator')) {
                 // get the data that is inside of it
