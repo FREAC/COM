@@ -23,6 +23,7 @@ async function setup() {
             markerLogic(num, json_group)
         }, this);
         map.addLayer(json_group)
+        // set json_group as active layer
         activeLayer = json_group;
         //instantiate autocomplete for initial data
         setAutocomplete(json_data);
