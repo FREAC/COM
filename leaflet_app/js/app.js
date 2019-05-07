@@ -81,6 +81,7 @@ $('#radius-selected').change(function () {
     }
 });
 
+
 $('#SearchButton').on('click', executeSearchBar);
 
 // Convert miles to meters to set radius of circle
@@ -128,11 +129,6 @@ $("form").submit(function (e) {
 // when submit button clicked, search names and addresses
 $('#ESRI-Search').on('click', executeSearchBar);
 
-// when search radius changes, chang circle size and re-query
-$('#radius-selected').change(function () {
-
-    changeCircleRadius();
-});
 
 $("#checkboxes input[type='checkbox']").change(async function (event) {
     // when any checkbox inside the div "checkboxes" changes, run this function
