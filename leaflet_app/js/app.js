@@ -15,6 +15,8 @@ function markerStyle(fillColor, strokeColor) {
     };
 }
 
+//Test comment
+
 // Map
 const map = new L.Map('map', {
     renderer: L.canvas(),
