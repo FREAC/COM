@@ -15,8 +15,6 @@ function markerStyle(fillColor, strokeColor) {
     };
 }
 
-//Test comment
-
 // Map
 const map = new L.Map('map', {
     renderer: L.canvas(),
@@ -38,11 +36,8 @@ map.on({
         if (zoom < 10) {
             geocodePlaceMarkersOnMap(event.latlng, activeLayer);
         } else {
-            geocodePlaceMarkersOnMap(event.latlng, activeLayer,  zoom);
+            geocodePlaceMarkersOnMap(event.latlng, activeLayer, zoom);
         }
-    },
-    popupclose: function () {
-        selection_marker.setStyle(markerStyle(default_fill_color, default_outline_color));
     }
 });
 
@@ -51,12 +46,23 @@ L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 
 // Locate Button
 const locate = L.control.locate({
-    strings: {
-        title: "Find my location"
-    },
+    flyTo: true,
+    clickBehavior: {inViewNotFollowing: 'setView'},
+    strings: {title: "Find my location"},
     drawCircle: false,
-    drawMarker: false
+    showPopup: false
 }).addTo(map);
+
+// ESRI Geocoder
+const searchControl = L.esri.Geocoding.geosearch().addTo(map);
+// const results = L.layerGroup().addTo(map);
+// searchControl.on('results', function(data){
+//     results.clearLayers();
+//     for (let i = data.results.length - 1; i >= 0; i--) {
+//         results.addLayer(L.marker(data.results[i].latlng));
+//     }
+// });
+
 
 
 // TODO CAN THIS BE ADDED INTO THE ZOOM TO FUNCTIONALITY?
@@ -82,8 +88,6 @@ $('#radius-selected').change(function () {
 });
 
 
-$('#SearchButton').on('click', executeSearchBar);
-
 // Convert miles to meters to set radius of circle
 function milesToMeters(miles) {
     return miles * 1069.344;
@@ -101,41 +105,43 @@ function milesToMeters(miles) {
 ///////////////////////////////////////
 
 
+// $('#SearchButton').on('click', executeSearchBar);
 
 
 
-// when the event button is clicked, and location found
-// zoom to location and draw circle
-map.on('locationfound', function (event) {
-    locateZoom(event);
-});
+
+// // when the event button is clicked, and location found
+// // zoom to location and draw circle
+// map.on('locationfound', function (event) {
+//     locateZoom(event);
+// });
 
 
 
-$("form").submit(function (e) {
-    // prevent refresh
-    e.preventDefault();
+// $("form").submit(function (e) {
+//     // prevent refresh
+//     e.preventDefault();
 
-    // if the search bar is not empty, execute a search
-    if ($("#geocoder-input").val() !== '') {
-        executeSearchBar();
-        return;
-    } else { // immediately call the input invalid if nothing is in the search bar
-        isInvalid();
-    }
-});
-
-
-// when submit button clicked, search names and addresses
-$('#ESRI-Search').on('click', executeSearchBar);
+//     // if the search bar is not empty, execute a search
+//     if ($("#geocoder-input").val() !== '') {
+//         executeSearchBar();
+//         return;
+//     } else { // immediately call the input invalid if nothing is in the search bar
+//         isInvalid();
+//     }
+// });
 
 
-$("#checkboxes input[type='checkbox']").change(async function (event) {
-    // when any checkbox inside the div "checkboxes" changes, run this function
-    await filterLocations(event);
+// // when submit button clicked, search names and addresses
+// $('#ESRI-Search').on('click', executeSearchBar);
 
-    pointsInCircle(searchArea, milesToMeters($('#radius-selected').val()), activeLayer);
-});
+
+// $("#checkboxes input[type='checkbox']").change(async function (event) {
+//     // when any checkbox inside the div "checkboxes" changes, run this function
+//     await filterLocations(event);
+
+//     pointsInCircle(searchArea, milesToMeters($('#radius-selected').val()), activeLayer);
+// });
 
 
 
@@ -220,48 +226,48 @@ function search(nameKey, myArray) {
     }
 }
 
-async function executeSearchBar() {
-    const val = document.getElementById("geocoder-input").value;
-    let results;
+// async function executeSearchBar() {
+//     const val = document.getElementById("geocoder-input").value;
+//     let results;
 
-    // Remove marker if one is already on map
-    if (search_marker) {
-        map.removeLayer(search_marker);
-    }
+//     // Remove marker if one is already on map
+//     if (search_marker) {
+//         map.removeLayer(search_marker);
+//     }
 
-    // Get json data and search it
-    const json_data = await $.get("./data/COM.json", function (json_data) {
-        results = search(val, json_data);
-    });
+//     // Get json data and search it
+//     const json_data = await $.get("./data/COM.json", function (json_data) {
+//         results = search(val, json_data);
+//     });
 
-    // If there are any results returned from the search,
-    // Add it to the tableResults object array
-    if (results !== undefined) {
-        // the results are not invalid!
-        isNotInvalid();
+//     // If there are any results returned from the search,
+//     // Add it to the tableResults object array
+//     if (results !== undefined) {
+//         // the results are not invalid!
+//         isNotInvalid();
 
-        const tableResults = [{
-            id: 1,
-            name: results['Agency'],
-            distance: 0,
-            lat: results['Latitude'],
-            lng: results['Longitude'],
-            link: results['Agency'],
-        }]
+//         const tableResults = [{
+//             id: 1,
+//             name: results['Agency'],
+//             distance: 0,
+//             lat: results['Latitude'],
+//             lng: results['Longitude'],
+//             link: results['Agency'],
+//         }]
 
-        // Insert tabulator object 
-        insertTabulator(tableResults);
-        // Zoom to location of company
-        const z = map.getZoom();
-        if (z < 12) {
-            zoomToLocation(results['Latitude'], results['Longitude']);
-        } else {
-            zoomToLocation(results['Latitude'], results['Longitude'], z);
-        }
-    } else {
-        geocodeAddress($('#geocoder-input').val());
-    }
-}
+//         // Insert tabulator object 
+//         insertTabulator(tableResults);
+//         // Zoom to location of company
+//         const z = map.getZoom();
+//         if (z < 12) {
+//             zoomToLocation(results['Latitude'], results['Longitude']);
+//         } else {
+//             zoomToLocation(results['Latitude'], results['Longitude'], z);
+//         }
+//     } else {
+//         geocodeAddress($('#geocoder-input').val());
+//     }
+// }
 
 
 
@@ -291,29 +297,29 @@ function locateZoom(event) {
 
 }
 
-// This uses the ESRI geocoder
-function geocodeAddress(address) {
+// // This uses the ESRI geocoder
+// function geocodeAddress(address) {
 
-    const url = 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates';
-    const params = 'f=json&sourceCountry=USA&searchExtent=-88.5,33,-79,23.5&outFields=location&SingleLine=';
-    const queryString = params + address;
-    $.get(url, queryString, function (data) {
-        if (data.candidates.length !== 0) {
-            // results were found!
-            isNotInvalid();
-            // pick the top candidate of the geocode match
-            const coords = data.candidates[0].location;
-            const location = {
-                lng: coords.x,
-                lat: coords.y
-            };
-            geocodePlaceMarkersOnMap(location);
-        } else {
-            // set invalid classes
-            isInvalid();
-        }
-    });
-}
+//     const url = 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates';
+//     const params = 'f=json&sourceCountry=USA&searchExtent=-88.5,33,-79,23.5&outFields=location&SingleLine=';
+//     const queryString = params + address;
+//     $.get(url, queryString, function (data) {
+//         if (data.candidates.length !== 0) {
+//             // results were found!
+//             isNotInvalid();
+//             // pick the top candidate of the geocode match
+//             const coords = data.candidates[0].location;
+//             const location = {
+//                 lng: coords.x,
+//                 lat: coords.y
+//             };
+//             geocodePlaceMarkersOnMap(location);
+//         } else {
+//             // set invalid classes
+//             isInvalid();
+//         }
+//     });
+// }
 
 
 
@@ -506,6 +512,9 @@ function markerLogic(num, targetLayer) {
                     }
                 }
             }
+        },
+        popupclose: function () {
+            selection_marker.setStyle(markerStyle(default_fill_color, default_outline_color));
         }
     });
     targetLayer.addLayer(circle_marker);

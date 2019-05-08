@@ -16,10 +16,9 @@
 	<link rel="stylesheet" href="css/lib/leaflet.infoButton.css" />
 	<link rel="stylesheet" href="css/lib/easy-autocomplete.min.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.66.1/dist/L.Control.Locate.min.css" />
+	<link rel="stylesheet" href="css/lib/esri-leaflet-geocoder.css" />
 
-
-
-	<!-- CSS: Custom This is an important fix -->
+	<!-- CSS: Custom fix -->
 	<link rel="stylesheet" href="css/styles.css" />
 
 	<!-- JS: Libs -->
@@ -32,6 +31,9 @@
 	<script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.2.1/dist/js/tabulator.min.js"></script>
 	<script type="text/javascript" src="js/lib/jquery.easy-autocomplete.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.66.1/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+	<script type="text/javascript" src="js/lib/esri-leaflet.js"></script>
+	<script type="text/javascript" src="js/lib/esri-leaflet-geocoder.js"></script>
+	
 </head>
 <body>
 
@@ -40,7 +42,7 @@
 			<!-- Sidebar-->
 			<div class="col-sm-5 col-md-4 sidenav" id="legend">
 				<h3><br>FSU College of Medicine<br>Group Care Search Demo</h3>
-				<div id="search-box">
+				<!-- <div id="search-box">
 					<div id="geocoder_box" class="geocoder">
 						<form class="form-inline">
 							<div class="input-group mb-3">
@@ -54,7 +56,7 @@
 							</div>
 						</form>
 					</div>
-				</div>
+				</div> -->
 				<div id='checkboxes'>
 					<div class="form-check">
 						<input class="form-check-input" type="checkbox" value="" id="privateSchool">
