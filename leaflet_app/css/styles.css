@@ -101,7 +101,7 @@ body {
 
   #legend {
     padding: 0px 2%;
-    /* z-index: 7; */
+    z-index: -10;
     height: 40%;
     /* background-color: #EEE; */
     position: absolute;
