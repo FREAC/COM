@@ -128,8 +128,6 @@ const locate = L.control.locate({
 // ESRI Geocoder
 const searchControl = L.esri.Geocoding.geosearch().addTo(map);
 
-
-// TODO CAN THIS BE ADDED INTO THE ZOOM TO FUNCTIONALITY?
 // This should clear the table as well
 function clearSelection() {
     if (search_marker) {
@@ -143,17 +141,18 @@ function clearSelection() {
     }
 }
 
-$('#radius-selected').change(function () {
-    if (searchArea) {
-        const radius = milesToMeters($('#radius-selected').val());
-        searchArea.setRadius(radius);
-        pointsInCircle(searchArea, radius, activeLayer)
-    }
-});
-
 // Clear button functionality
 $('#clear-search').click(function () {
     clearSelection();
+});
+
+const radius = $('#radius');
+radius.change(function () {
+    if (searchArea) {
+        const size = milesToMeters(radius.val());
+        searchArea.setRadius(size);
+        pointsInCircle(searchArea, size, activeLayer)
+    }
 });
 
 // Convert miles to meters to set radius of circle
@@ -161,15 +160,8 @@ function milesToMeters(miles) {
     return miles * 1069.344;
 };
 
-// let objects = [];
-// $.get("./data/COM.json", function(data) {
-//     $.each(data, function (object) {
-//         objects.push(data[object]);
-//     })
-// });
-
 // JQuery Easy Autocomplete: http://easyautocomplete.com
-let options = {
+const options = {
     url: "data/COM.json",
     getValue: "Agency",
     list: {
@@ -182,16 +174,22 @@ let options = {
     },    
     requestDelay: 250,
     placeholder: "Search Providers"
-}
+};
 
 $("#easy-auto").easyAutocomplete(options);
 
+///////////////////////////////////////
+///////////////////////////////////////
+///////////////////////////////////////
+///////////////////////////////////////
 
 
-///////////////////////////////////////
-///////////////////////////////////////
-///////////////////////////////////////
-///////////////////////////////////////
+// let objects = [];
+// $.get("./data/COM.json", function(data) {
+//     $.each(data, function (object) {
+//         objects.push(data[object]);
+//     })
+// });
 
 
 $('#SearchButton').on('click', executeSearchBar);
@@ -201,9 +199,9 @@ $('#SearchButton').on('click', executeSearchBar);
 
 // // when the event button is clicked, and location found
 // // zoom to location and draw circle
-map.on('locationfound', function (event) {
-    locateZoom(event);
-});
+// map.on('locationfound', function (event) {
+//     locateZoom(event);
+// });
 
 
 
@@ -381,10 +379,11 @@ function locateZoom(event) {
 
 // This figures out how many points are within our circle
 function pointsInCircle(circle, meters_user_set, groupLayer) {
+
     if (circle !== undefined) {
         // Only run if we have an address entered
         // Lat, long of circle
-        circle_lat_long = circle.getLatLng();
+        const circle_lat_long = circle.getLatLng();
 
         // Singular, plural information about our JSON file
         // Which is getting put on the map
@@ -401,11 +400,11 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
         groupLayer.eachLayer(function (layer) {
 
             // Lat, long of current point
-            layer_lat_long = layer.getLatLng();
+            const layer_lat_long = layer.getLatLng();
 
             // Distance from our circle marker
             // To current point in meters
-            distance_from_layer_circle = layer_lat_long.distanceTo(circle_lat_long);
+            const distance_from_layer_circle = layer_lat_long.distanceTo(circle_lat_long);
 
             // See if meters is within raduis
             // The user has selected
@@ -463,7 +462,7 @@ function geocodePlaceMarkersOnMap(location, activeLayer = json_group, z = 10) {
     map.setView(new L.LatLng(location.lat, location.lng), z);
 
     // Create circle around marker with our selected radius
-    searchArea = L.circle([location.lat, location.lng], milesToMeters($('#radius-selected').val()), {
+    searchArea = L.circle([location.lat, location.lng], milesToMeters(radius.val()), {
         color: selected_color,
         fillColor: selected_color,
         fillOpacity: 0.1,
@@ -490,7 +489,7 @@ function geocodePlaceMarkersOnMap(location, activeLayer = json_group, z = 10) {
         searchArea.setLatLng(event.target.getLatLng());
 
         // This will determine how many markers are within the circle
-        pointsInCircle(searchArea, milesToMeters($('#radius-selected').val()), activeLayer);
+        pointsInCircle(searchArea, milesToMeters(radius.val()), activeLayer);
 
         // Redraw: Leaflet function
         searchArea.redraw();
@@ -504,7 +503,7 @@ function geocodePlaceMarkersOnMap(location, activeLayer = json_group, z = 10) {
 
     // This will determine how many markers are within the circle
     // Called when points are initially loaded
-    pointsInCircle(searchArea, milesToMeters($('#radius-selected').val()), activeLayer);
+    pointsInCircle(searchArea, milesToMeters(radius.val()), activeLayer);
 }
 
 

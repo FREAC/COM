@@ -18,10 +18,8 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.66.1/dist/L.Control.Locate.min.css" />
 	<link rel="stylesheet" href="css/lib/esri-leaflet-geocoder.css" />
 	
-	
-
 	<!-- CSS: Custom fix -->
-	<!-- <link rel="stylesheet" href="css/styles.css" /> -->
+	<link rel="stylesheet" href="css/styles.css" />
 
 	<!-- JS: Libs -->
 	<script type="text/javascript" src="js/lib/jquery.js"></script>
@@ -38,47 +36,50 @@
 
 </head>
 <body>
-
-	<div class="container-fluid">
-		<div class="row content" id="full-page">
+	<div class="container-fluid h-100">
+		<div class="row">
 			<!-- Sidebar-->
-			<div class="col-sm-5 col-md-4 sidenav" id="legend">
-				<div class="row">
-					<h3><br>FSU College of Medicine<br>Group Care Search Demo</h3>
-				</div>
-				<div class="row">
-						<form class="form-group">
-							<input type="text" id="easy-auto">							
-						</form>
-				</div>
-				<div id='checkboxes'>
-					<div class="row form-check">
-						<input class="form-check-input" type="checkbox" value="" id="privateSchool">
-						<label class="form-check-label" for="lessOrEqualTo80">
-							Accepts Insurance
-						</label>
+			<div class="col-sm-5 col-md-4 sidebar">
+				<h3>FSU College of Medicine<br>Group Care Search Demo</h3>
+				<form>
+					<div class="form-row">
+						<div class="col">
+							<input type="text" class="form-control" id="easy-auto">							
+						</div>
+						<div class="col">
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="insurance">
+								<label class="form-check-label" for="insurance">
+									Accepts Insurance
+								</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="medicare">
+								<label class="form-check-label" for="medicare">
+									Accepts Medicare
+								</label>
+							</div>
+						</div>
 					</div>
-					<div class="row form-check">
-						<input class="form-check-input" type="checkbox" value="" id="publicSchool">
-						<label class="form-check-label" for="lessOrEqualTo45">
-							Accepts Medicare
-						</label>
+
+					<div class="form-row">
+						<div class="col text-center my-auto">
+							Search Area Radius:
+						</div>
+						<div class="col">
+							<select class="form-control" id="radius" placeholder="Search Area Radius">
+								<option value="5">5 miles</option>
+								<option value="10">10 miles</option>
+								<option value="25">25 miles</option>
+								<option value="50">50 miles</option>
+							</select>
+						</div>
+						<div class="col text-center">
+							<button type="button" class="btn" id="clear-search">Clear Search Area</button>
+						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col-3 form">
-						<h6>Search radius:</h6>
-						<select id="radius-selected" name="radius">
-							<option value="5">5 miles</option>
-							<option value="10">10 miles</option>
-							<option value="25">25 miles</option>
-							<option value="50">50 miles</option>
-						</select>
-					</div>
-					<div class="col">
-						<button id="clear-search">Clear Search Area</button>
-					</div>
-				</div>
+				</form>
+
 				<div class="row">
 					<div>
 						<h3>Results</h3>

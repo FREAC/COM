@@ -1,4 +1,18 @@
-/* Base */
+body, html {
+  height: 100%;
+}
+
+.row {
+  height: 100%;
+}
+
+.sidebar {
+  height: 100%;
+  padding: 15px;
+}
+
+
+/* 
 html {
   margin: 0;
   padding: 0;
@@ -19,7 +33,6 @@ body {
   font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
-/* Map */
 #map {
   right: 0px;
   height: 100%;
@@ -29,7 +42,6 @@ body {
   top: 0;
 }
 
-/* Legend */
 #legend {
   padding: 0px 2%;
   z-index: 1;
@@ -55,9 +67,25 @@ body {
   display: block;
 }
 
-/* Set height of the grid so .sidenav can be 100% (adjust if needed) */
-.row.content {
-  height: 100%
+body, html {
+    height: 100%;
+}
+
+
+
+.sidebar {
+    height: 100%;
+    padding: 15px;
+    background-color: rgba(206, 184, 136, 0.5);
+    font-family: Georgia, serif;
+}
+
+.row {
+  height: 100%;
+}
+
+.leaflet-popup-content-wrapper .leaflet-popup-content {
+  font-family: Georgia, serif;
 }
 
 #results-table {
@@ -65,7 +93,6 @@ body {
   margin-bottom: 2%;
 }
 
-/* Put the submit button inside of the search bar */
 #search-bar {
   position: relative;
 }
@@ -89,7 +116,7 @@ body {
   height: 100%;
 }
 
-/* On small screens, set height to 'auto' for sidenav and grid */
+
 @media screen and (max-width: 767px) and (orientation: portrait) {
   .sidenav {
     height: auto;
@@ -101,22 +128,18 @@ body {
 
   #legend {
     padding: 0px 2%;
-    /* z-index: 7; */
     height: 40%;
-    /* background-color: #EEE; */
     position: absolute;
     bottom: 0px;
     overflow-y: scroll;
 
   }
-
-  /* Map */
+  
   #map {
     width: 100%;
     height: 60%;
     position: absolute;
     z-index: -1;
-    /* cursor: default; */
     bottom: 0;
   }
 
@@ -130,13 +153,12 @@ body {
     top: 2%
   }
 
-  /* prevent about from showing when in mobile view */
   #about-section {
     display: none;
   }
 }
 
-/* On small screens, set height to 'auto' for sidenav and grid */
+
 @media screen and (max-width: 812px) and (orientation: landscape) {
   .sidenav {
     height: auto;
@@ -148,15 +170,11 @@ body {
 
   #legend {
     padding: 0px 2%;
-    /* z-index: 7; */
     height: 100%;
-    /* background-color: #EEE; */
-    /* position: absolute; */
     bottom: 0px;
     overflow-y: scroll;
   }
 
-  /* Map */
   #map {
     width: 60%;
     height: 100%;
@@ -176,8 +194,7 @@ body {
     width: 175px;
   }
 
-  /* prevent about from showing when in mobile view */
   #about-section {
     display: none;
   }
-}
+}*/
