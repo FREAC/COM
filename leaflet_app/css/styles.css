@@ -13,7 +13,6 @@ body {
   margin: 0;
   padding: 0;
   width: auto;
-  position: absolute;
 }
 
 .leaflet-popup-content-wrapper .leaflet-popup-content {
@@ -94,6 +93,7 @@ body {
 @media screen and (max-width: 767px) and (orientation: portrait) {
   .sidenav {
     height: auto;
+    width: auto;
     padding: 15px;
     position: relative;
    /* width: 100%; */
