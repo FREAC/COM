@@ -127,7 +127,8 @@ body {
   #geocoder_box {
     position: absolute;
     left: 15%;
-    top: 2%
+    top: 2%;
+    z-index: 2;
   }
 
   /* prevent about from showing when in mobile view */
