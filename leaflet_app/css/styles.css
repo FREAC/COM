@@ -122,6 +122,7 @@ body {
 
   .row.content {
     height: auto;
+    width: auto;
   }
 
   #geocoder_box {
