@@ -68,6 +68,7 @@ body {
 /* Put the submit button inside of the search bar */
 #search-bar {
   position: relative;
+  z-index: 20 !important;
 }
 
 #geocoder-input {
