@@ -1,19 +1,92 @@
+'use strict';
 // Colors
 const default_fill_color = "#ED9118";
 const default_outline_color = "#FFFFFF";
-const hover_color = "#2BBED8";
-const selected_color = "#FF0000";
+const selected_color = "#2BBED8";
+const selected_fill_opacity = 1;
 
 // This sets the marker styles for any of the circleMarker symbols
-function markerStyle(fillColor, strokeColor) {
+function markerStyle(fillColor, strokeColor, fillOpacity=0.75) {
     return {
         fillColor: fillColor,
         color: strokeColor,
-        fillOpacity: 0.8,
+        fillOpacity: fillOpacity,
         radius: 4,
         weight: 0.8
     };
 }
+
+// We'll append our markers to this global variable
+const json_group = new L.FeatureGroup();
+//This is our selection group
+const selection_group = new L.FeatureGroup();
+// This is the circle on the map that will be determine how many markers are around
+let searchArea;
+// this is the icon in the middle of the circle
+let circleIcon;
+// Marker in the middle of the circle
+let search_marker;
+// current selection (red dot)
+let selection_marker;
+// array to store table in
+let table;
+let activeLayer;
+
+// initial setup function to loop through json that
+// assigns marker and add to map
+async function setup() {
+    selection_group.clearLayers();
+    $.get("./data/COM.json", function (json_data) {
+        _.each(json_data, function (num) {
+            markerLogic(num, json_group)
+        }, this);
+        map.addLayer(json_group)
+        // set json_group as active layer
+        activeLayer = json_group;
+    });
+}
+
+// return activelayer
+function checkActiveLayer() {
+    if (_.isEmpty(selection_group._layers) === false) {
+        return json_group;
+    } else {
+        return selection_group;
+    }
+}
+
+
+
+// functions to handle the styling of invalid or valid inputs to the search bar
+function isInvalid() {
+    if (!$('#geocoder-input').hasClass("is-invalid")) {
+        // change color of text to bootstrap is-invalid class to show user that their input was invalid
+        $('#geocoder-input').addClass("is-invalid");
+        // add invalid address message
+        $('.invalid-feedback').show();
+    }
+}
+
+function isNotInvalid() {
+    // if the is-invalid class is present, remove it
+    if ($('#geocoder-input').hasClass('is-invalid')) {
+        $('#geocoder-input').removeClass('is-invalid');
+        // hide invalide address message
+        $('.invalid-feedback').hide();
+    }
+}
+
+// run the setup to query the file 
+setup();
+
+
+///////////////////////////////////////////////
+///////////////////////////////////////////////
+///////////////////////////////////////////////
+///////////////////////////////////////////////
+
+
+
 
 // Map
 const map = new L.Map('map', {
@@ -31,7 +104,6 @@ const map = new L.Map('map', {
 map.on({
     contextmenu: function (event) {
         clearSelection();
-        $('.leaflet-control-locate').removeClass("active following");
         const zoom = map.getZoom();
         if (zoom < 10) {
             geocodePlaceMarkersOnMap(event.latlng, activeLayer);
@@ -55,17 +127,10 @@ const locate = L.control.locate({
 
 // ESRI Geocoder
 const searchControl = L.esri.Geocoding.geosearch().addTo(map);
-// const results = L.layerGroup().addTo(map);
-// searchControl.on('results', function(data){
-//     results.clearLayers();
-//     for (let i = data.results.length - 1; i >= 0; i--) {
-//         results.addLayer(L.marker(data.results[i].latlng));
-//     }
-// });
-
 
 
 // TODO CAN THIS BE ADDED INTO THE ZOOM TO FUNCTIONALITY?
+// This should clear the table as well
 function clearSelection() {
     if (search_marker) {
         map.removeLayer(search_marker);
@@ -78,7 +143,6 @@ function clearSelection() {
     }
 }
 
-// when search radius changes, chang circle size and re-query
 $('#radius-selected').change(function () {
     if (searchArea) {
         const radius = milesToMeters($('#radius-selected').val());
@@ -87,15 +151,40 @@ $('#radius-selected').change(function () {
     }
 });
 
+// Clear button functionality
+$('#clear-search').click(function () {
+    clearSelection();
+});
 
 // Convert miles to meters to set radius of circle
 function milesToMeters(miles) {
     return miles * 1069.344;
 };
 
+// let objects = [];
+// $.get("./data/COM.json", function(data) {
+//     $.each(data, function (object) {
+//         objects.push(data[object]);
+//     })
+// });
 
+// JQuery Easy Autocomplete: http://easyautocomplete.com
+let options = {
+    url: "data/COM.json",
+    getValue: "Agency",
+    list: {
+        maxNumberOfElements: 3,
+        match: {enabled: true},
+        onClickEvent: function() {
+            const data = $("#easy-auto").getSelectedItemData();
+            zoomToLocation(data.Latitude, data.Longitude);
+        }
+    },    
+    requestDelay: 250,
+    placeholder: "Search Providers"
+}
 
-
+$("#easy-auto").easyAutocomplete(options);
 
 
 
@@ -105,35 +194,31 @@ function milesToMeters(miles) {
 ///////////////////////////////////////
 
 
-// $('#SearchButton').on('click', executeSearchBar);
+$('#SearchButton').on('click', executeSearchBar);
 
 
 
 
 // // when the event button is clicked, and location found
 // // zoom to location and draw circle
-// map.on('locationfound', function (event) {
-//     locateZoom(event);
-// });
+map.on('locationfound', function (event) {
+    locateZoom(event);
+});
 
 
 
-// $("form").submit(function (e) {
-//     // prevent refresh
-//     e.preventDefault();
+$("form").submit(function (e) {
+    // prevent refresh
+    e.preventDefault();
 
-//     // if the search bar is not empty, execute a search
-//     if ($("#geocoder-input").val() !== '') {
-//         executeSearchBar();
-//         return;
-//     } else { // immediately call the input invalid if nothing is in the search bar
-//         isInvalid();
-//     }
-// });
-
-
-// // when submit button clicked, search names and addresses
-// $('#ESRI-Search').on('click', executeSearchBar);
+    // if the search bar is not empty, execute a search
+    if ($("#geocoder-input").val() !== '') {
+        executeSearchBar();
+        return;
+    } else { // immediately call the input invalid if nothing is in the search bar
+        isInvalid();
+    }
+});
 
 
 // $("#checkboxes input[type='checkbox']").change(async function (event) {
@@ -160,7 +245,7 @@ function zoomToLocation(lat, lng, z = 12) {
     const marker_location = new L.LatLng(lat, lng);
 
     // set the selection_marker variable to our location and style
-    selection_marker = L.circleMarker(marker_location, markerStyle(selected_color, selected_color));
+    selection_marker = L.circleMarker(marker_location, markerStyle(selected_color, selected_color, selected_fill_opacity));
 
     //allow for the user to click the point under the marker
     selection_marker.options.interactive = false;
@@ -189,11 +274,10 @@ if (screen.availWidth < 813) {
 
 // create a reusable Tabulator object
 function insertTabulator(data) {
-    // insert new dynamic table based on the results of the circle
     table = new Tabulator("#results-table", {
-        height: 200, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
-        data: data, //assign data to table
-        layout: "fitColumns", //fit columns to width of table (optional)
+        height: 200,
+        data: data,
+        layout: "fitColumns",
         selectable: 1,
         columns: [
             {
@@ -201,17 +285,14 @@ function insertTabulator(data) {
                 field: "agency"
             }
         ],
-        rowClick: function (e, row) { //trigger a response when the row is clicked
-
+        rowClick: function (event, row) {
             const lat = row.getData().lat;
             const lng = row.getData().lng;
-            const z = map.getZoom();
-
-            // if too far away, zoom in
-            if (z < 12) {
+            const zoom = map.getZoom();
+            if (zoom < 12) {
                 zoomToLocation(lat, lng);
             } else {
-                zoomToLocation(lat, lng, z);
+                zoomToLocation(lat, lng, zoom);
             }
         },
     });
@@ -226,48 +307,48 @@ function search(nameKey, myArray) {
     }
 }
 
-// async function executeSearchBar() {
-//     const val = document.getElementById("geocoder-input").value;
-//     let results;
+async function executeSearchBar() {
+    const val = document.getElementById("geocoder-input").value;
+    let results;
 
-//     // Remove marker if one is already on map
-//     if (search_marker) {
-//         map.removeLayer(search_marker);
-//     }
+    // Remove marker if one is already on map
+    if (search_marker) {
+        map.removeLayer(search_marker);
+    }
 
-//     // Get json data and search it
-//     const json_data = await $.get("./data/COM.json", function (json_data) {
-//         results = search(val, json_data);
-//     });
+    // Get json data and search it
+    const json_data = await $.get("./data/COM.json", function (json_data) {
+        results = search(val, json_data);
+    });
 
-//     // If there are any results returned from the search,
-//     // Add it to the tableResults object array
-//     if (results !== undefined) {
-//         // the results are not invalid!
-//         isNotInvalid();
+    // If there are any results returned from the search,
+    // Add it to the tableResults object array
+    if (results !== undefined) {
+        // the results are not invalid!
+        isNotInvalid();
 
-//         const tableResults = [{
-//             id: 1,
-//             name: results['Agency'],
-//             distance: 0,
-//             lat: results['Latitude'],
-//             lng: results['Longitude'],
-//             link: results['Agency'],
-//         }]
+        const tableResults = [{
+            id: 1,
+            name: results['Agency'],
+            distance: 0,
+            lat: results['Latitude'],
+            lng: results['Longitude'],
+            link: results['Agency'],
+        }]
 
-//         // Insert tabulator object 
-//         insertTabulator(tableResults);
-//         // Zoom to location of company
-//         const z = map.getZoom();
-//         if (z < 12) {
-//             zoomToLocation(results['Latitude'], results['Longitude']);
-//         } else {
-//             zoomToLocation(results['Latitude'], results['Longitude'], z);
-//         }
-//     } else {
-//         geocodeAddress($('#geocoder-input').val());
-//     }
-// }
+        // Insert tabulator object 
+        insertTabulator(tableResults);
+        // Zoom to location of company
+        const z = map.getZoom();
+        if (z < 12) {
+            zoomToLocation(results['Latitude'], results['Longitude']);
+        } else {
+            zoomToLocation(results['Latitude'], results['Longitude'], z);
+        }
+    } else {
+        geocodeAddress($('#geocoder-input').val());
+    }
+}
 
 
 
@@ -296,31 +377,6 @@ function locateZoom(event) {
     $('.leaflet-control-locate').addClass("active following")
 
 }
-
-// // This uses the ESRI geocoder
-// function geocodeAddress(address) {
-
-//     const url = 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates';
-//     const params = 'f=json&sourceCountry=USA&searchExtent=-88.5,33,-79,23.5&outFields=location&SingleLine=';
-//     const queryString = params + address;
-//     $.get(url, queryString, function (data) {
-//         if (data.candidates.length !== 0) {
-//             // results were found!
-//             isNotInvalid();
-//             // pick the top candidate of the geocode match
-//             const coords = data.candidates[0].location;
-//             const location = {
-//                 lng: coords.x,
-//                 lat: coords.y
-//             };
-//             geocodePlaceMarkersOnMap(location);
-//         } else {
-//             // set invalid classes
-//             isInvalid();
-//         }
-//     });
-// }
-
 
 
 // This figures out how many points are within our circle
@@ -408,8 +464,8 @@ function geocodePlaceMarkersOnMap(location, activeLayer = json_group, z = 10) {
 
     // Create circle around marker with our selected radius
     searchArea = L.circle([location.lat, location.lng], milesToMeters($('#radius-selected').val()), {
-        color: hover_color,
-        fillColor: hover_color,
+        color: selected_color,
+        fillColor: selected_color,
         fillOpacity: 0.1,
         clickable: false,
         interactive: false
@@ -475,46 +531,44 @@ function markerLogic(num, targetLayer) {
     // Add events
     circle_marker.on({
         mouseover: function (event) {
-            if (event.target.options.fillColor !== selected_color) {
-                event.target.setStyle(markerStyle(hover_color, hover_color));
+            if (event.target !== selection_marker) {
+                event.target.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity));
             }
         },
         mouseout: function (event) {
-            if (event.target.options.fillColor !== selected_color) {
+            if (event.target !== selection_marker) {
                 event.target.setStyle(markerStyle(default_fill_color, default_outline_color));
             }
         },
         click: function (event) {
-            // if there is no click marker yet, assign one
             if (selection_marker === undefined) {
                 selection_marker = event.target;
-                selection_marker.setStyle(markerStyle(selected_color, selected_color));
-            } else { // if there is a click marker already
-                // assign old marker back to original color
+                event.target.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity));
+            } else {
                 selection_marker.setStyle(markerStyle(default_fill_color, default_outline_color));
-
-                // assign new marker to red
                 selection_marker = event.target;
-                selection_marker.setStyle(markerStyle(selected_color, selected_color));
-            }
-            // if a tabulator table is already active
-            if ($('#results-table').hasClass('tabulator')) {
-                // get the data that is inside of it
-                const data = table.getData();
-                // loop through data to see if clicked feature matches
-                for (let i in data) {
-                    // if we find a layer match, select it
-                    if (event.target.data.Agency === data[i].agency) {
-                        // deselect previous row selection
-                        table.deselectRow();
-                        // select new row selection
-                        table.selectRow(i);
-                    }
-                }
+                selection_marker.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity));
             }
         },
-        popupclose: function () {
-            selection_marker.setStyle(markerStyle(default_fill_color, default_outline_color));
+            // }
+            // if a tabulator table is already active
+            // if ($('#results-table').hasClass('tabulator')) {
+            //     // get the data that is inside of it
+            //     const data = table.getData();
+            //     // loop through data to see if clicked feature matches
+            //     for (let i in data) {
+            //         // if we find a layer match, select it
+            //         if (event.target.data.Agency === data[i].agency) {
+            //             // deselect previous row selection
+            //             table.deselectRow();
+            //             // select new row selection
+            //             table.selectRow(i);
+            //         }
+            //     }
+            // }
+        popupclose: function (event) {
+            selection_marker = undefined;
+            event.target.setStyle(markerStyle(default_fill_color, default_outline_color));
         }
     });
     targetLayer.addLayer(circle_marker);
