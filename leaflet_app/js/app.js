@@ -38,7 +38,7 @@ map.on({
         if (zoom < 10) {
             geocodePlaceMarkersOnMap(event.latlng, activeLayer);
         } else {
-            geocodePlaceMarkersOnMap(event.latlng, activeLayer,  zoom);
+            geocodePlaceMarkersOnMap(event.latlng, activeLayer, zoom);
         }
     },
     popupclose: function () {
@@ -170,8 +170,7 @@ if (screen.availWidth < 813) {
     document.getElementById('full-page').appendChild(
         document.getElementById('geocoder_box')
     );
-    if (infoButton) {
-    } else {
+    if (infoButton) {} else {
         infoButton = L.control.infoButton({
             position: 'topleft',
             html: "<div style='text-align:center;'><p></p><img src='images/fsulogo.png' alt='FSU Logo' width='75' height='75'=><br><br><h4>Florida State University College of Medicine</h4><br><h5>Group Care Search Demo</h5><br><p>This demo counts the number of group care facilities within a radius of a given point and displays them on a map using Leaflet.</p><br><p>To use, enter an address and then enter a radius. Under results will be the number of markers within the given radius. You can also drag the marker on the map; the number will update automatically.</p><br><p>More information regarding the original code is available here. Code was originally used here.</p><br><p>This project is sponsored by:</p><a href='https://www.sagerx.com/' target='_blank'><img alt='Sage Therapeutics' src='images/logo-sagerx.svg'><br><br></div>"
@@ -189,12 +188,10 @@ function insertTabulator(data) {
         data: data, //assign data to table
         layout: "fitColumns", //fit columns to width of table (optional)
         selectable: 1,
-        columns: [
-            {
-                title: "Provider",
-                field: "agency"
-            }
-        ],
+        columns: [{
+            title: "Provider",
+            field: "agency"
+        }],
         rowClick: function (e, row) { //trigger a response when the row is clicked
 
             const lat = row.getData().lat;
@@ -261,6 +258,11 @@ async function executeSearchBar() {
     } else {
         geocodeAddress($('#geocoder-input').val());
     }
+
+    $('#geocoder-input').touch(function () {
+        alert('touched!');
+    });
+
 }
 
 
@@ -457,7 +459,9 @@ function markerLogic(num, targetLayer) {
     const html = `<b>${num['Agency']}</b><br>
                     ${num['HouseNumber']} ${num['Street']} ${num['Unit']}<br>
                     ${num['City']}, ${num['State']} ${num['PostalCode']}`;
-    const popup = L.popup({closeButton: false}).setContent(html);
+    const popup = L.popup({
+        closeButton: false
+    }).setContent(html);
     // Create marker for point
     const marker_location = new L.LatLng(num['Latitude'], num['Longitude']);
     const circle_marker = L.circleMarker(marker_location, markerStyle(default_fill_color, default_outline_color))
