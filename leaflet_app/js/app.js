@@ -1,4 +1,5 @@
 'use strict';
+
 // Colors
 const default_fill_color = "#ED9118";
 const default_outline_color = "#FFFFFF";
@@ -16,6 +17,10 @@ function markerStyle(fillColor, strokeColor, fillOpacity=0.75) {
     };
 }
 
+// current selection (red dot)
+let selection_marker;
+
+
 // We'll append our markers to this global variable
 const json_group = new L.FeatureGroup();
 //This is our selection group
@@ -23,70 +28,34 @@ const selection_group = new L.FeatureGroup();
 // This is the circle on the map that will be determine how many markers are around
 let searchArea;
 // this is the icon in the middle of the circle
-let circleIcon;
+// let circleIcon;
 // Marker in the middle of the circle
 let search_marker;
-// current selection (red dot)
-let selection_marker;
 // array to store table in
 let table;
 let activeLayer;
+
 
 // initial setup function to loop through json that
 // assigns marker and add to map
 async function setup() {
     selection_group.clearLayers();
     $.get("./data/COM.json", function (json_data) {
-        _.each(json_data, function (num) {
-            markerLogic(num, json_group)
-        }, this);
+        $.each(json_data, function (object) {
+            const provider = json_data[object];
+            const marker = markerLogic(provider);
+            marker.addTo(json_group);
+            json_group.addLayer(marker);
+        });
         map.addLayer(json_group)
-        // set json_group as active layer
         activeLayer = json_group;
     });
 }
 
-// return activelayer
-function checkActiveLayer() {
-    if (_.isEmpty(selection_group._layers) === false) {
-        return json_group;
-    } else {
-        return selection_group;
-    }
-}
-
-
-
-// functions to handle the styling of invalid or valid inputs to the search bar
-function isInvalid() {
-    if (!$('#geocoder-input').hasClass("is-invalid")) {
-        // change color of text to bootstrap is-invalid class to show user that their input was invalid
-        $('#geocoder-input').addClass("is-invalid");
-        // add invalid address message
-        $('.invalid-feedback').show();
-    }
-}
-
-function isNotInvalid() {
-    // if the is-invalid class is present, remove it
-    if ($('#geocoder-input').hasClass('is-invalid')) {
-        $('#geocoder-input').removeClass('is-invalid');
-        // hide invalide address message
-        $('.invalid-feedback').hide();
-    }
-}
-
-// run the setup to query the file 
-setup();
-
-
 ///////////////////////////////////////////////
 ///////////////////////////////////////////////
 ///////////////////////////////////////////////
 ///////////////////////////////////////////////
-
-
-
 
 // Map
 const map = new L.Map('map', {
@@ -103,15 +72,12 @@ const map = new L.Map('map', {
 
 map.on({
     contextmenu: function (event) {
-        clearSelection();
-        const zoom = map.getZoom();
-        if (zoom < 10) {
-            geocodePlaceMarkersOnMap(event.latlng, activeLayer);
-        } else {
-            geocodePlaceMarkersOnMap(event.latlng, activeLayer, zoom);
-        }
+        querySearchArea(event.latlng, activeLayer);
     }
 });
+
+// Load the data
+setup();
 
 // Base map
 L.tileLayer.provider('CartoDB.Voyager').addTo(map);
@@ -160,6 +126,13 @@ function milesToMeters(miles) {
     return miles * 1069.344;
 };
 
+function createPopup(data) {
+    const content = `<b>${data['Agency']}</b><br>
+                    ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
+                    ${data['City']}, ${data['State']} ${data['PostalCode']}`;
+    return L.popup({closeButton: false}).setContent(content);
+}
+
 // JQuery Easy Autocomplete: http://easyautocomplete.com
 const options = {
     url: "data/COM.json",
@@ -168,6 +141,7 @@ const options = {
         maxNumberOfElements: 3,
         match: {enabled: true},
         onClickEvent: function() {
+            clearSelection();
             const data = $("#easy-auto").getSelectedItemData();
             zoomToLocation(data.Latitude, data.Longitude);
         }
@@ -184,49 +158,20 @@ $("#easy-auto").easyAutocomplete(options);
 ///////////////////////////////////////
 
 
-// let objects = [];
-// $.get("./data/COM.json", function(data) {
-//     $.each(data, function (object) {
-//         objects.push(data[object]);
-//     })
-// });
-
-
-$('#SearchButton').on('click', executeSearchBar);
-
-
-
-
-// // when the event button is clicked, and location found
-// // zoom to location and draw circle
-// map.on('locationfound', function (event) {
-//     locateZoom(event);
-// });
-
-
-
-$("form").submit(function (e) {
-    // prevent refresh
-    e.preventDefault();
-
-    // if the search bar is not empty, execute a search
-    if ($("#geocoder-input").val() !== '') {
-        executeSearchBar();
-        return;
-    } else { // immediately call the input invalid if nothing is in the search bar
-        isInvalid();
-    }
-});
-
+// function getMarker(agency) {
+//     for (const i in providers) {
+//         const provider = providers[i].data.Agency;
+//         if (provider === agency) {
+//             providers[i].openPopup();
+//         }
+//     }
+// }
 
 // $("#checkboxes input[type='checkbox']").change(async function (event) {
 //     // when any checkbox inside the div "checkboxes" changes, run this function
 //     await filterLocations(event);
-
 //     pointsInCircle(searchArea, milesToMeters($('#radius-selected').val()), activeLayer);
 // });
-
-
 
 // general function that will take in lat and lon
 // then will zoom to and highlight desired feature
@@ -252,23 +197,23 @@ function zoomToLocation(lat, lng, z = 12) {
     map.addLayer(selection_marker);
 }
 
-// This file will house all of the map logic for screen size changes
-let infoButton;
-// append search bar to the top of the map when on small screen
-if (screen.availWidth < 813) {
-    document.getElementById('full-page').appendChild(
-        document.getElementById('geocoder_box')
-    );
-    if (infoButton) {
-    } else {
-        infoButton = L.control.infoButton({
-            position: 'topleft',
-            html: "<div style='text-align:center;'><p></p><img src='images/fsulogo.png' alt='FSU Logo' width='75' height='75'=><br><br><h4>Florida State University College of Medicine</h4><br><h5>Group Care Search Demo</h5><br><p>This demo counts the number of group care facilities within a radius of a given point and displays them on a map using Leaflet.</p><br><p>To use, enter an address and then enter a radius. Under results will be the number of markers within the given radius. You can also drag the marker on the map; the number will update automatically.</p><br><p>More information regarding the original code is available here. Code was originally used here.</p><br><p>This project is sponsored by:</p><a href='https://www.sagerx.com/' target='_blank'><img alt='Sage Therapeutics' src='images/logo-sagerx.svg'><br><br></div>"
-        });
+// // This file will house all of the map logic for screen size changes
+// let infoButton;
+// // append search bar to the top of the map when on small screen
+// if (screen.availWidth < 813) {
+//     document.getElementById('full-page').appendChild(
+//         document.getElementById('geocoder_box')
+//     );
+//     if (infoButton) {
+//     } else {
+//         infoButton = L.control.infoButton({
+//             position: 'topleft',
+//             html: "<div style='text-align:center;'><p></p><img src='images/fsulogo.png' alt='FSU Logo' width='75' height='75'=><br><br><h4>Florida State University College of Medicine</h4><br><h5>Group Care Search Demo</h5><br><p>This demo counts the number of group care facilities within a radius of a given point and displays them on a map using Leaflet.</p><br><p>To use, enter an address and then enter a radius. Under results will be the number of markers within the given radius. You can also drag the marker on the map; the number will update automatically.</p><br><p>More information regarding the original code is available here. Code was originally used here.</p><br><p>This project is sponsored by:</p><a href='https://www.sagerx.com/' target='_blank'><img alt='Sage Therapeutics' src='images/logo-sagerx.svg'><br><br></div>"
+//         });
 
-        infoButton.addTo(map);
-    }
-}
+//         infoButton.addTo(map);
+//     }
+// }
 
 // create a reusable Tabulator object
 function insertTabulator(data) {
@@ -294,86 +239,6 @@ function insertTabulator(data) {
             }
         },
     });
-}
-
-// search a JSON object for value
-function search(nameKey, myArray) {
-    for (var i = 0; i < myArray.length; i++) {
-        if (myArray[i].Agency === nameKey) {
-            return myArray[i];
-        }
-    }
-}
-
-async function executeSearchBar() {
-    const val = document.getElementById("geocoder-input").value;
-    let results;
-
-    // Remove marker if one is already on map
-    if (search_marker) {
-        map.removeLayer(search_marker);
-    }
-
-    // Get json data and search it
-    const json_data = await $.get("./data/COM.json", function (json_data) {
-        results = search(val, json_data);
-    });
-
-    // If there are any results returned from the search,
-    // Add it to the tableResults object array
-    if (results !== undefined) {
-        // the results are not invalid!
-        isNotInvalid();
-
-        const tableResults = [{
-            id: 1,
-            name: results['Agency'],
-            distance: 0,
-            lat: results['Latitude'],
-            lng: results['Longitude'],
-            link: results['Agency'],
-        }]
-
-        // Insert tabulator object 
-        insertTabulator(tableResults);
-        // Zoom to location of company
-        const z = map.getZoom();
-        if (z < 12) {
-            zoomToLocation(results['Latitude'], results['Longitude']);
-        } else {
-            zoomToLocation(results['Latitude'], results['Longitude'], z);
-        }
-    } else {
-        geocodeAddress($('#geocoder-input').val());
-    }
-}
-
-
-
-// when location is found, zoom to the location
-function locateZoom(event) {
-    // start the locate control
-    locate.start();
-
-    // set location of the locate function
-    const location = {
-        lng: event.longitude,
-        lat: event.latitude
-    };
-
-    // get current zoom level
-    const z = map.getZoom();
-    if (z < 10) {
-        // geocode, draw circle, and find points within circle at default zoom
-        geocodePlaceMarkersOnMap(location);
-    } else {
-        // geocode, draw circle, and find points within circle at current zoom
-        geocodePlaceMarkersOnMap(location, z);
-    }
-
-    locate.stop();
-    $('.leaflet-control-locate').addClass("active following")
-
 }
 
 
@@ -453,53 +318,23 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
     }
 };
 
+
+
 // This places marker, circle on map
-function geocodePlaceMarkersOnMap(location, activeLayer = json_group, z = 10) {
-    // Clear any current selections that are on the map
+function querySearchArea(location, activeLayer = json_group, z = 10) {
+    
     clearSelection();
 
     // Center the map on the result
     map.setView(new L.LatLng(location.lat, location.lng), z);
 
-    // Create circle around marker with our selected radius
     searchArea = L.circle([location.lat, location.lng], milesToMeters(radius.val()), {
-        color: selected_color,
-        fillColor: selected_color,
-        fillOpacity: 0.1,
-        clickable: false,
-        interactive: false
-    }).addTo(map);
-
-    //custom icon to go inside the circle
-    circleIcon = L.icon({
-        iconUrl: './css/lib/images/circleIcon.png',
-        iconSize: [8, 8],
-    });
-
-    // Create marker
-    search_marker = L.marker([location.lat, location.lng], {
-        // Allow user to drag marker
-        draggable: true,
-        icon: circleIcon
-    });
-
-    // Reset map view on marker drag
-    search_marker.on('dragend', function (event) {
-        map.setView(event.target.getLatLng());
-        searchArea.setLatLng(event.target.getLatLng());
-
-        // This will determine how many markers are within the circle
-        pointsInCircle(searchArea, milesToMeters(radius.val()), activeLayer);
-
-        // Redraw: Leaflet function
-        searchArea.redraw();
-
-        // Clear out address in geocoder
-        $('#geocoder-input').val('');
-    });
-
-    // Add marker to the map
-    search_marker.addTo(map);
+            color: selected_color,
+            fillColor: selected_color,
+            fillOpacity: 0.1,
+            clickable: false,
+            interactive: false
+        }).addTo(map);
 
     // This will determine how many markers are within the circle
     // Called when points are initially loaded
@@ -507,27 +342,15 @@ function geocodePlaceMarkersOnMap(location, activeLayer = json_group, z = 10) {
 }
 
 
-
-
-
-
-
 // Assign these properties to each marker in the data
-function markerLogic(num, targetLayer) {
-    // Popup template
-    const html = `<b>${num['Agency']}</b><br>
-                    ${num['HouseNumber']} ${num['Street']} ${num['Unit']}<br>
-                    ${num['City']}, ${num['State']} ${num['PostalCode']}`;
-    const popup = L.popup({closeButton: false}).setContent(html);
-    // Create marker for point
-    const marker_location = new L.LatLng(num['Latitude'], num['Longitude']);
+function markerLogic(data) {
+
+    // Create marker for data
+    const popup = createPopup(data);
+    const marker_location = new L.LatLng(data['Latitude'], data['Longitude']);
     const circle_marker = L.circleMarker(marker_location, markerStyle(default_fill_color, default_outline_color))
         .bindPopup(popup);
-    // Add data object
-    circle_marker.data = {
-        'Agency': num['Agency']
-    };
-    // Add events
+
     circle_marker.on({
         mouseover: function (event) {
             if (event.target !== selection_marker) {
@@ -549,7 +372,10 @@ function markerLogic(num, targetLayer) {
                 selection_marker.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity));
             }
         },
-            // }
+        popupclose: function (event) {
+            selection_marker = undefined;
+            event.target.setStyle(markerStyle(default_fill_color, default_outline_color));
+        }
             // if a tabulator table is already active
             // if ($('#results-table').hasClass('tabulator')) {
             //     // get the data that is inside of it
@@ -565,10 +391,12 @@ function markerLogic(num, targetLayer) {
             //         }
             //     }
             // }
-        popupclose: function (event) {
-            selection_marker = undefined;
-            event.target.setStyle(markerStyle(default_fill_color, default_outline_color));
-        }
     });
-    targetLayer.addLayer(circle_marker);
+
+    // Add a data object for use in the table
+    circle_marker.data = {
+        'Agency': data['Agency']
+    };
+
+    return circle_marker;
 }
