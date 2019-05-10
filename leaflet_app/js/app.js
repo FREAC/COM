@@ -259,7 +259,7 @@ async function executeSearchBar() {
         geocodeAddress($('#geocoder-input').val());
     }
 
-    $('#geocoder-input').touch(function () {
+    $('#geocoder-input').focus(function () {
         $('#geocoder-input').val('touched');
     });
 
