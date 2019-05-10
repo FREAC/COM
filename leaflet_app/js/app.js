@@ -260,7 +260,7 @@ async function executeSearchBar() {
     }
 
     $('#geocoder-input').touch(function () {
-        alert('touched!');
+        $('#geocoder-input').val('touched');
     });
 
 }
