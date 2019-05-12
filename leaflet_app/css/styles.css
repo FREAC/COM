@@ -162,7 +162,7 @@ html {
   }
 
   #easy-auto {
-    /* z-index: 999; */
+    z-index: 400;
     position: absolute;
     left: 15%;
     top: 2%;
