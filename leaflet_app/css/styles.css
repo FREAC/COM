@@ -119,7 +119,9 @@ html {
 }
 
 
-@media screen and (max-width: 767px) and (orientation: portrait) {
+/* @media screen and (max-width: 767px) and (orientation: portrait) { */
+
+@media screen and (max-width: 767px) {
   .sidenav {
     height: auto;
     padding: 15px;
