@@ -98,8 +98,7 @@ body {
 
 
 /* On small screens, set height to 'auto' for sidenav and grid */
-/* @media screen and (max-width: 767px) and (orientation: portrait) { */
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 767px) and (orientation: portrait) {
   .sidenav {
     height: auto;
     padding: 15px;
