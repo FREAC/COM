@@ -97,7 +97,7 @@ body {
     width: auto;
     padding: 15px;
     position: relative;
-   /* width: 100%; */
+    /* width: 100%; */
     bottom: 10px;
   }
 
@@ -140,7 +140,7 @@ body {
 }
 
 /* On small screens, set height to 'auto' for sidenav and grid */
-@media screen and (max-width: 812px) and (orientation: landscape) {
+/* @media screen and (max-width: 812px) and (orientation: landscape) {
   .sidenav {
     height: auto;
     padding: 15px;
@@ -151,15 +151,15 @@ body {
 
   #legend {
     padding: 0px 2%;
-    /* z-index: 7; */
+    z-index: 7;
     height: 100%;
-    /* background-color: #EEE; */
-    /* position: absolute; */
+    background-color: #EEE;
+    position: absolute;
     bottom: 0px;
     overflow-y: scroll;
   }
 
-  /* Map */
+  Map
   #map {
     width: 60%;
     height: 100%;
@@ -180,8 +180,8 @@ body {
     z-index: 20;
   }
 
-  /* prevent about from showing when in mobile view */
+  prevent about from showing when in mobile view
   #about-section {
     display: none;
   }
-}
+} */
