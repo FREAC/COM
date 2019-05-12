@@ -160,6 +160,14 @@ html {
   #about-section {
     display: none;
   }
+
+  #easy-auto {
+    z-index: 999;
+    position: absolute;
+    left: 15%;
+    top: 2%;
+    max-width: 65%;
+  }
 }
 
 

@@ -7,7 +7,7 @@ const selected_color = "#2BBED8";
 const selected_fill_opacity = 1;
 
 // This sets the marker styles for any of the circleMarker symbols
-function markerStyle(fillColor, strokeColor, fillOpacity=0.75) {
+function markerStyle(fillColor, strokeColor, fillOpacity = 0.75) {
     return {
         fillColor: fillColor,
         color: strokeColor,
@@ -85,8 +85,12 @@ L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 // Locate Button
 const locate = L.control.locate({
     flyTo: true,
-    clickBehavior: {inViewNotFollowing: 'setView'},
-    strings: {title: "Find my location"},
+    clickBehavior: {
+        inViewNotFollowing: 'setView'
+    },
+    strings: {
+        title: "Find my location"
+    },
     drawCircle: false,
     showPopup: false
 }).addTo(map);
@@ -130,7 +134,9 @@ function createPopup(data) {
     const content = `<b>${data['Agency']}</b><br>
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}`;
-    return L.popup({closeButton: false}).setContent(content);
+    return L.popup({
+        closeButton: false
+    }).setContent(content);
 }
 
 // JQuery Easy Autocomplete: http://easyautocomplete.com
@@ -139,13 +145,15 @@ const options = {
     getValue: "Agency",
     list: {
         maxNumberOfElements: 3,
-        match: {enabled: true},
-        onClickEvent: function() {
+        match: {
+            enabled: true
+        },
+        onClickEvent: function () {
             clearSelection();
             const data = $("#easy-auto").getSelectedItemData();
             zoomToLocation(data.Latitude, data.Longitude);
         }
-    },    
+    },
     requestDelay: 250,
     placeholder: "Search Providers"
 };
@@ -222,12 +230,10 @@ function insertTabulator(data) {
         data: data,
         layout: "fitColumns",
         selectable: 1,
-        columns: [
-            {
-                title: "Provider",
-                field: "agency"
-            }
-        ],
+        columns: [{
+            title: "Provider",
+            field: "agency"
+        }],
         rowClick: function (event, row) {
             const lat = row.getData().lat;
             const lng = row.getData().lng;
@@ -322,19 +328,19 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
 
 // This places marker, circle on map
 function querySearchArea(location, activeLayer = json_group, z = 10) {
-    
+
     clearSelection();
 
     // Center the map on the result
     map.setView(new L.LatLng(location.lat, location.lng), z);
 
     searchArea = L.circle([location.lat, location.lng], milesToMeters(radius.val()), {
-            color: selected_color,
-            fillColor: selected_color,
-            fillOpacity: 0.1,
-            clickable: false,
-            interactive: false
-        }).addTo(map);
+        color: selected_color,
+        fillColor: selected_color,
+        fillOpacity: 0.1,
+        clickable: false,
+        interactive: false
+    }).addTo(map);
 
     // This will determine how many markers are within the circle
     // Called when points are initially loaded
@@ -376,21 +382,21 @@ function markerLogic(data) {
             selection_marker = undefined;
             event.target.setStyle(markerStyle(default_fill_color, default_outline_color));
         }
-            // if a tabulator table is already active
-            // if ($('#results-table').hasClass('tabulator')) {
-            //     // get the data that is inside of it
-            //     const data = table.getData();
-            //     // loop through data to see if clicked feature matches
-            //     for (let i in data) {
-            //         // if we find a layer match, select it
-            //         if (event.target.data.Agency === data[i].agency) {
-            //             // deselect previous row selection
-            //             table.deselectRow();
-            //             // select new row selection
-            //             table.selectRow(i);
-            //         }
-            //     }
-            // }
+        // if a tabulator table is already active
+        // if ($('#results-table').hasClass('tabulator')) {
+        //     // get the data that is inside of it
+        //     const data = table.getData();
+        //     // loop through data to see if clicked feature matches
+        //     for (let i in data) {
+        //         // if we find a layer match, select it
+        //         if (event.target.data.Agency === data[i].agency) {
+        //             // deselect previous row selection
+        //             table.deselectRow();
+        //             // select new row selection
+        //             table.selectRow(i);
+        //         }
+        //     }
+        // }
     });
 
     // Add a data object for use in the table
@@ -399,4 +405,22 @@ function markerLogic(data) {
     };
 
     return circle_marker;
+}
+
+// This file will house all of the map logic for screen size changes
+let infoButton;
+// append search bar to the top of the map when on small screen
+if (screen.availWidth < 813) {
+    document.getElementById('map').appendChild(
+        document.getElementById('easy-auto')
+    );
+    if (infoButton) {} else {
+        infoButton = L.control.infoButton({
+            position: 'topleft',
+            html: "<div style='text-align:center;'><p></p><img src='images/fsulogo.png' alt='FSU Logo' width='75' height='75'=><br><br><h4>Florida State University College of Medicine</h4><br><h5>Group Care Search Demo</h5><br><p>This demo counts the number of group care facilities within a radius of a given point and displays them on a map using Leaflet.</p><br><p>To use, enter an address and then enter a radius. Under results will be the number of markers within the given radius. You can also drag the marker on the map; the number will update automatically.</p><br><p>More information regarding the original code is available here. Code was originally used here.</p><br><p>This project is sponsored by:</p><a href='https://www.sagerx.com/' target='_blank'><img alt='Sage Therapeutics' src='images/logo-sagerx.svg'><br><br></div>"
+        });
+
+        infoButton.addTo(map);
+    }
+
 }
