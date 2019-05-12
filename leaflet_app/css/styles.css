@@ -161,7 +161,7 @@ html {
 }
 
 
-@media screen and (max-width: 812px) and (orientation: landscape) {
+/* @media screen and (max-width: 812px) and (orientation: landscape) {
   .sidenav {
     height: auto;
     padding: 15px;
@@ -181,22 +181,24 @@ html {
     width: 60%;
     height: 100%;
     position: absolute;
-    /* z-index: -1; */
-    bottom: 0px;
-  }
-
-  .row.content {
-    height: auto;
-  }
-
-  #geocoder_box {
-    position: absolute;
-    left: 60%;
-    top: 2%;
-    width: 175px;
-  }
-
-  #about-section {
-    display: none;
-  }
+    z-index: -1; 
+bottom: 0px;
 }
+
+.row.content {
+  height: auto;
+}
+
+#geocoder_box {
+  position: absolute;
+  left: 60%;
+  top: 2%;
+  width: 175px;
+}
+
+#about-section {
+  display: none;
+}
+}
+
+*/
