@@ -168,7 +168,8 @@ let infoButton;
 // append search bar to the top of the map when on small screen
 if (screen.availWidth < 813) {
     document.getElementById('full-page').appendChild(
-        document.getElementById('geocoder_box')
+        // document.getElementById('geocoder_box')
+        document.getElementById('geocoder-input')
     );
     if (infoButton) {} else {
         infoButton = L.control.infoButton({
