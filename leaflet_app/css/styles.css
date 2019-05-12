@@ -88,6 +88,7 @@ body {
   font-size: 80%;
   color: #dc3545;
 }
+
 #ESRI-Search {
   position: absolute;
   width: 25%;
@@ -97,7 +98,8 @@ body {
 
 
 /* On small screens, set height to 'auto' for sidenav and grid */
-@media screen and (max-width: 767px) and (orientation: portrait) {
+/* @media screen and (max-width: 767px) and (orientation: portrait) { */
+@media screen and (max-width: 767px) {
   .sidenav {
     height: auto;
     padding: 15px;
