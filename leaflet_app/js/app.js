@@ -6,6 +6,16 @@ const default_outline_color = "#FFFFFF";
 const selected_color = "#2BBED8";
 const selected_fill_opacity = 1;
 
+$(document).ready(function() {
+    $('.geocoder-control').click(function() {
+        $("#map").css("width","100%");
+    });
+    $('.sidebar').focusin(function() {
+        $('#legend').addClass('col-sm-12');
+        $("#map").css("z-index","-1");
+    })
+});
+
 // This sets the marker styles for any of the circleMarker symbols
 function markerStyle(fillColor, strokeColor, fillOpacity=0.75) {
     return {
@@ -19,8 +29,6 @@ function markerStyle(fillColor, strokeColor, fillOpacity=0.75) {
 
 // current selection (red dot)
 let selection_marker;
-
-
 // We'll append our markers to this global variable
 const json_group = new L.FeatureGroup();
 //This is our selection group
@@ -94,7 +102,7 @@ const locate = L.control.locate({
 // ESRI Geocoder
 const searchControl = L.esri.Geocoding.geosearch().addTo(map);
 
-// This should clear the table as well
+// TODO This should clear the table as well
 function clearSelection() {
     if (search_marker) {
         map.removeLayer(search_marker);
@@ -120,6 +128,7 @@ radius.change(function () {
         pointsInCircle(searchArea, size, activeLayer)
     }
 });
+
 
 // Convert miles to meters to set radius of circle
 function milesToMeters(miles) {
@@ -195,6 +204,7 @@ function zoomToLocation(lat, lng, z = 12) {
 
     // add marker to the map
     map.addLayer(selection_marker);
+    $('#map').css('z-index','11');
 }
 
 // // This file will house all of the map logic for screen size changes
@@ -316,9 +326,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
         // Set number of results on main page
         $('#json_one_results').html(counter_points_in_circle);
     }
-};
-
-
+}
 
 // This places marker, circle on map
 function querySearchArea(location, activeLayer = json_group, z = 10) {
