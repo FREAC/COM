@@ -411,8 +411,8 @@ function markerLogic(data) {
 let infoButton;
 // append search bar to the top of the map when on small screen
 if (screen.availWidth < 813) {
-    document.getElementById('map').appendChild(
-        document.getElementById('easy-auto')
+    document.getElementById('full-page').appendChild(
+        document.getElementById('autocomplete')
     );
     if (infoButton) {} else {
         infoButton = L.control.infoButton({

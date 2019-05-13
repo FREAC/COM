@@ -161,7 +161,7 @@ html {
     display: none;
   }
 
-  #easy-auto {
+  #autocomplete {
     z-index: 400;
     position: absolute;
     left: 15%;
