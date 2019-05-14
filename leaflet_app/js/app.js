@@ -100,10 +100,24 @@ const locate = L.control.locate({
 }).addTo(map);
 
 // ESRI Geocoder
-const searchControl = L.esri.Geocoding.geosearch().addTo(map);
+const options2 = {
+    zoomToResult: true,
+    useMapBounds: false
+};    
+var searchControl = L.esri.Geocoding.geosearch(options2).addTo(map);
+// create an empty layer group to store the results and add it to the map
+var results = L.layerGroup().addTo(map);
+searchControl.on('results', function(data){
+   results.clearLayers();
+   for (var i = data.results.length - 1; i >= 0; i--) {
+      results.addLayer(L.marker(data.results[i].latlng));
+    }
+    querySearchArea(data.results[0].latlng, activeLayer);
+ });
 
 // TODO This should clear the table as well
 function clearSelection() {
+    $('#map').css('z-index', '22')
     if (search_marker) {
         map.removeLayer(search_marker);
     }
@@ -117,6 +131,9 @@ function clearSelection() {
 
 // Clear button functionality
 $('#clear-search').click(function () {
+    var tableResults = []
+    insertTabulator(tableResults);
+    $('#json_one_results').html('0');
     clearSelection();
 });
 
@@ -125,7 +142,8 @@ radius.change(function () {
     if (searchArea) {
         const size = milesToMeters(radius.val());
         searchArea.setRadius(size);
-        pointsInCircle(searchArea, size, activeLayer)
+        pointsInCircle(searchArea, size, activeLayer);
+        $('#map').css('z-index', '2')
     }
 });
 
@@ -329,8 +347,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
 }
 
 // This places marker, circle on map
-function querySearchArea(location, activeLayer = json_group, z = 10) {
-    
+function querySearchArea(location, activeLayer = json_group, z = 5) {
     clearSelection();
 
     // Center the map on the result
