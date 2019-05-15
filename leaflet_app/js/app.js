@@ -71,18 +71,22 @@ const map = new L.Map('map', {
     center: new L.LatLng(28.3, -83.1),
     minZoom: 7,
     maxZoom: 19,
-    zoom: 7,
+    zoom: 1,
     maxBounds: [
-        [23.5, -88.5],
-        [33, -79]
+        [24.5, -87.75],
+        [31.1, -80]
     ]
 });
 
+// comment out the following block of code to NOT allow right clicks on the map to draw the search radius
+
 map.on({
     contextmenu: function (event) {
-        querySearchArea(event.latlng, activeLayer);
+        querySearchArea(event.latlng, activeLayer,map.getZoom());
     }
 });
+
+// End of right click zoom
 
 // Load the data
 setup();
@@ -102,11 +106,15 @@ const locate = L.control.locate({
     drawCircle: false,
     showPopup: false
 }).addTo(map);
-
+// Florida Lat Long boundaries
+var lowerLeft  = L.latLng(24.5, -87.75);
+var upperRight = L.latLng(31.1, -80);
+var FLbounds   = L.latLngBounds(lowerLeft, upperRight);
 // ESRI Geocoder
 const options2 = {
     zoomToResult: true,
-    useMapBounds: false
+    useMapBounds: false,
+    searchBounds: FLbounds 
 };    
 var searchControl = L.esri.Geocoding.geosearch(options2).addTo(map);
 // create an empty layer group to store the results and add it to the map
