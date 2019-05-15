@@ -116,17 +116,14 @@ html {
   height: 100%;
 }
 
-
-/* @media screen and (max-width: 767px) and (orientation: portrait) { */
-
 @media screen and (max-width: 767px) {
-  /* .sidebar {
+  .sidebar {
     height: auto;
     padding: 15px;
     position: relative;
     width: 100%;
     bottom: 10px;
-  } */
+  }
 
   #legend {
     padding: 2% 2% 2% 5%;
@@ -163,7 +160,7 @@ html {
   }
 }
 
- @media screen and (max-width: 812px) and (orientation: landscape) {
+@media screen and (max-width: 812px) and (orientation: landscape) {
   .sidebar {
     height: auto;
     padding: 15px;
@@ -192,3 +189,4 @@ html {
     display: none;
   }
 }
+
