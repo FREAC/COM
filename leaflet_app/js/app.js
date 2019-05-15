@@ -110,8 +110,13 @@ searchControl.on("results", function (data) {
     console.log(data);
     clearSelection();
     // create marker in place
+    const location = {
+        lat: data.latlng.lat,
+        lng: data.latlng.lng
+    };
     let selectedAddress = L.circleMarker([data.latlng.lat, data.latlng.lng]);
     selectedAddress.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity)).addTo(map);
+    querySearchArea(location, activeLayer, 13);
 });
 
 // TODO This should clear the table as well
