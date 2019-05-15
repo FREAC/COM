@@ -6,18 +6,18 @@ const default_outline_color = "#FFFFFF";
 const selected_color = "#2BBED8";
 const selected_fill_opacity = 1;
 
-$(document).ready(function() {
-    $('.geocoder-control').click(function() {
-        $("#map").css("width","100%");
+$(document).ready(function () {
+    $('.geocoder-control').click(function () {
+        $("#map").css("width", "100%");
     });
-    $('.sidebar').focusin(function() {
+    $('.sidebar').focusin(function () {
         $('#legend').addClass('col-sm-12');
-        $("#map").css("z-index","-1");
+        $("#map").css("z-index", "-1");
     })
 });
 
 // This sets the marker styles for any of the circleMarker symbols
-function markerStyle(fillColor, strokeColor, fillOpacity=0.75) {
+function markerStyle(fillColor, strokeColor, fillOpacity = 0.75) {
     return {
         fillColor: fillColor,
         color: strokeColor,
@@ -93,14 +93,26 @@ L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 // Locate Button
 const locate = L.control.locate({
     flyTo: true,
-    clickBehavior: {inViewNotFollowing: 'setView'},
-    strings: {title: "Find my location"},
+    clickBehavior: {
+        inViewNotFollowing: 'setView'
+    },
+    strings: {
+        title: "Find my location"
+    },
     drawCircle: false,
     showPopup: false
 }).addTo(map);
 
 // ESRI Geocoder
 const searchControl = L.esri.Geocoding.geosearch().addTo(map);
+
+searchControl.on("results", function (data) {
+    console.log(data);
+    clearSelection();
+    // create marker in place
+    let selectedAddress = L.circleMarker([data.latlng.lat, data.latlng.lng]);
+    selectedAddress.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity)).addTo(map);
+});
 
 // TODO This should clear the table as well
 function clearSelection() {
@@ -139,7 +151,9 @@ function createPopup(data) {
     const content = `<b>${data['Agency']}</b><br>
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}`;
-    return L.popup({closeButton: false}).setContent(content);
+    return L.popup({
+        closeButton: false
+    }).setContent(content);
 }
 
 // JQuery Easy Autocomplete: http://easyautocomplete.com
@@ -148,13 +162,15 @@ const options = {
     getValue: "Agency",
     list: {
         maxNumberOfElements: 3,
-        match: {enabled: true},
-        onClickEvent: function() {
+        match: {
+            enabled: true
+        },
+        onClickEvent: function () {
             clearSelection();
             const data = $("#easy-auto").getSelectedItemData();
             zoomToLocation(data.Latitude, data.Longitude);
         }
-    },    
+    },
     requestDelay: 250,
     placeholder: "Search Providers"
 };
@@ -204,7 +220,7 @@ function zoomToLocation(lat, lng, z = 12) {
 
     // add marker to the map
     map.addLayer(selection_marker);
-    $('#map').css('z-index','11');
+    $('#map').css('z-index', '11');
 }
 
 // // This file will house all of the map logic for screen size changes
@@ -232,12 +248,10 @@ function insertTabulator(data) {
         data: data,
         layout: "fitColumns",
         selectable: 1,
-        columns: [
-            {
-                title: "Provider",
-                field: "agency"
-            }
-        ],
+        columns: [{
+            title: "Provider",
+            field: "agency"
+        }],
         rowClick: function (event, row) {
             const lat = row.getData().lat;
             const lng = row.getData().lng;
@@ -330,19 +344,19 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
 
 // This places marker, circle on map
 function querySearchArea(location, activeLayer = json_group, z = 10) {
-    
+
     clearSelection();
 
     // Center the map on the result
     map.setView(new L.LatLng(location.lat, location.lng), z);
 
     searchArea = L.circle([location.lat, location.lng], milesToMeters(radius.val()), {
-            color: selected_color,
-            fillColor: selected_color,
-            fillOpacity: 0.1,
-            clickable: false,
-            interactive: false
-        }).addTo(map);
+        color: selected_color,
+        fillColor: selected_color,
+        fillOpacity: 0.1,
+        clickable: false,
+        interactive: false
+    }).addTo(map);
 
     // This will determine how many markers are within the circle
     // Called when points are initially loaded
@@ -384,21 +398,21 @@ function markerLogic(data) {
             selection_marker = undefined;
             event.target.setStyle(markerStyle(default_fill_color, default_outline_color));
         }
-            // if a tabulator table is already active
-            // if ($('#results-table').hasClass('tabulator')) {
-            //     // get the data that is inside of it
-            //     const data = table.getData();
-            //     // loop through data to see if clicked feature matches
-            //     for (let i in data) {
-            //         // if we find a layer match, select it
-            //         if (event.target.data.Agency === data[i].agency) {
-            //             // deselect previous row selection
-            //             table.deselectRow();
-            //             // select new row selection
-            //             table.selectRow(i);
-            //         }
-            //     }
-            // }
+        // if a tabulator table is already active
+        // if ($('#results-table').hasClass('tabulator')) {
+        //     // get the data that is inside of it
+        //     const data = table.getData();
+        //     // loop through data to see if clicked feature matches
+        //     for (let i in data) {
+        //         // if we find a layer match, select it
+        //         if (event.target.data.Agency === data[i].agency) {
+        //             // deselect previous row selection
+        //             table.deselectRow();
+        //             // select new row selection
+        //             table.selectRow(i);
+        //         }
+        //     }
+        // }
     });
 
     // Add a data object for use in the table
