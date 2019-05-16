@@ -160,6 +160,7 @@ $('#clear-search').click(function () {
     insertTabulator(tableResults);
     $('#json_one_results').html('0');
     clearSelection();
+    $('#map').css('z-index', '11');
 });
 
 const radius = $('#radius');
@@ -199,7 +200,8 @@ const options = {
         onClickEvent: function () {
             clearSelection();
             const data = $("#easy-auto").getSelectedItemData();
-            zoomToLocation(data.Latitude, data.Longitude);
+            var zzoom = undefined;
+            zoomToLocation(data.Latitude, data.Longitude, zzoom, data);
         }
     },
     requestDelay: 250,
@@ -231,7 +233,7 @@ $("#easy-auto").easyAutocomplete(options);
 
 // general function that will take in lat and lon
 // then will zoom to and highlight desired feature
-function zoomToLocation(lat, lng, z = 12) {
+function zoomToLocation(lat, lng, z = 12, data) {
     // if a marker is already present on the map, remove it
     if (selection_marker) {
         map.removeLayer(selection_marker);
@@ -250,16 +252,17 @@ function zoomToLocation(lat, lng, z = 12) {
     selection_marker.options.interactive = false;
     // add marker to the map
     map.addLayer(selection_marker);
-    map.fire('click', {
-        latlng: marker_location
-    });
 
-    $('#map').css('z-index', '11');
-
-    var popup = L.popup()
+    var pop_text = `<b>${data['Agency']}</b><br>
+                    ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
+                    ${data['City']}, ${data['State']} ${data['PostalCode']}`;
+    var popup = L.popup({maxWidth: 200})
         .setLatLng(marker_location)
-        .setContent(event.toElement.innerHTML)
+        .setContent(pop_text)
         .openOn(map);
+
+    //make sure the map is the top most div
+    $('#map').css('z-index', '11');
 }
 // // This file will house all of the map logic for screen size changes
 // let infoButton;
