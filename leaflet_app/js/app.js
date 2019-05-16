@@ -248,12 +248,19 @@ function zoomToLocation(lat, lng, z = 12) {
 
     //allow for the user to click the point under the marker
     selection_marker.options.interactive = false;
-
     // add marker to the map
     map.addLayer(selection_marker);
-    $('#map').css('z-index', '11');
-}
+    map.fire('click', {
+        latlng: marker_location
+    });
 
+    $('#map').css('z-index', '11');
+
+    var popup = L.popup()
+        .setLatLng(marker_location)
+        .setContent(event.toElement.innerHTML)
+        .openOn(map);
+}
 // // This file will house all of the map logic for screen size changes
 // let infoButton;
 // // append search bar to the top of the map when on small screen
