@@ -98,7 +98,8 @@ L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 const locate = L.control.locate({
     flyTo: true,
     clickBehavior: {
-        inViewNotFollowing: 'setView'
+        //inViewNotFollowing: 'stop',
+        inView: 'stop'
     },
     strings: {
         title: "Find my location"
@@ -106,7 +107,6 @@ const locate = L.control.locate({
     drawCircle: false,
     showPopup: false
 }).addTo(map);
-locate.stopLocate();
 // Florida Lat Long boundaries
 var lowerLeft  = L.latLng(24.5, -87.75);
 var upperRight = L.latLng(31.1, -80);
@@ -115,7 +115,7 @@ var FLbounds   = L.latLngBounds(lowerLeft, upperRight);
 const options2 = {
     zoomToResult: true,
     useMapBounds: false,
-    placeholder: 'Search for an address',
+    placeholder: 'Search for an address2',
     expanded: true,
     searchBounds: FLbounds 
 };    
