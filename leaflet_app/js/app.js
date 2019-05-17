@@ -128,7 +128,7 @@ searchControl.on('results', function(data){
  });
 
 searchControl.on("results", function (data) {
-    console.log(data);
+    //console.log('geocoded stuff here ',data);
     clearSelection();
     // create marker in place
     const location = {
@@ -200,6 +200,7 @@ const options = {
         onClickEvent: function () {
             clearSelection();
             const data = $("#easy-auto").getSelectedItemData();
+            //console.log('what is data ',data)
             var zzoom = undefined;
             zoomToLocation(data.Latitude, data.Longitude, zzoom, data);
         }
@@ -253,14 +254,29 @@ function zoomToLocation(lat, lng, z = 12, data) {
     // add marker to the map
     map.addLayer(selection_marker);
 
-    var pop_text = `<b>${data['Agency']}</b><br>
+    try {
+        // The commented out stuff can probably be deleted at some point.  It was added when we had both
+        // upper and lowercase array memebers.  I think we now have a consistent uppercase situation
+
+    //    console.log('finally we see what data is before the popup ',data)
+    //    data['Agency'] = data['agency'];
+    //    try {
+    //    if(typeof data['housenumber'] === undefined){data['HouseNumber'] = '99999'}     else {data['HouseNumber'] = data['housenumber']};
+    //    if(typeof data['street']      === undefined){data['Street']      = 'No Street'} else {data['Street']      = data['street']};
+        if(data['Unit'] === undefined || data['Unit'] === null){data['Unit'] = ''}  
+    //    if(typeof data['city']        === undefined){data['City']        = 'No City'}   else {data['City']        = data['city']};
+    //    if(typeof data['state']       === undefined){data['State']       = 'No State'}  else {data['State']       = data['state']};
+    //if(typeof data['postalcode']  === undefined){data['PostalCode']  = 'No Zip'}    else {data['PostalCode']  = data['postalcode']};
+    //    } catch {}
+        //console.log('just one ',data._row.data.agency)
+        var pop_text = `<b>${data['Agency']}</b><br>
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}`;
-    var popup = L.popup({maxWidth: 200})
-        .setLatLng(marker_location)
-        .setContent(pop_text)
-        .openOn(map);
-
+        var popup = L.popup({maxWidth: 200})
+            .setLatLng(marker_location)
+            .setContent(pop_text)
+            .openOn(map);
+    } catch {}
     //make sure the map is the top most div
     $('#map').css('z-index', '11');
 }
@@ -284,6 +300,7 @@ function zoomToLocation(lat, lng, z = 12, data) {
 
 // create a reusable Tabulator object
 function insertTabulator(data) {
+    //console.log('start of the inserttablular and the data we have is ',data)
     table = new Tabulator("#results-table", {
         height: 200,
         data: data,
@@ -294,13 +311,20 @@ function insertTabulator(data) {
             field: "agency"
         }],
         rowClick: function (event, row) {
+            //console.log('what is row ', row)
+            //console.log('the data in the row ',row._row.data)
+            //console.log('and data is ',data)
+            // NOTE: New function parameter to pass all of the row information to the zoomtolocation
+            //       function so it can handle the popup
+
             const lat = row.getData().lat;
             const lng = row.getData().lng;
             const zoom = map.getZoom();
             if (zoom < 12) {
-                zoomToLocation(lat, lng);
+                zzoom = undefined
+                zoomToLocation(lat, lng,zzoom,row._row.data);
             } else {
-                zoomToLocation(lat, lng, zoom);
+                zoomToLocation(lat, lng, zoom, row._row.data);
             }
         },
     });
@@ -328,7 +352,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
 
         // Loop through each point in JSON file
         groupLayer.eachLayer(function (layer) {
-
+            //console.log('I think this is a provider ', layer)
             // Lat, long of current point
             const layer_lat_long = layer.getLatLng();
 
@@ -340,8 +364,16 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
             // The user has selected
             if (distance_from_layer_circle <= meters_user_set) {
                 counter_points_in_circle += 1;
+                //console.log('layer data looks like this? ', layer.data)
+                // We need all of the fields below for the popup from the Results table to work with all 
+                // the fields
                 results.push({
                     agency: layer.data.Agency,
+                    housenumber: layer.data.HouseNumber,
+                    street: layer.data.Street,
+                    city: layer.data.City,
+                    state: layer.data.State,
+                    postalcode: layer.data.PostalCode,     
                     dist: distance_from_layer_circle,
                     latitude: layer_lat_long.lat,
                     longitude: layer_lat_long.lng
@@ -358,12 +390,29 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
         const tableResults = [];
 
         // for every point in circle, add a tableResults object
+        // the table needs lower case fields (currently we only show agency but may want to
+        // show others in the future so I put them all in) but the popup relies on capitalized fields
+        // TODO - fix this so we only have one case
+
         for (let i = 0; i < counter_points_in_circle; i++) {
+            //console.log('what does a typical result look like, ', results[i])
             tableResults.push({
                 id: i,
-                agency: results[i]['agency'],
+                Agency: results[i]['agency'],
+                HouseNumber: results[i]['housenumber'],
+                Street: results[i]['street'],
+                City: results[i]['city'],
+                State: results[i]['state'],
+                PostalCode: results[i]['postalcode'],
                 lat: results[i]['latitude'],
-                lng: results[i]['longitude']
+                lng: results[i]['longitude'],
+
+                agency: results[i]['agency'],
+                housenumber: results[i]['housenumber'],
+                street: results[i]['street'],
+                city: results[i]['city'],
+                state: results[i]['state'],
+                postalcode: results[i]['postalcode']
             });
         }
         // add tabulator object to screen
@@ -456,8 +505,16 @@ function markerLogic(data) {
     });
 
     // Add a data object for use in the table
+    //console.log('do we have data now ',data)
+    // TODO -- SWH - not sure we need all of these fields - maybe just Agency (5/17/19)
     circle_marker.data = {
-        'Agency': data['Agency']
+        'Agency': data['Agency'],
+        'HouseNumber': data['HouseNumber'],
+        'Street': data['Street'],
+        'Unit': data['Unit'],
+        'City': data['City'],
+        'State': data['State'],
+        'PostalCode': data['PostalCode']
     };
 
     return circle_marker;
