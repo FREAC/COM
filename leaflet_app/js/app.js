@@ -114,6 +114,8 @@ var FLbounds   = L.latLngBounds(lowerLeft, upperRight);
 const options2 = {
     zoomToResult: true,
     useMapBounds: false,
+    placeholder: 'Search for an address',
+    expanded: true,
     searchBounds: FLbounds 
 };    
 var searchControl = L.esri.Geocoding.geosearch(options2).addTo(map);
@@ -219,7 +221,6 @@ const options = {
 };
 
 $("#easy-auto").easyAutocomplete(options);
-
 ///////////////////////////////////////
 ///////////////////////////////////////
 ///////////////////////////////////////

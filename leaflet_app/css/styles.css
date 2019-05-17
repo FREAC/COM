@@ -1,8 +1,8 @@
 body,
 html {
   height: 100%;
-}
-
+}  
+.easy-autocomplete-container { top: 40px;width:300%;}  
 .row {
   height: 100%;
 }
@@ -124,6 +124,7 @@ html {
     width: 100%;
     bottom: 10px;
   }
+  .easy-autocomplete-container { top: 40px;width:300%;}  
 
   #legend {
     padding: 2% 2% 2% 5%;
