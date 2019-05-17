@@ -98,8 +98,9 @@ L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 const locate = L.control.locate({
     flyTo: true,
     clickBehavior: {
-        //inViewNotFollowing: 'stop',
-        inView: 'stop'
+        inViewNotFollowing: 'stop',
+        inView: 'stop',
+        outOfView: 'stop'
     },
     strings: {
         title: "Find my location"
@@ -115,7 +116,7 @@ var FLbounds   = L.latLngBounds(lowerLeft, upperRight);
 const options2 = {
     zoomToResult: true,
     useMapBounds: false,
-    placeholder: 'Search for an address4',
+    placeholder: 'Search for an address5',
     expanded: true,
     searchBounds: FLbounds 
 };    
