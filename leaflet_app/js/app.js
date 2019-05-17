@@ -106,6 +106,7 @@ const locate = L.control.locate({
     drawCircle: false,
     showPopup: false
 }).addTo(map);
+locate.stopLocate();
 // Florida Lat Long boundaries
 var lowerLeft  = L.latLng(24.5, -87.75);
 var upperRight = L.latLng(31.1, -80);
