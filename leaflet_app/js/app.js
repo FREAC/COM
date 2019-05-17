@@ -202,6 +202,15 @@ const options = {
             const data = $("#easy-auto").getSelectedItemData();
             //console.log('what is data ',data)
             var zzoom = undefined;
+            //TODO - the next 5 lines are copied from the #easy-auto "click" event
+            // probably could make this a function rather than duplicating the code
+
+            var tableResults = []
+            insertTabulator(tableResults);
+            $('#json_one_results').html('0');
+            clearSelection();
+            $('#map').css('z-index', '11');
+            
             zoomToLocation(data.Latitude, data.Longitude, zzoom, data);
         }
     },
