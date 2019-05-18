@@ -323,6 +323,9 @@ function insertTabulator(data) {
         columns: [{
             title: "Provider",
             field: "agency"
+        }, {
+            title: "Zip code",
+            field: "PostalCode"
         }],
         rowClick: function (event, row) {
             //console.log('what is row ', row)
