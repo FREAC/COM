@@ -82,7 +82,7 @@ const map = new L.Map('map', {
 
 map.on({
     contextmenu: function (event) {
-        querySearchArea(event.latlng, activeLayer,map.getZoom());
+        querySearchArea(event.latlng, activeLayer, map.getZoom());
     }
 });
 
@@ -107,25 +107,25 @@ const locate = L.control.locate({
     showPopup: false
 }).addTo(map);
 // Florida Lat Long boundaries
-var lowerLeft  = L.latLng(24.5, -87.75);
+var lowerLeft = L.latLng(24.5, -87.75);
 var upperRight = L.latLng(31.1, -80);
-var FLbounds   = L.latLngBounds(lowerLeft, upperRight);
+var FLbounds = L.latLngBounds(lowerLeft, upperRight);
 // ESRI Geocoder
 const options2 = {
     zoomToResult: true,
     useMapBounds: false,
-    searchBounds: FLbounds 
-};    
+    searchBounds: FLbounds
+};
 var searchControl = L.esri.Geocoding.geosearch(options2).addTo(map);
 // create an empty layer group to store the results and add it to the map
 var results = L.layerGroup().addTo(map);
-searchControl.on('results', function(data){
-   results.clearLayers();
-   for (var i = data.results.length - 1; i >= 0; i--) {
-      results.addLayer(L.marker(data.results[i].latlng));
+searchControl.on('results', function (data) {
+    results.clearLayers();
+    for (var i = data.results.length - 1; i >= 0; i--) {
+        results.addLayer(L.marker(data.results[i].latlng));
     }
     querySearchArea(data.results[0].latlng, activeLayer);
- });
+});
 
 searchControl.on("results", function (data) {
     //console.log('geocoded stuff here ',data);
@@ -152,6 +152,7 @@ function clearSelection() {
     if (selection_marker) {
         map.removeLayer(selection_marker);
     }
+    map.closePopup();
 }
 
 // Clear button functionality
@@ -210,7 +211,7 @@ const options = {
             $('#json_one_results').html('0');
             clearSelection();
             $('#map').css('z-index', '11');
-            
+
             zoomToLocation(data.Latitude, data.Longitude, zzoom, data);
         }
     },
@@ -267,21 +268,25 @@ function zoomToLocation(lat, lng, z = 12, data) {
         // The commented out stuff can probably be deleted at some point.  It was added when we had both
         // upper and lowercase array memebers.  I think we now have a consistent uppercase situation
 
-    //    console.log('finally we see what data is before the popup ',data)
-    //    data['Agency'] = data['agency'];
-    //    try {
-    //    if(typeof data['housenumber'] === undefined){data['HouseNumber'] = '99999'}     else {data['HouseNumber'] = data['housenumber']};
-    //    if(typeof data['street']      === undefined){data['Street']      = 'No Street'} else {data['Street']      = data['street']};
-        if(data['Unit'] === undefined || data['Unit'] === null){data['Unit'] = ''}  
-    //    if(typeof data['city']        === undefined){data['City']        = 'No City'}   else {data['City']        = data['city']};
-    //    if(typeof data['state']       === undefined){data['State']       = 'No State'}  else {data['State']       = data['state']};
-    //if(typeof data['postalcode']  === undefined){data['PostalCode']  = 'No Zip'}    else {data['PostalCode']  = data['postalcode']};
-    //    } catch {}
+        //    console.log('finally we see what data is before the popup ',data)
+        //    data['Agency'] = data['agency'];
+        //    try {
+        //    if(typeof data['housenumber'] === undefined){data['HouseNumber'] = '99999'}     else {data['HouseNumber'] = data['housenumber']};
+        //    if(typeof data['street']      === undefined){data['Street']      = 'No Street'} else {data['Street']      = data['street']};
+        if (data['Unit'] === undefined || data['Unit'] === null) {
+            data['Unit'] = ''
+        }
+        //    if(typeof data['city']        === undefined){data['City']        = 'No City'}   else {data['City']        = data['city']};
+        //    if(typeof data['state']       === undefined){data['State']       = 'No State'}  else {data['State']       = data['state']};
+        //if(typeof data['postalcode']  === undefined){data['PostalCode']  = 'No Zip'}    else {data['PostalCode']  = data['postalcode']};
+        //    } catch {}
         //console.log('just one ',data._row.data.agency)
         var pop_text = `<b>${data['Agency']}</b><br>
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}`;
-        var popup = L.popup({maxWidth: 200})
+        var popup = L.popup({
+                maxWidth: 200
+            })
             .setLatLng(marker_location)
             .setContent(pop_text)
             .openOn(map);
@@ -331,7 +336,7 @@ function insertTabulator(data) {
             const zoom = map.getZoom();
             if (zoom < 12) {
                 zzoom = undefined
-                zoomToLocation(lat, lng,zzoom,row._row.data);
+                zoomToLocation(lat, lng, zzoom, row._row.data);
             } else {
                 zoomToLocation(lat, lng, zoom, row._row.data);
             }
@@ -382,7 +387,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
                     street: layer.data.Street,
                     city: layer.data.City,
                     state: layer.data.State,
-                    postalcode: layer.data.PostalCode,     
+                    postalcode: layer.data.PostalCode,
                     dist: distance_from_layer_circle,
                     latitude: layer_lat_long.lat,
                     longitude: layer_lat_long.lng
