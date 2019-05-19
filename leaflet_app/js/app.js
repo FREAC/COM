@@ -138,13 +138,14 @@ searchControl.on('results', function (data) {
     // add to map
     map.addLayer(selection_marker);
 
+    querySearchArea(data.latlng, activeLayer)
+
     // set up popup 
     const popup = L.popup();
     popup
         .setLatLng(data.latlng)
         .setContent(data.results[0].text)
         .openOn(map);
-
 });
 
 
@@ -520,7 +521,7 @@ function querySearchArea(location, activeLayer = json_group, z = 5) {
     search_marker.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity)).addTo(map);
 
     // Center the map on the result
-    map.setView(new L.LatLng(location.lat, location.lng), z);
+    // map.setView(new L.LatLng(location.lat, location.lng), z);
 
     searchArea = L.circle([location.lat, location.lng], milesToMeters(radius.val()), {
         color: selected_color,
@@ -529,6 +530,9 @@ function querySearchArea(location, activeLayer = json_group, z = 5) {
         clickable: false,
         interactive: false
     }).addTo(map);
+
+    // fly to the bounds of the circle
+    map.flyToBounds(searchArea.getBounds());
 
     // This will determine how many markers are within the circle
     // Called when points are initially loaded
