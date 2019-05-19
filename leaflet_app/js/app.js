@@ -112,7 +112,7 @@ var upperRight = L.latLng(31.1, -80);
 var FLbounds = L.latLngBounds(lowerLeft, upperRight);
 // ESRI Geocoder
 const options2 = {
-    zoomToResult: true,
+    zoomToResult: false,
     useMapBounds: false,
     searchBounds: FLbounds
 };
@@ -122,9 +122,29 @@ var searchControl = L.esri.Geocoding.geosearch(options2).addTo(map);
 
 // listen for search results, zoom to pouint and draw search radius around point
 searchControl.on('results', function (data) {
+
     clearSelection();
 
-    querySearchArea(data.results[0].latlng, activeLayer);
+    // zoom to location
+    map.flyTo(data.results[0].latlng, 14);
+
+    // put pin on location
+    // Set marker location
+    const marker_location = new L.LatLng(data.results[0].latlng.lat, data.results[0].latlng.lng);
+
+    // set the selection_marker variable to our location and style
+    selection_marker = L.circleMarker(marker_location, markerStyle(selected_color, selected_color, selected_fill_opacity)).bindPopup();
+
+    // add to map
+    map.addLayer(selection_marker);
+
+    // set up popup 
+    const popup = L.popup();
+    popup
+        .setLatLng(data.latlng)
+        .setContent(data.results[0].text)
+        .openOn(map);
+
 });
 
 
@@ -249,9 +269,44 @@ $("#easy-auto").easyAutocomplete(options);
 //     pointsInCircle(searchArea, milesToMeters($('#radius-selected').val()), activeLayer);
 // });
 
+// function that will configure a popup for housing info
+function configurePopup(data) {
+    console.log(data)
+
+    try {
+        // The commented out stuff can probably be deleted at some point.  It was added when we had both
+        // upper and lowercase array memebers.  I think we now have a consistent uppercase situation
+
+        //    console.log('finally we see what data is before the popup ',data)
+        //    data['Agency'] = data['agency'];
+        //    try {
+        //    if(typeof data['housenumber'] === undefined){data['HouseNumber'] = '99999'}     else {data['HouseNumber'] = data['housenumber']};
+        //    if(typeof data['street']      === undefined){data['Street']      = 'No Street'} else {data['Street']      = data['street']};
+        if (data['Unit'] === undefined || data['Unit'] === null) {
+            data['Unit'] = ''
+        }
+        //    if(typeof data['city']        === undefined){data['City']        = 'No City'}   else {data['City']        = data['city']};
+        //    if(typeof data['state']       === undefined){data['State']       = 'No State'}  else {data['State']       = data['state']};
+        //if(typeof data['postalcode']  === undefined){data['PostalCode']  = 'No Zip'}    else {data['PostalCode']  = data['postalcode']};
+        //    } catch {}
+        //console.log('just one ',data._row.data.agency)
+        var pop_text = `<b>${data['Agency']}</b><br>
+                    ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
+                    ${data['City']}, ${data['State']} ${data['PostalCode']}`;
+        var popup = L.popup({
+                maxWidth: 200
+            })
+            .setLatLng(marker_location)
+            .setContent(pop_text)
+            .openOn(map);
+    } catch {}
+
+}
+
+
 // general function that will take in lat and lon
 // then will zoom to and highlight desired feature
-function zoomToLocation(lat, lng, z = 12, data) {
+function zoomToLocation(lat, lng, z = 11, data) {
     // if a marker is already present on the map, remove it
     if (selection_marker) {
         map.removeLayer(selection_marker);
