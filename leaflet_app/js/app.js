@@ -12,7 +12,7 @@ $(document).ready(function () {
     });
     $('.sidebar').focusin(function () {
         $('#legend').addClass('col-sm-12');
-        $("#map").css("z-index", "-1");
+        // $("#map").css("z-index", "-1");
     })
 });
 
@@ -116,29 +116,17 @@ const options2 = {
     useMapBounds: false,
     searchBounds: FLbounds
 };
+
+// add esri geocoder control to map
 var searchControl = L.esri.Geocoding.geosearch(options2).addTo(map);
-// create an empty layer group to store the results and add it to the map
-var results = L.layerGroup().addTo(map);
+
+// listen for search results, zoom to pouint and draw search radius around point
 searchControl.on('results', function (data) {
-    results.clearLayers();
-    for (var i = data.results.length - 1; i >= 0; i--) {
-        results.addLayer(L.marker(data.results[i].latlng));
-    }
+    clearSelection();
+
     querySearchArea(data.results[0].latlng, activeLayer);
 });
 
-searchControl.on("results", function (data) {
-    //console.log('geocoded stuff here ',data);
-    clearSelection();
-    // create marker in place
-    const location = {
-        lat: data.latlng.lat,
-        lng: data.latlng.lng
-    };
-    let selectedAddress = L.circleMarker([data.latlng.lat, data.latlng.lng]);
-    selectedAddress.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity)).addTo(map);
-    querySearchArea(location, activeLayer, 13);
-});
 
 // TODO This should clear the table as well
 function clearSelection() {
@@ -152,6 +140,7 @@ function clearSelection() {
     if (selection_marker) {
         map.removeLayer(selection_marker);
     }
+    // close any open popups on map
     map.closePopup();
 }
 
@@ -452,6 +441,10 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
 // This places marker, circle on map
 function querySearchArea(location, activeLayer = json_group, z = 5) {
     clearSelection();
+
+    // set center point in map
+    search_marker = L.circleMarker([location.lat, location.lng]);
+    search_marker.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity)).addTo(map);
 
     // Center the map on the result
     map.setView(new L.LatLng(location.lat, location.lng), z);
