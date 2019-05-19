@@ -140,7 +140,25 @@ function clearSelection() {
     if (selection_marker) {
         map.removeLayer(selection_marker);
     }
+
+    $('#easy-auto').val('');
+
     // close any open popups on map
+    map.closePopup();
+}
+
+function clearSelectionMinusProvider() {
+    $('#map').css('z-index', '22')
+    if (search_marker) {
+        map.removeLayer(search_marker);
+    }
+    if (searchArea) {
+        map.removeLayer(searchArea);
+    }
+    if (selection_marker) {
+        map.removeLayer(selection_marker);
+    }
+
     map.closePopup();
 }
 
@@ -188,7 +206,8 @@ const options = {
             enabled: true
         },
         onClickEvent: function () {
-            clearSelection();
+            clearSelectionMinusProvider();
+
             const data = $("#easy-auto").getSelectedItemData();
             //console.log('what is data ',data)
             var zzoom = undefined;
@@ -198,7 +217,6 @@ const options = {
             var tableResults = []
             insertTabulator(tableResults);
             $('#json_one_results').html('0');
-            clearSelection();
             $('#map').css('z-index', '11');
 
             zoomToLocation(data.Latitude, data.Longitude, zzoom, data);
