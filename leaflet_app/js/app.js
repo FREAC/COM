@@ -71,10 +71,10 @@ const map = new L.Map('map', {
     center: new L.LatLng(28.3, -83.1),
     minZoom: 7,
     maxZoom: 19,
-    zoom: 1,
+    zoom: 7,
     maxBounds: [
-        [24.5, -87.75],
-        [31.1, -80]
+        [23.5, -88.5],
+        [33, -79]
     ]
 });
 
