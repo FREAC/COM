@@ -97,7 +97,9 @@ L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 const locate = L.control.locate({
     flyTo: true,
     clickBehavior: {
-        inViewNotFollowing: 'setView'
+        inViewNotFollowing: 'stop',
+        inView: 'stop',
+        outOfView: 'stop'
     },
     strings: {
         title: "Find my location"
@@ -107,17 +109,16 @@ const locate = L.control.locate({
 }).addTo(map);
 
 // Florida Lat Long boundaries
-var lowerLeft = L.latLng(24.5, -87.75);
-var upperRight = L.latLng(31.1, -80);
-var FLbounds = L.latLngBounds(lowerLeft, upperRight);
+var lowerLeft  = L.latLng(24.5, -87.75);
+var upperRight = L.latLng(31.1, -79.5);
+var FLbounds   = L.latLngBounds(lowerLeft, upperRight);
 // ESRI Geocoder
 const options2 = {
     zoomToResult: false,
     useMapBounds: false,
-    searchBounds: FLbounds
-};
-
-// add esri geocoder control to map
+    placeholder: 'Search for an address',
+    searchBounds: FLbounds 
+};    
 var searchControl = L.esri.Geocoding.geosearch(options2).addTo(map);
 
 // listen for search results, zoom to pouint and draw search radius around point
@@ -243,11 +244,10 @@ const options = {
         }
     },
     requestDelay: 250,
-    placeholder: "Search Providers"
+    placeholder: "Search for a provider"
 };
 
 $("#easy-auto").easyAutocomplete(options);
-
 ///////////////////////////////////////
 ///////////////////////////////////////
 ///////////////////////////////////////
