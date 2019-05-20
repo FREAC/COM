@@ -27,7 +27,7 @@ function markerStyle(fillColor, strokeColor, fillOpacity = 0.75) {
     };
 }
 
-// current selection (red dot)
+// current selection
 let selection_marker;
 // We'll append our markers to this global variable
 const json_group = new L.FeatureGroup();
@@ -86,7 +86,6 @@ map.on({
     }
 });
 
-// End of right click zoom
 
 // Load the data
 setup();
@@ -106,6 +105,7 @@ const locate = L.control.locate({
     drawCircle: false,
     showPopup: false
 }).addTo(map);
+
 // Florida Lat Long boundaries
 var lowerLeft = L.latLng(24.5, -87.75);
 var upperRight = L.latLng(31.1, -80);
@@ -254,15 +254,6 @@ $("#easy-auto").easyAutocomplete(options);
 ///////////////////////////////////////
 
 
-// function getMarker(agency) {
-//     for (const i in providers) {
-//         const provider = providers[i].data.Agency;
-//         if (provider === agency) {
-//             providers[i].openPopup();
-//         }
-//     }
-// }
-
 // $("#checkboxes input[type='checkbox']").change(async function (event) {
 //     // when any checkbox inside the div "checkboxes" changes, run this function
 //     await filterLocations(event);
@@ -356,23 +347,6 @@ function zoomToLocation(lat, lng, z = 11, data) {
     //make sure the map is the top most div
     $('#map').css('z-index', '11');
 }
-// // This file will house all of the map logic for screen size changes
-// let infoButton;
-// // append search bar to the top of the map when on small screen
-// if (screen.availWidth < 813) {
-//     document.getElementById('full-page').appendChild(
-//         document.getElementById('geocoder_box')
-//     );
-//     if (infoButton) {
-//     } else {
-//         infoButton = L.control.infoButton({
-//             position: 'topleft',
-//             html: "<div style='text-align:center;'><p></p><img src='images/fsulogo.png' alt='FSU Logo' width='75' height='75'=><br><br><h4>Florida State University College of Medicine</h4><br><h5>Group Care Search Demo</h5><br><p>This demo counts the number of group care facilities within a radius of a given point and displays them on a map using Leaflet.</p><br><p>To use, enter an address and then enter a radius. Under results will be the number of markers within the given radius. You can also drag the marker on the map; the number will update automatically.</p><br><p>More information regarding the original code is available here. Code was originally used here.</p><br><p>This project is sponsored by:</p><a href='https://www.sagerx.com/' target='_blank'><img alt='Sage Therapeutics' src='images/logo-sagerx.svg'><br><br></div>"
-//         });
-
-//         infoButton.addTo(map);
-//     }
-// }
 
 // create a reusable Tabulator object
 function insertTabulator(data) {
@@ -401,7 +375,7 @@ function insertTabulator(data) {
             const zoom = map.getZoom();
             if (zoom < 12) {
                 zzoom = undefined
-                zoomToLocation(lat, lng, zzoom, row._row.data);
+                zoomToLocation(lat, lng, zoom, row._row.data);
             } else {
                 zoomToLocation(lat, lng, zoom, row._row.data);
             }
@@ -605,22 +579,4 @@ function markerLogic(data) {
     };
 
     return circle_marker;
-}
-
-// This file will house all of the map logic for screen size changes
-let infoButton;
-// append search bar to the top of the map when on small screen
-if (screen.availWidth < 813) {
-    document.getElementById('full-page').appendChild(
-        document.getElementById('autocomplete')
-    );
-    if (infoButton) {} else {
-        infoButton = L.control.infoButton({
-            position: 'topleft',
-            html: "<div style='text-align:center;'><p></p><img src='images/fsulogo.png' alt='FSU Logo' width='75' height='75'=><br><br><h4>Florida State University College of Medicine</h4><br><h5>Group Care Search Demo</h5><br><p>This demo counts the number of group care facilities within a radius of a given point and displays them on a map using Leaflet.</p><br><p>To use, enter an address and then enter a radius. Under results will be the number of markers within the given radius. You can also drag the marker on the map; the number will update automatically.</p><br><p>More information regarding the original code is available here. Code was originally used here.</p><br><p>This project is sponsored by:</p><a href='https://www.sagerx.com/' target='_blank'><img alt='Sage Therapeutics' src='images/logo-sagerx.svg'><br><br></div>"
-        });
-
-        infoButton.addTo(map);
-    }
-
 }
