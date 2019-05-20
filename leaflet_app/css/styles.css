@@ -27,7 +27,7 @@ body {
   line-height: 18px;
   margin: 0;
   padding: 0;
-  width: 100%;
+  width: auto;
 }
 
 .leaflet-popup-content-wrapper .leaflet-popup-content {
@@ -97,6 +97,7 @@ html {
 
 #search-bar {
   position: relative;
+  z-index: 20 !important;
 }
 
 #geocoder-input {
@@ -118,15 +119,14 @@ html {
   height: 100%;
 }
 
-
-/* @media screen and (max-width: 767px) and (orientation: portrait) { */
-
+/* On small screens, set height to 'auto' for sidenav and grid */
 @media screen and (max-width: 767px) {
   .sidenav {
     height: auto;
+    width: auto;
     padding: 15px;
     position: relative;
-    width: 100%;
+    /* width: 100%; */
     bottom: 10px;
   }
 
@@ -154,7 +154,8 @@ html {
   #geocoder_box {
     position: absolute;
     left: 15%;
-    top: 2%
+    top: 2%;
+    z-index: 20;
   }
 
   #about-section {
@@ -170,7 +171,7 @@ html {
   }
 }
 
-
+/* On small screens, set height to 'auto' for sidenav and grid */
 /* @media screen and (max-width: 812px) and (orientation: landscape) {
   .sidenav {
     height: auto;
@@ -182,7 +183,10 @@ html {
 
   #legend {
     padding: 0px 2%;
+    z-index: 7;
     height: 100%;
+    background-color: #EEE;
+    position: absolute;
     bottom: 0px;
     overflow-y: scroll;
   }
@@ -199,16 +203,16 @@ bottom: 0px;
   height: auto;
 }
 
-#geocoder_box {
-  position: absolute;
-  left: 60%;
-  top: 2%;
-  width: 175px;
-}
+  #geocoder_box {
+    position: absolute;
+    left: 60%;
+    top: 2%;
+    width: 175px;
+    z-index: 20;
+  }
 
-#about-section {
-  display: none;
-}
-}
-
-*/
+  prevent about from showing when in mobile view
+  #about-section {
+    display: none;
+  }
+} */
