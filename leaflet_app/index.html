@@ -15,9 +15,10 @@
 	<link rel="stylesheet" href="https://unpkg.com/tabulator-tables@4.2.1/dist/css/tabulator.min.css">
 	<link rel="stylesheet" href="css/lib/leaflet.infoButton.css" />
 	<link rel="stylesheet" href="css/lib/easy-autocomplete.min.css" />
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.66.1/dist/L.Control.Locate.min.css" />
+	<link rel="stylesheet"
+		href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.66.1/dist/L.Control.Locate.min.css" />
 	<link rel="stylesheet" href="css/lib/esri-leaflet-geocoder.css" />
-	
+
 	<!-- CSS: Custom fix -->
 	<link rel="stylesheet" href="css/styles.css" />
 
@@ -32,22 +33,27 @@
 	<script type="text/javascript" src="js/lib/leaflet.infoButton.js"></script>
 	<script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.2.1/dist/js/tabulator.min.js"></script>
 	<script type="text/javascript" src="js/lib/jquery.easy-autocomplete.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.66.1/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+	<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.66.1/dist/L.Control.Locate.min.js"
+		charset="utf-8"></script>
 	<script type="text/javascript" src="js/lib/esri-leaflet.js"></script>
 	<script type="text/javascript" src="js/lib/esri-leaflet-geocoder.js"></script>
 
 </head>
+
 <body>
-	<div class="container-fluid h-100">
+	<!-- <div class="container-fluid h-100"> -->
+	<div class="container-fluid" id="full-page">
 		<div class="row">
 			<!-- Sidebar-->
-			<div class="col-sm-5 col-md-4 sidebar">
-				<h3>FSU College of Medicine<br>Group Care Search Demo</h3>
+			<div class="col-sm-5 col-md-4 sidebar" id="legend">
+				<h3>FSU College of Medicine<br>Group Care Search Demo testing dropdown</h3>
+
 				<form>
 					<div class="form-row">
-						<div class="col">
-							<input type="text" class="form-control" id="easy-auto">							
+						<div class="col" id="autocomplete">
+							<input type="text" class="form-control" id="easy-auto">
 						</div>
+
 						<div class="col">
 							<div class="form-check">
 								<input class="form-check-input" type="checkbox" id="insurance">
@@ -85,21 +91,32 @@
 				<div class="row">
 					<div>
 						<h3>Results</h3>
-						<p><span id="json_one_results_title"><span id="json_one_results">0</span> <span id="json_one_title">providers</span></span>
+						<p><span id="json_one_results_title"><span id="json_one_results">0</span> <span
+									id="json_one_title">providers</span></span>
 							are within the given radius.</p>
 
 						<div id="results-table"></div>
 						<div id='about-section'>
 							<h3>About</h3>
-							<p>This demo counts the number of group care facilities within a radius of a given point and displays them on a map	using <a href="https://leafletjs.com/" target="_blank">Leaflet</a>.</p>
-							<p>To use, enter an address and then enter a radius. Under results will be the number of markers within the	given radius. You can also drag the marker on the map; the number will update automatically.</p>
-							<p>More information regarding the original code is available <a href="http://csessig.wordpress.com/2014/06/22/leaflet-solution-counting-markers-within-a-radius/" target="_blank">here</a>.
-								Code was originally used <a href="http://wcfcourier.com/app/special/ia-mental-health-public/" target="_blank">here</a>.
+							<p>This demo counts the number of group care facilities within a radius of a given point and
+								displays them on a map using <a href="https://leafletjs.com/"
+									target="_blank">Leaflet</a>.</p>
+							<p>To use, enter an address and then enter a radius. Under results will be the number of
+								markers within the given radius. You can also drag the marker on the map; the number
+								will update automatically.</p>
+							<p>More information regarding the original code is available <a
+									href="http://csessig.wordpress.com/2014/06/22/leaflet-solution-counting-markers-within-a-radius/"
+									target="_blank">here</a>.
+								Code was originally used <a
+									href="http://wcfcourier.com/app/special/ia-mental-health-public/"
+									target="_blank">here</a>.
 							</p>
-							<p>This project is sponsored by:<br><br><a href="https://www.sagerx.com/" target="_blank"><img alt="Sage Therapeutics" src="images/logo-sagerx.svg"></a></p>
+							<p>This project is sponsored by:<br><br><a href="https://www.sagerx.com/"
+									target="_blank"><img alt="Sage Therapeutics" src="images/logo-sagerx.svg"></a></p>
 						</div>
 					</div>
 				</div>
+
 			</div>
 			<!-- Map -->
 			<div class="col-sm-7 col-md-8" id="map"></div>
@@ -109,4 +126,5 @@
 	<script type="text/javascript" src="js/filter.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
 </body>
+
 </html>

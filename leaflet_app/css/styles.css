@@ -1,4 +1,5 @@
-body, html {
+body,
+html {
   height: 100%;
 }
 
@@ -12,7 +13,7 @@ body, html {
 }
 
 
-/* 
+
 html {
   margin: 0;
   padding: 0;
@@ -67,17 +68,18 @@ body {
   display: block;
 }
 
-body, html {
-    height: 100%;
+body,
+html {
+  height: 100%;
 }
 
 
 
 .sidebar {
-    height: 100%;
-    padding: 15px;
-    background-color: rgba(206, 184, 136, 0.5);
-    font-family: Georgia, serif;
+  height: 100%;
+  padding: 15px;
+  background-color: rgba(206, 184, 136, 0.5);
+  font-family: Georgia, serif;
 }
 
 .row {
@@ -117,7 +119,9 @@ body, html {
 }
 
 
-@media screen and (max-width: 767px) and (orientation: portrait) {
+/* @media screen and (max-width: 767px) and (orientation: portrait) { */
+
+@media screen and (max-width: 767px) {
   .sidenav {
     height: auto;
     padding: 15px;
@@ -134,12 +138,12 @@ body, html {
     overflow-y: scroll;
 
   }
-  
+
   #map {
     width: 100%;
     height: 60%;
     position: absolute;
-    z-index: -1;
+    z-index: 20;
     bottom: 0;
   }
 
@@ -156,10 +160,18 @@ body, html {
   #about-section {
     display: none;
   }
+
+  #autocomplete {
+    z-index: 400;
+    position: absolute;
+    left: 15%;
+    top: 2%;
+    max-width: 65%;
+  }
 }
 
 
-@media screen and (max-width: 812px) and (orientation: landscape) {
+/* @media screen and (max-width: 812px) and (orientation: landscape) {
   .sidenav {
     height: auto;
     padding: 15px;
@@ -179,22 +191,24 @@ body, html {
     width: 60%;
     height: 100%;
     position: absolute;
-    z-index: -1;
-    bottom: 0px;
-  }
+    z-index: -1; 
+bottom: 0px;
+}
 
-  .row.content {
-    height: auto;
-  }
+.row.content {
+  height: auto;
+}
 
-  #geocoder_box {
-    position: absolute;
-    left: 60%;
-    top: 2%;
-    width: 175px;
-  }
+#geocoder_box {
+  position: absolute;
+  left: 60%;
+  top: 2%;
+  width: 175px;
+}
 
-  #about-section {
-    display: none;
-  }
-}*/
+#about-section {
+  display: none;
+}
+}
+
+*/
