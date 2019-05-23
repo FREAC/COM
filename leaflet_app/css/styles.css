@@ -17,34 +17,36 @@ body {
   font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
-#map {
+/* #map {
   right: 0px;
   height: 100%;
   position: absolute;
   z-index: 6;
   cursor: default;
   top: 0;
-}
+} */
 
-#legend {
+/* #legend {
   padding: 0px 2%;
   z-index: 1;
   height: 100%;
   background-color: #E1D4B7;
   position: absolute;
   overflow-y: scroll;
-}
+} */
+
+
 
 #json_one_results {
   font-weight: bold;
   font-size: 20px;
 }
 
-.sidebar {
+/* .sidebar {
   height: 100%;
   padding: 15px;
   background-color: #CEB888;
-}
+} */
 
 #results-table {
   overflow-y: hidden;
@@ -60,7 +62,11 @@ body {
     position: relative;
     bottom: 10px;
   }
-  .easy-autocomplete-container { top: 40px;width:300%;}  
+
+  .easy-autocomplete-container {
+    top: 40px;
+    width: 300%;
+  }
 
   #legend {
     padding: 2% 2% 2% 5%;
@@ -122,7 +128,7 @@ body {
     width: 60%;
     height: 100%;
     position: absolute;
-    z-index: -1; 
+    z-index: -1;
     bottom: 0px;
   }
 
