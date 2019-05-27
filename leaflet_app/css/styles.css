@@ -2,8 +2,6 @@ body,
 html {
   height: 100%;
   width: 100%;
-  margin: 0;
-  padding: 0;
 }
 
 body {
@@ -18,11 +16,8 @@ body {
 }
 
 #legend {
-  overflow-y: scroll !important;
   background-color: #E1D4B7;
 }
-
-
 
 #json_one_results {
   font-weight: bold;
@@ -35,12 +30,12 @@ body {
   width: 95%;
 }
 
+/* rules to control the positioning of the divs when in mobile (portriat) mode */
 @media screen and (max-width: 576px) {
   #legend {
     height: 40%;
     position: absolute;
     bottom: 0;
-    overflow-y: scroll;
   }
 
   #map {
@@ -48,9 +43,4 @@ body {
     position: absolute;
     top: 0;
   }
-
-  #header {
-    font-size: 5vw;
-  }
-
 }
