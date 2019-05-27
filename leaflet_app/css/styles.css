@@ -35,6 +35,11 @@ body {
   overflow-y: scroll;
 } */
 
+#legend {
+  overflow-y: scroll !important;
+  background-color: #E1D4B7;
+}
+
 
 
 #json_one_results {
@@ -51,9 +56,38 @@ body {
 #results-table {
   overflow-y: hidden;
   margin-bottom: 2%;
+  width: 95%;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 576px) {
+  #legend {
+    height: 33%;
+    position: absolute;
+    bottom: 0;
+    overflow-y: scroll;
+  }
+
+  #map {
+    height: 66%;
+    position: absolute;
+    top: 0;
+  }
+
+}
+
+/* @media screen and (max-width: 767px) {
+
+  #legend {
+    height: 50% !important;
+    overflow: scroll;
+  }
+
+  .map {
+    height: 50% !important;
+  }
+} */
+
+/* @media screen and (max-width: 767px) {
 
   .sidebar {
     height: auto;
@@ -135,4 +169,4 @@ body {
   #about-section {
     display: none;
   }
-}
+} */

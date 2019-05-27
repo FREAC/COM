@@ -9,7 +9,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<!-- CSS: Libs -->
-	<link rel="stylesheet" href="css/lib/bootstrap.css" />
+	<!-- <link rel="stylesheet" href="css/lib/bootstrap.css" /> -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
 		integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 	<link rel="stylesheet" href="css/lib/leaflet.css" />
@@ -23,7 +25,10 @@
 
 	<!-- JS: Libs -->
 	<script type="text/javascript" src="js/lib/jquery.js"></script>
-	<script type="text/javascript" src="js/lib/bootstrap.js"></script>
+	<!-- <script type="text/javascript" src="js/lib/bootstrap.js"></script> -->
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+	</script>
 	<script type="text/javascript" src="js/lib/leaflet.js"></script>
 
 	<script type="text/javascript" src="js/lib/leaflet-providers.js"></script>
@@ -37,10 +42,84 @@
 
 <body>
 
-	<div class="container-fluid h-100 d-flex flex-column">
-		<div class="row h-100 flex-fill">
+	<div class="container-fluid d-flex mh-100">
+		<div class="row flex-fill d-flex">
+			<!-- Map -->
+			<!-- <div class="col-sm-7 col-md-8 row map-container flex-fill order-lg-last" id="map"> </div> -->
+			<div class="col-sm-7 col-md-7 order-sm-last overflow-hidden" id="map" style="max-height: 100vh"></div>
+
 			<!-- Sidebar-->
-			<div class="col-sm-5 col-md-4 sidebar" id="legend">
+			<!-- <div class="col-xs-5 col-md-4 order-md-first" style="background:red; max-height: 100vh; overflow-y: scroll;"> -->
+			<div class="col-sm-5 col-md-5 order-sm-first overflow-auto mh-100" id="legend">
+				<h3>FSU College of Medicine<br>Maternal Mental Health Resource Directory</h3>
+				<form>
+					<div class="form-row">
+						<div class="col">
+							<input type="text" class="form-control" id="easy-auto">
+						</div>
+
+						<div class="col">
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="insurance">
+								<label class="form-check-label" for="insurance">
+									Accepts Insurance
+								</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="medicare">
+								<label class="form-check-label" for="medicare">
+									Accepts Medicare
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-row">
+						<div class="col">
+							<select class="form-control" id="radius">
+								<option value="5">5 miles</option>
+								<option value="10">10 miles</option>
+								<option value="25">25 miles</option>
+								<option value="50">50 miles</option>
+							</select>
+						</div>
+						<div class="col">
+							<button type="button" class="btn btn-secondary" id="clear-search">Clear Search Area</button>
+						</div>
+					</div>
+				</form>
+
+				<div class="row p-3">
+					<div>
+						<h3>Results</h3>
+						<p><span id="json_one_results_title"><span id="json_one_results">0</span> <span
+									id="json_one_title">providers</span></span>
+							are within the given radius.</p>
+
+						<div id="results-table"></div>
+
+						<div id='about-section'>
+							<h3>About</h3>
+							<p>This demo counts the number of group care facilities within a radius of a given point and
+								displays them on a map using <a href="https://leafletjs.com/"
+									target="_blank">Leaflet</a>.</p>
+							<p>To use, enter an address and then enter a radius. Under results will be the number of
+								markers within the given radius. You can also drag the marker on the map; the number
+								will update automatically.</p>
+							<p>More information regarding the original code is available <a
+									href="http://csessig.wordpress.com/2014/06/22/leaflet-solution-counting-markers-within-a-radius/"
+									target="_blank">here</a>.
+								Code was originally used <a
+									href="http://wcfcourier.com/app/special/ia-mental-health-public/"
+									target="_blank">here</a>.
+							</p>
+							<p>This project is sponsored by:<br><br><a href="https://www.sagerx.com/"
+									target="_blank"><img alt="Sage Therapeutics" src="images/logo-sagerx.svg"></a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- <div class="col-sm-5 col-md-4 sidebar order-xs-last order-md-first flex-fill" id="legend">
 				<h3>FSU College of Medicine<br>Maternal Mental Health Resource Directory</h3>
 				<form>
 					<div class="form-row">
@@ -109,9 +188,7 @@
 					</div>
 				</div>
 
-			</div>
-			<!-- Map -->
-			<div class="col-sm-7 col-md-8 row h-100 map-container flex-fill" id="map"></div>
+			</div> -->
 		</div>
 	</div>
 	<!-- JS: Custom -->
