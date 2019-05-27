@@ -61,16 +61,20 @@ body {
 
 @media screen and (max-width: 576px) {
   #legend {
-    height: 33%;
+    height: 40%;
     position: absolute;
     bottom: 0;
     overflow-y: scroll;
   }
 
   #map {
-    height: 66%;
+    height: 60%;
     position: absolute;
     top: 0;
+  }
+
+  #header {
+    font-size: 5vw;
   }
 
 }
