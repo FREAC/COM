@@ -48,14 +48,14 @@ let activeLayer;
 // assigns marker and add to map
 async function setup() {
     selection_group.clearLayers();
-    $.get("./data/COM.json", function (json_data) {
-        $.each(json_data, function (object) {
+    $.get("./data/COM.json", function(json_data) {
+        $.each(json_data, function(object) {
             const provider = json_data[object];
             const marker = markerLogic(provider);
             marker.addTo(json_group);
             json_group.addLayer(marker);
         });
-        map.addLayer(json_group)
+        map.addLayer(json_group);
         activeLayer = json_group;
     });
 }
@@ -65,6 +65,9 @@ async function setup() {
 ///////////////////////////////////////////////
 ///////////////////////////////////////////////
 
+const bottomLeft = [24, -88];
+const topRight = [32, -79];
+
 // Map
 const map = new L.Map('map', {
     renderer: L.canvas(),
@@ -72,17 +75,14 @@ const map = new L.Map('map', {
     minZoom: 7,
     maxZoom: 19,
     zoom: 7,
-    maxBounds: [
-        [23.5, -88.5],
-        [33, -79]
-    ]
+    maxBounds: [bottomLeft, topRight]
 });
 
 // comment out the following block of code to NOT allow right clicks on the map to draw the search radius
 
 map.on({
-    contextmenu: function (event) {
-        querySearchArea(event.latlng, activeLayer, map.getZoom());
+    contextmenu: function(e) {
+        querySearchArea(e);
     }
 });
 
@@ -97,9 +97,9 @@ L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 const locate = L.control.locate({
     flyTo: true,
     clickBehavior: {
-        inViewNotFollowing: 'stop',
         inView: 'stop',
-        outOfView: 'stop'
+        outOfView: 'stop',
+        inViewNotFollowing: 'stop'
     },
     strings: {
         title: "Find my location"
@@ -108,50 +108,22 @@ const locate = L.control.locate({
     showPopup: false
 }).addTo(map);
 
-// Florida Lat Long boundaries
-var lowerLeft  = L.latLng(24.5, -87.75);
-var upperRight = L.latLng(31.1, -79.5);
-var FLbounds   = L.latLngBounds(lowerLeft, upperRight);
-// ESRI Geocoder
-const options2 = {
+// ESRI Geocoder 
+var geocoder = L.esri.Geocoding.geosearch({
     zoomToResult: false,
     useMapBounds: false,
     placeholder: 'Search for an address',
-    searchBounds: FLbounds 
-};    
-var searchControl = L.esri.Geocoding.geosearch(options2).addTo(map);
+    searchBounds: [bottomLeft, topRight]
+}).addTo(map);
 
-// listen for search results, zoom to pouint and draw search radius around point
-searchControl.on('results', function (data) {
-
+geocoder.on('results', function(result) {
     clearSelection();
-
-    // zoom to location
-    map.flyTo(data.results[0].latlng, 14);
-
-    // put pin on location
-    // Set marker location
-    const marker_location = new L.LatLng(data.results[0].latlng.lat, data.results[0].latlng.lng);
-
-    // set the selection_marker variable to our location and style
-    selection_marker = L.circleMarker(marker_location, markerStyle(selected_color, selected_color, selected_fill_opacity)).bindPopup();
-
-    // add to map
-    map.addLayer(selection_marker);
-
-    querySearchArea(data.latlng, activeLayer)
-
-    // set up popup 
-    const popup = L.popup();
-    popup
-        .setLatLng(data.latlng)
-        .setContent(data.results[0].text)
-        .openOn(map);
+    querySearchArea(result);
 });
 
 
 // TODO This should clear the table as well
-function clearSelection() {
+function clearSelection(provider=true) {
     $('#map').css('z-index', '22')
     if (search_marker) {
         map.removeLayer(search_marker);
@@ -162,52 +134,31 @@ function clearSelection() {
     if (selection_marker) {
         map.removeLayer(selection_marker);
     }
-
-    $('#easy-auto').val('');
-
-    // close any open popups on map
-    map.closePopup();
-}
-
-function clearSelectionMinusProvider() {
-    $('#map').css('z-index', '22')
-    if (search_marker) {
-        map.removeLayer(search_marker);
-    }
-    if (searchArea) {
-        map.removeLayer(searchArea);
-    }
-    if (selection_marker) {
-        map.removeLayer(selection_marker);
-    }
-
+    $('#json_one_results').html('0');
+    insertTabulator([]);
+    if (provider) {
+        $easyAuto.val("");
+    } 
+    searchArea = undefined;
     map.closePopup();
 }
 
 // Clear button functionality
-$('#clear-search').click(function () {
-    var tableResults = []
-    insertTabulator(tableResults);
-    $('#json_one_results').html('0');
+$('#clear-search').click(function() {
     clearSelection();
-    $('#map').css('z-index', '11');
 });
 
-const radius = $('#radius');
-radius.change(function () {
+// Radius dropdown functionality
+const $radius = $('#radius');
+$radius.change(function() {
     if (searchArea) {
-        const size = milesToMeters(radius.val());
-        searchArea.setRadius(size);
-        pointsInCircle(searchArea, size, activeLayer);
+        const r_size = parseInt($radius.val());
+        searchArea.setRadius(r_size);
+        map.flyToBounds(searchArea.getBounds());
+        pointsInCircle(searchArea, r_size, activeLayer);
         $('#map').css('z-index', '2')
     }
 });
-
-
-// Convert miles to meters to set radius of circle
-function milesToMeters(miles) {
-    return miles * 1069.344;
-};
 
 function createPopup(data) {
     const content = `<b>${data['Agency']}</b><br>
@@ -219,7 +170,8 @@ function createPopup(data) {
 }
 
 // JQuery Easy Autocomplete: http://easyautocomplete.com
-const options = {
+const $easyAuto = $('#easy-auto');
+$easyAuto.easyAutocomplete({
     url: "data/COM.json",
     getValue: "Agency",
     list: {
@@ -227,17 +179,13 @@ const options = {
         match: {
             enabled: true
         },
-        onClickEvent: function () {
-            clearSelection();
-            const data = $("#easy-auto").getSelectedItemData();
+        onChooseEvent: function () {
+            clearSelection(false);
+            const data = $easyAuto.getSelectedItemData();
             //console.log('what is data ',data)
             var zzoom = undefined;
             //TODO - the next 5 lines are copied from the #easy-auto "click" event
             // probably could make this a function rather than duplicating the code
-
-            var tableResults = []
-            insertTabulator(tableResults);
-            $('#json_one_results').html('0');
             $('#map').css('z-index', '11');
 
             zoomToLocation(data.Latitude, data.Longitude, zzoom, data);
@@ -245,9 +193,8 @@ const options = {
     },
     requestDelay: 250,
     placeholder: "Search for a provider"
-};
+});
 
-$("#easy-auto").easyAutocomplete(options);
 ///////////////////////////////////////
 ///////////////////////////////////////
 ///////////////////////////////////////
@@ -486,18 +433,11 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
 }
 
 // This places marker, circle on map
-function querySearchArea(location, activeLayer = json_group, z = 10) {
+function querySearchArea(location) {
 
     clearSelection();
-
-    // set center point in map
-    search_marker = L.circleMarker([location.lat, location.lng]);
-    search_marker.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity)).addTo(map);
-
-    // Center the map on the result
-    // map.setView(new L.LatLng(location.lat, location.lng), z);
-
-    searchArea = L.circle([location.lat, location.lng], milesToMeters(radius.val()), {
+    const r_size = parseInt($radius.val());
+    searchArea = L.circle(location.latlng, r_size, {
         color: selected_color,
         fillColor: selected_color,
         fillOpacity: 0.1,
@@ -505,12 +445,8 @@ function querySearchArea(location, activeLayer = json_group, z = 10) {
         interactive: false
     }).addTo(map);
 
-    // fly to the bounds of the circle
     map.flyToBounds(searchArea.getBounds());
-
-    // This will determine how many markers are within the circle
-    // Called when points are initially loaded
-    pointsInCircle(searchArea, milesToMeters(radius.val()), activeLayer);
+    pointsInCircle(searchArea, r_size, json_group);
 }
 
 
