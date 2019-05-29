@@ -79,7 +79,6 @@ const map = new L.Map('map', {
 });
 
 // comment out the following block of code to NOT allow right clicks on the map to draw the search radius
-
 map.on({
     contextmenu: function(e) {
         querySearchArea(e);
@@ -483,7 +482,8 @@ function markerLogic(data) {
         popupclose: function (event) {
             selection_marker = undefined;
             event.target.setStyle(markerStyle(default_fill_color, default_outline_color));
-        }
+        },
+        contextmenu: function(e) {}
         // if a tabulator table is already active
         // if ($('#results-table').hasClass('tabulator')) {
         //     // get the data that is inside of it
