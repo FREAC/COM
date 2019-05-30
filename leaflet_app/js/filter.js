@@ -1,5 +1,17 @@
 // this performs dynamic filtering when the user wants to limit their search
 // set up event handler to watch when any checkboxes are checked
+
+async function filterLocationsTest(event) {
+    const acceptMedicare = $('#medicare');
+    const acceptInsurance = $('#insurance');
+
+    console.log(acceptMedicare);
+    console.log(acceptInsurance);
+
+    // TODO: add filter functionality based on previous filter locations function
+
+}
+
 async function filterLocations(event) {
 
     // assign button ids to variables

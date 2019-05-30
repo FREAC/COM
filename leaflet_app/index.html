@@ -52,11 +52,19 @@
 				<h3>FSU College of Medicine<br>Maternal Mental Health Resource Directory</h3>
 				<form>
 					<div class="form-row">
-						<div class="col-6">
+						<div class="col">
 							<input type="text" class="form-control" id="easy-auto">
 						</div>
 
-						<div class="col-6 mb-2">
+						<div class=" col mb-2 btn-group-vertical btn-group-toggle" data-toggle="buttons">
+							<label class="btn btn-secondary">
+								<input type="checkbox" name="options" id="insurance" autocomplete="off"> Accepts
+								Insurance</label>
+							<label class="btn btn-secondary">
+								<input type="checkbox" name="options" id="medicare" autocomplete="off"> Accepts
+								Medicare</label>
+						</div>
+						<!-- <div class="col mb-2">
 							<div class="form-check">
 								<input class="form-check-input" type="checkbox" id="insurance">
 								<label class="form-check-label" for="insurance">
@@ -69,7 +77,7 @@
 									Accepts Medicare
 								</label>
 							</div>
-						</div>
+						</div> -->
 					</div>
 
 					<div class="form-row">
@@ -83,7 +91,7 @@
 							</select>
 						</div>
 						<div class="col">
-							<button type="button" class="btn btn-light" id="clear-search">Clear</button>
+							<!-- <button type="button" class="btn btn-light" id="clear-search">Clear</button> -->
 						</div>
 					</div>
 				</form>
