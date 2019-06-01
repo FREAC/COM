@@ -98,6 +98,7 @@ async function filterLocations(event) {
         }
     } else {
 
+        await map.removeLayer(json_group);
         // clear the selection layer
         selection_group.clearLayers();
         // add the full layer back to the map
