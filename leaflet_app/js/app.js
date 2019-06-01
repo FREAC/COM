@@ -205,7 +205,8 @@ $easyAuto.easyAutocomplete({
 $("input[type='checkbox']").change(async function (event) {
 
     // perform a filter based on which checkboxes are checked
-    filterLocationsTest(event);
+    // filterLocationsTest(event);
+    filterLocations(event);
 
 });
 
@@ -217,7 +218,6 @@ $("input[type='checkbox']").change(async function (event) {
 
 // function that will configure a popup for housing info
 function configurePopup(data) {
-    console.log(data)
 
     try {
         // The commented out stuff can probably be deleted at some point.  It was added when we had both
@@ -454,12 +454,12 @@ function querySearchArea(location) {
     }).addTo(map);
 
     map.flyToBounds(searchArea.getBounds());
-    pointsInCircle(searchArea, r_size, json_group);
+    pointsInCircle(searchArea, r_size, activeLayer);
 }
 
 
 // Assign these properties to each marker in the data
-function markerLogic(data) {
+function markerLogic(data, selection_marker) {
 
     // Create marker for data
     const popup = createPopup(data);

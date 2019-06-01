@@ -1,0 +1,45 @@
+.btn-garnet { 
+  color: #FFFFFF; 
+  background-color: #782F40; 
+  border-color: #782F40; 
+} 
+ 
+.btn-garnet:hover, 
+.btn-garnet:focus, 
+.btn-garnet:active, 
+.btn-garnet.active, 
+.open .dropdown-toggle.btn-garnet { 
+  color: #FFFFFF; 
+  background-color: #530613; 
+  border-color: #782F40; 
+} 
+ 
+.btn-garnet:active, 
+.btn-garnet.active, 
+.open .dropdown-toggle.btn-garnet { 
+  background-image: none; 
+} 
+ 
+.btn-garnet.disabled, 
+.btn-garnet[disabled], 
+fieldset[disabled] .btn-garnet, 
+.btn-garnet.disabled:hover, 
+.btn-garnet[disabled]:hover, 
+fieldset[disabled] .btn-garnet:hover, 
+.btn-garnet.disabled:focus, 
+.btn-garnet[disabled]:focus, 
+fieldset[disabled] .btn-garnet:focus, 
+.btn-garnet.disabled:active, 
+.btn-garnet[disabled]:active, 
+fieldset[disabled] .btn-garnet:active, 
+.btn-garnet.disabled.active, 
+.btn-garnet[disabled].active, 
+fieldset[disabled] .btn-garnet.active { 
+  background-color: #782F40; 
+  border-color: #782F40; 
+} 
+ 
+.btn-garnet .badge { 
+  color: #782F40; 
+  background-color: #FFFFFF; 
+}
