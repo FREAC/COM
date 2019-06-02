@@ -48,8 +48,8 @@ let activeLayer;
 // assigns marker and add to map
 async function setup() {
     selection_group.clearLayers();
-    $.get("./data/COM.json", function(json_data) {
-        $.each(json_data, function(object) {
+    $.get("./data/COM.json", function (json_data) {
+        $.each(json_data, function (object) {
             const provider = json_data[object];
             const marker = markerLogic(provider);
             marker.addTo(json_group);
@@ -80,7 +80,7 @@ const map = new L.Map('map', {
 
 // comment out the following block of code to NOT allow right clicks on the map to draw the search radius
 map.on({
-    contextmenu: function(e) {
+    contextmenu: function (e) {
         querySearchArea(e);
     }
 });
@@ -115,14 +115,14 @@ var geocoder = L.esri.Geocoding.geosearch({
     searchBounds: [bottomLeft, topRight]
 }).addTo(map);
 
-geocoder.on('results', function(result) {
+geocoder.on('results', function (result) {
     clearSelection();
     querySearchArea(result);
 });
 
 
 // TODO This should clear the table as well
-function clearSelection(provider=true) {
+function clearSelection(provider = true) {
     $('#map').css('z-index', '22')
     if (search_marker) {
         map.removeLayer(search_marker);
@@ -137,19 +137,19 @@ function clearSelection(provider=true) {
     insertTabulator([]);
     if (provider) {
         $easyAuto.val("");
-    } 
+    }
     searchArea = undefined;
     map.closePopup();
 }
 
 // Clear button functionality
-$('#clear-search').click(function() {
+$('#clear-search').click(function () {
     clearSelection();
 });
 
 // Radius dropdown functionality
 const $radius = $('#radius');
-$radius.change(function() {
+$radius.change(function () {
     if (searchArea) {
         const r_size = parseInt($radius.val());
         searchArea.setRadius(r_size);
@@ -200,6 +200,16 @@ $easyAuto.easyAutocomplete({
 ///////////////////////////////////////
 
 
+/// Alert for checkbox change
+
+$("input[type='checkbox']").change(async function (event) {
+
+    // perform a filter based on which checkboxes are checked
+    // filterLocationsTest(event);
+    filterLocations(event);
+
+});
+
 // $("#checkboxes input[type='checkbox']").change(async function (event) {
 //     // when any checkbox inside the div "checkboxes" changes, run this function
 //     await filterLocations(event);
@@ -208,7 +218,6 @@ $easyAuto.easyAutocomplete({
 
 // function that will configure a popup for housing info
 function configurePopup(data) {
-    console.log(data)
 
     try {
         // The commented out stuff can probably be deleted at some point.  It was added when we had both
@@ -445,12 +454,12 @@ function querySearchArea(location) {
     }).addTo(map);
 
     map.flyToBounds(searchArea.getBounds());
-    pointsInCircle(searchArea, r_size, json_group);
+    pointsInCircle(searchArea, r_size, activeLayer);
 }
 
 
 // Assign these properties to each marker in the data
-function markerLogic(data) {
+function markerLogic(data, selection_marker) {
 
     // Create marker for data
     const popup = createPopup(data);
@@ -483,7 +492,7 @@ function markerLogic(data) {
             selection_marker = undefined;
             event.target.setStyle(markerStyle(default_fill_color, default_outline_color));
         },
-        contextmenu: function(e) {}
+        contextmenu: function (e) {}
         // if a tabulator table is already active
         // if ($('#results-table').hasClass('tabulator')) {
         //     // get the data that is inside of it
