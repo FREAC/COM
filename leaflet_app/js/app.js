@@ -94,6 +94,7 @@ L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 
 // Locate Button
 const locate = L.control.locate({
+    // flyTo: true,
     flyTo: true,
     clickBehavior: {
         inView: 'stop',
@@ -106,6 +107,17 @@ const locate = L.control.locate({
     drawCircle: false,
     showPopup: false
 }).addTo(map);
+
+// listen to locationfound event
+map.on('locationfound', function (event) {
+
+    // on the zoom end, turn off locate
+    map.on('moveend', function () {
+        // turn off locate
+        locate.stop();
+    });
+
+});
 
 // ESRI Geocoder 
 var geocoder = L.esri.Geocoding.geosearch({
