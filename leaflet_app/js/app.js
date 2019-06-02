@@ -108,6 +108,7 @@ const locate = L.control.locate({
     showPopup: false
 }).addTo(map);
 
+// listen to locationfound event
 map.on('locationfound', function (event) {
 
     // on the zoom end, turn off locate
