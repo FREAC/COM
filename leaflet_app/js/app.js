@@ -150,7 +150,8 @@ function clearSelection(provider = true) {
     if (provider) {
         $easyAuto.val("");
     }
-    searchArea = undefined;
+    searchArea = null;
+    $radius.val('default');
     map.closePopup();
 }
 
@@ -456,7 +457,13 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
 function querySearchArea(location) {
 
     clearSelection();
-    const r_size = parseInt($radius.val());
+    let r_size;
+    if ($radius.val()) {
+        r_size = parseInt($radius.val());
+    } else {
+        r_size = 5347;
+        $radius.val(5347);
+    }
     searchArea = L.circle(location.latlng, r_size, {
         color: selected_color,
         fillColor: selected_color,
