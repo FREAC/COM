@@ -78,13 +78,11 @@ const map = new L.Map('map', {
     maxBounds: [bottomLeft, topRight]
 });
 
-// comment out the following block of code to NOT allow right clicks on the map to draw the search radius
 map.on({
     contextmenu: function(e) {
         querySearchArea(e);
     }
 });
-
 
 // Load the data
 setup();
@@ -120,8 +118,6 @@ geocoder.on('results', function(result) {
     querySearchArea(result);
 });
 
-
-// TODO This should clear the table as well
 function clearSelection(provider=true) {
     $('#map').css('z-index', '22')
     if (search_marker) {
@@ -163,9 +159,7 @@ function createPopup(data) {
     const content = `<b>${data['Agency']}</b><br>
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}`;
-    return L.popup({
-        closeButton: false
-    }).setContent(content);
+    return L.popup({closeButton: false}).setContent(content);
 }
 
 // JQuery Easy Autocomplete: http://easyautocomplete.com
@@ -208,8 +202,7 @@ $easyAuto.easyAutocomplete({
 
 // function that will configure a popup for housing info
 function configurePopup(data) {
-    console.log(data)
-
+    
     try {
         // The commented out stuff can probably be deleted at some point.  It was added when we had both
         // upper and lowercase array memebers.  I think we now have a consistent uppercase situation
@@ -328,7 +321,6 @@ function insertTabulator(data) {
         },
     });
 }
-
 
 // This figures out how many points are within our circle
 function pointsInCircle(circle, meters_user_set, groupLayer) {
