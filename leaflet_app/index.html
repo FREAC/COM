@@ -52,31 +52,29 @@
 				<h3>FSU College of Medicine<br>Maternal Mental Health Resource Directory</h3>
 				<form>
 					<div class="form-row">
-						<div class="col-6">
+						<div class="col-sm-6">
 							<input type="text" class="form-control" id="easy-auto">
 						</div>
 
-						<div class="col-6 mb-2">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" id="insurance">
-								<label class="form-check-label" for="insurance">
-									Accepts Insurance
-								</label>
-							</div>
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" id="medicare">
-								<label class="form-check-label" for="medicare">
-									Accepts Medicare
-								</label>
-							</div>
+						<div class="col-sm-6 mb-2 mt-2 mt-sm-0 btn-group-vertical btn-group-toggle"
+							data-toggle="buttons">
+							<label class="btn btn-garnet">
+								<input type="checkbox" name="options" id="insurance" autocomplete="off">
+								Tallahassee/insurance
+							</label>
+							<label class="btn btn-garnet">
+								<input type="checkbox" name="options" id="medicare" autocomplete="off">
+								zipcode	32309/medicare
+							</label>
 						</div>
 					</div>
 
 					<div class="form-row">
 						<div class="col">
 							<select class="form-control" id="radius">
-								<!-- Value is number of meters -->
-								<option value="5347" selected>5 miles</option>
+								<option value="default" selected disabled hidden>Search radius</option>
+								<!-- Value is distance in meters -->
+								<option value="5347">5 miles</option>
 								<option value="10693">10 miles</option>
 								<option value="26734">25 miles</option>
 								<option value="53467">50 miles</option>

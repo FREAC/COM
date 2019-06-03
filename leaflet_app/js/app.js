@@ -6,13 +6,13 @@ const default_outline_color = "#FFFFFF";
 const selected_color = "#2BBED8";
 const selected_fill_opacity = 1;
 
+// TODO: Can this be dealt with using Bootstrap components?
 $(document).ready(function () {
     $('.geocoder-control').click(function () {
         $("#map").css("width", "100%");
     });
     $('.sidebar').focusin(function () {
         $('#legend').addClass('col-sm-12');
-        // $("#map").css("z-index", "-1");
     })
 });
 
@@ -48,8 +48,8 @@ let activeLayer;
 // assigns marker and add to map
 async function setup() {
     selection_group.clearLayers();
-    $.get("./data/COM.json", function(json_data) {
-        $.each(json_data, function(object) {
+    $.get("./data/COM.json", function (json_data) {
+        $.each(json_data, function (object) {
             const provider = json_data[object];
             const marker = markerLogic(provider);
             marker.addTo(json_group);
@@ -78,13 +78,17 @@ const map = new L.Map('map', {
     maxBounds: [bottomLeft, topRight]
 });
 
-// comment out the following block of code to NOT allow right clicks on the map to draw the search radius
 map.on({
-    contextmenu: function(e) {
+    contextmenu: function (e) {
         querySearchArea(e);
+    },
+    // Turn off mobile locate control after zoom
+    locationfound: function() {
+        map.on('moveend', function() {
+            locate.stop();
+        });
     }
 });
-
 
 // Load the data
 setup();
@@ -115,14 +119,12 @@ var geocoder = L.esri.Geocoding.geosearch({
     searchBounds: [bottomLeft, topRight]
 }).addTo(map);
 
-geocoder.on('results', function(result) {
+geocoder.on('results', function (result) {
     clearSelection();
     querySearchArea(result);
 });
 
-
-// TODO This should clear the table as well
-function clearSelection(provider=true) {
+function clearSelection({provider=true, radius=false}={}) {
     $('#map').css('z-index', '22')
     if (search_marker) {
         map.removeLayer(search_marker);
@@ -137,19 +139,22 @@ function clearSelection(provider=true) {
     insertTabulator([]);
     if (provider) {
         $easyAuto.val("");
-    } 
+    }
+    if (radius) {
+        $radius.val('default');
+    }
     searchArea = undefined;
     map.closePopup();
 }
 
 // Clear button functionality
-$('#clear-search').click(function() {
-    clearSelection();
+$('#clear-search').click(function () {
+    clearSelection({radius: true});
 });
 
 // Radius dropdown functionality
 const $radius = $('#radius');
-$radius.change(function() {
+$radius.change(function () {
     if (searchArea) {
         const r_size = parseInt($radius.val());
         searchArea.setRadius(r_size);
@@ -179,13 +184,10 @@ $easyAuto.easyAutocomplete({
             enabled: true
         },
         onChooseEvent: function () {
-            clearSelection(false);
+            clearSelection({provider: false, radius: true});
             const data = $easyAuto.getSelectedItemData();
-            //console.log('what is data ',data)
             var zzoom = undefined;
-            //TODO - the next 5 lines are copied from the #easy-auto "click" event
-            // probably could make this a function rather than duplicating the code
-            $('#map').css('z-index', '11');
+            // $('#map').css('z-index', '11');
 
             zoomToLocation(data.Latitude, data.Longitude, zzoom, data);
         }
@@ -200,33 +202,23 @@ $easyAuto.easyAutocomplete({
 ///////////////////////////////////////
 
 
-// $("#checkboxes input[type='checkbox']").change(async function (event) {
-//     // when any checkbox inside the div "checkboxes" changes, run this function
-//     await filterLocations(event);
-//     pointsInCircle(searchArea, milesToMeters($('#radius-selected').val()), activeLayer);
-// });
+/// Alert for checkbox change
+
+$("input[type='checkbox']").change(async function (event) {
+
+    // perform a filter based on which checkboxes are checked
+    filterLocations(event);
+});
 
 // function that will configure a popup for housing info
 function configurePopup(data) {
-    console.log(data)
 
     try {
-        // The commented out stuff can probably be deleted at some point.  It was added when we had both
-        // upper and lowercase array memebers.  I think we now have a consistent uppercase situation
-
-        //    console.log('finally we see what data is before the popup ',data)
-        //    data['Agency'] = data['agency'];
-        //    try {
-        //    if(typeof data['housenumber'] === undefined){data['HouseNumber'] = '99999'}     else {data['HouseNumber'] = data['housenumber']};
-        //    if(typeof data['street']      === undefined){data['Street']      = 'No Street'} else {data['Street']      = data['street']};
+        
         if (data['Unit'] === undefined || data['Unit'] === null) {
             data['Unit'] = ''
         }
-        //    if(typeof data['city']        === undefined){data['City']        = 'No City'}   else {data['City']        = data['city']};
-        //    if(typeof data['state']       === undefined){data['State']       = 'No State'}  else {data['State']       = data['state']};
-        //if(typeof data['postalcode']  === undefined){data['PostalCode']  = 'No Zip'}    else {data['PostalCode']  = data['postalcode']};
-        //    } catch {}
-        //console.log('just one ',data._row.data.agency)
+        
         var pop_text = `<b>${data['Agency']}</b><br>
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}`;
@@ -264,22 +256,11 @@ function zoomToLocation(lat, lng, z = 11, data) {
     map.addLayer(selection_marker);
 
     try {
-        // The commented out stuff can probably be deleted at some point.  It was added when we had both
-        // upper and lowercase array memebers.  I think we now have a consistent uppercase situation
-
-        //    console.log('finally we see what data is before the popup ',data)
-        //    data['Agency'] = data['agency'];
-        //    try {
-        //    if(typeof data['housenumber'] === undefined){data['HouseNumber'] = '99999'}     else {data['HouseNumber'] = data['housenumber']};
-        //    if(typeof data['street']      === undefined){data['Street']      = 'No Street'} else {data['Street']      = data['street']};
+        
         if (data['Unit'] === undefined || data['Unit'] === null) {
             data['Unit'] = ''
         }
-        //    if(typeof data['city']        === undefined){data['City']        = 'No City'}   else {data['City']        = data['city']};
-        //    if(typeof data['state']       === undefined){data['State']       = 'No State'}  else {data['State']       = data['state']};
-        //if(typeof data['postalcode']  === undefined){data['PostalCode']  = 'No Zip'}    else {data['PostalCode']  = data['postalcode']};
-        //    } catch {}
-        //console.log('just one ',data._row.data.agency)
+        
         var pop_text = `<b>${data['Agency']}</b><br>
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}`;
@@ -296,7 +277,6 @@ function zoomToLocation(lat, lng, z = 11, data) {
 
 // create a reusable Tabulator object
 function insertTabulator(data) {
-    //console.log('start of the inserttablular and the data we have is ',data)
     table = new Tabulator("#results-table", {
         height: 200,
         data: data,
@@ -310,9 +290,6 @@ function insertTabulator(data) {
             field: "PostalCode"
         }],
         rowClick: function (event, row) {
-            //console.log('what is row ', row)
-            //console.log('the data in the row ',row._row.data)
-            //console.log('and data is ',data)
             // NOTE: New function parameter to pass all of the row information to the zoomtolocation
             //       function so it can handle the popup
 
@@ -431,11 +408,17 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
     }
 }
 
-// This places marker, circle on map
+// This both places a circle on the map AND counts the # of points in that circle
 function querySearchArea(location) {
 
     clearSelection();
-    const r_size = parseInt($radius.val());
+    let r_size;
+    if ($radius.val()) {
+        r_size = parseInt($radius.val());
+    } else {
+        r_size = 5347;
+        $radius.val(5347);
+    }
     searchArea = L.circle(location.latlng, r_size, {
         color: selected_color,
         fillColor: selected_color,
@@ -445,12 +428,12 @@ function querySearchArea(location) {
     }).addTo(map);
 
     map.flyToBounds(searchArea.getBounds());
-    pointsInCircle(searchArea, r_size, json_group);
+    pointsInCircle(searchArea, r_size, activeLayer);
 }
 
 
 // Assign these properties to each marker in the data
-function markerLogic(data) {
+function markerLogic(data, selection_marker) {
 
     // Create marker for data
     const popup = createPopup(data);
@@ -483,26 +466,10 @@ function markerLogic(data) {
             selection_marker = undefined;
             event.target.setStyle(markerStyle(default_fill_color, default_outline_color));
         },
-        contextmenu: function(e) {}
-        // if a tabulator table is already active
-        // if ($('#results-table').hasClass('tabulator')) {
-        //     // get the data that is inside of it
-        //     const data = table.getData();
-        //     // loop through data to see if clicked feature matches
-        //     for (let i in data) {
-        //         // if we find a layer match, select it
-        //         if (event.target.data.Agency === data[i].agency) {
-        //             // deselect previous row selection
-        //             table.deselectRow();
-        //             // select new row selection
-        //             table.selectRow(i);
-        //         }
-        //     }
-        // }
+        contextmenu: function() {}
     });
 
     // Add a data object for use in the table
-    //console.log('do we have data now ',data)
     // TODO -- SWH - not sure we need all of these fields - maybe just Agency (5/17/19)
     circle_marker.data = {
         'Agency': data['Agency'],
