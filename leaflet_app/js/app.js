@@ -125,7 +125,7 @@ geocoder.on('results', function (result) {
 });
 
 function clearSelection({provider=true, radius=false}={}) {
-    $('#map').css('z-index', '22')
+    // $('#map').css('z-index', '22')
     if (search_marker) {
         map.removeLayer(search_marker);
     }
@@ -160,7 +160,7 @@ $radius.change(function () {
         searchArea.setRadius(r_size);
         map.flyToBounds(searchArea.getBounds());
         pointsInCircle(searchArea, r_size, activeLayer);
-        $('#map').css('z-index', '2')
+        // $('#map').css('z-index', '2')
     }
 });
 
@@ -187,7 +187,7 @@ $easyAuto.easyAutocomplete({
             clearSelection({provider: false, radius: true});
             const data = $easyAuto.getSelectedItemData();
             var zzoom = undefined;
-            $('#map').css('z-index', '11');
+            // $('#map').css('z-index', '11');
 
             zoomToLocation(data.Latitude, data.Longitude, zzoom, data);
         }
@@ -468,22 +468,7 @@ function markerLogic(data, selection_marker) {
             selection_marker = undefined;
             event.target.setStyle(markerStyle(default_fill_color, default_outline_color));
         },
-        contextmenu: function (e) {}
-        // if a tabulator table is already active
-        // if ($('#results-table').hasClass('tabulator')) {
-        //     // get the data that is inside of it
-        //     const data = table.getData();
-        //     // loop through data to see if clicked feature matches
-        //     for (let i in data) {
-        //         // if we find a layer match, select it
-        //         if (event.target.data.Agency === data[i].agency) {
-        //             // deselect previous row selection
-        //             table.deselectRow();
-        //             // select new row selection
-        //             table.selectRow(i);
-        //         }
-        //     }
-        // }
+        contextmenu: function() {}
     });
 
     // Add a data object for use in the table
