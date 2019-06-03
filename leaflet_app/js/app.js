@@ -6,7 +6,7 @@ const default_outline_color = "#FFFFFF";
 const selected_color = "#2BBED8";
 const selected_fill_opacity = 1;
 
-// Can this be dealt with using Bootstrap components?
+// TODO: Can this be dealt with using Bootstrap components?
 $(document).ready(function () {
     $('.geocoder-control').click(function () {
         $("#map").css("width", "100%");
@@ -125,7 +125,7 @@ geocoder.on('results', function (result) {
 });
 
 function clearSelection({provider=true, radius=false}={}) {
-    // $('#map').css('z-index', '22')
+    $('#map').css('z-index', '22')
     if (search_marker) {
         map.removeLayer(search_marker);
     }
@@ -160,7 +160,7 @@ $radius.change(function () {
         searchArea.setRadius(r_size);
         map.flyToBounds(searchArea.getBounds());
         pointsInCircle(searchArea, r_size, activeLayer);
-        // $('#map').css('z-index', '2')
+        $('#map').css('z-index', '2')
     }
 });
 
@@ -408,19 +408,17 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
     }
 }
 
-// This places marker, circle on map
+// This both places a circle on the map AND counts the # of points in that circle
 function querySearchArea(location) {
 
     clearSelection();
     let r_size;
     if ($radius.val()) {
-        console.log('it has a value');
         r_size = parseInt($radius.val());
     } else {
         r_size = 5347;
         $radius.val(5347);
     }
-    
     searchArea = L.circle(location.latlng, r_size, {
         color: selected_color,
         fillColor: selected_color,
