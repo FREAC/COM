@@ -124,7 +124,7 @@ geocoder.on('results', function (result) {
     querySearchArea(result);
 });
 
-function clearSelection(provider = true) {
+function clearSelection({provider=true, radius=false}={}) {
     $('#map').css('z-index', '22')
     if (search_marker) {
         map.removeLayer(search_marker);
@@ -140,14 +140,16 @@ function clearSelection(provider = true) {
     if (provider) {
         $easyAuto.val("");
     }
+    if (radius) {
+        $radius.val('default');
+    }
     searchArea = undefined;
-    $radius.val('default');
     map.closePopup();
 }
 
 // Clear button functionality
 $('#clear-search').click(function () {
-    clearSelection();
+    clearSelection({radius: true});
 });
 
 // Radius dropdown functionality
@@ -182,7 +184,7 @@ $easyAuto.easyAutocomplete({
             enabled: true
         },
         onChooseEvent: function () {
-            clearSelection(false);
+            clearSelection({provider: false, radius: true});
             const data = $easyAuto.getSelectedItemData();
             var zzoom = undefined;
             $('#map').css('z-index', '11');
@@ -412,11 +414,13 @@ function querySearchArea(location) {
     clearSelection();
     let r_size;
     if ($radius.val()) {
+        console.log('it has a value');
         r_size = parseInt($radius.val());
     } else {
         r_size = 5347;
         $radius.val(5347);
     }
+    
     searchArea = L.circle(location.latlng, r_size, {
         color: selected_color,
         fillColor: selected_color,
