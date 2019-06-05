@@ -84,7 +84,9 @@ map.on({
     },
     // Turn off mobile locate control after zoom
     locationfound: function (e) {
+        // query search area on location found
         querySearchArea(e);
+        // disable locate when flyTo(); method ends
         map.on('moveend', function () {
             locate.stop();
         });
