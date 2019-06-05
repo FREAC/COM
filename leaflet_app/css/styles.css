@@ -108,3 +108,9 @@ body {
 .btn-outline-garnet:not(:disabled):not(.disabled):active:focus, .btn-outline-garnet:not(:disabled):not(.disabled).active:focus, .show > .btn-outline-garnet.dropdown-toggle:focus {
   box-shadow: 0 0 0 0.2rem rgba(120, 47, 64, 0.5);
 }
+.blocks .btn-primary 
+{
+    padding: 10px 12px;
+    margin: 0 5px;  
+    border-radius: 0;
+}

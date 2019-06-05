@@ -294,7 +294,6 @@ function insertTabulator(data) {
             const lng = row.getData().lng;
             const zoom = map.getZoom();
             if (zoom < 12) {
-                zzoom = undefined
                 zoomToLocation(lat, lng, zoom, row._row.data);
             } else {
                 zoomToLocation(lat, lng, zoom, row._row.data);
