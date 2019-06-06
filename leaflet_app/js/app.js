@@ -114,6 +114,14 @@ const locate = L.control.locate({
     showPopup: false
 }).addTo(map);
 
+
+
+// check whether on mobile devices
+// Commented out based on issue #54
+// if (!L.Browser.mobile) {
+//     map.removeControl(locate);
+// }
+
 // ESRI Geocoder 
 var geocoder = L.esri.Geocoding.geosearch({
     zoomToResult: false,
