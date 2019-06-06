@@ -58,23 +58,29 @@ body {
   border-color: #53202c;
 }
 
-.btn-garnet:focus, .btn-garnet.focus {
+.btn-garnet:focus,
+.btn-garnet.focus {
   box-shadow: 0 0 0 0.2rem rgba(120, 47, 64, 0.5);
 }
 
-.btn-garnet.disabled, .btn-garnet:disabled {
+.btn-garnet.disabled,
+.btn-garnet:disabled {
   color: #fff;
   background-color: #782F40;
   border-color: #782F40;
 }
 
-.btn-garnet:not(:disabled):not(.disabled):active, .btn-garnet:not(:disabled):not(.disabled).active, .show > .btn-garnet.dropdown-toggle {
+.btn-garnet:not(:disabled):not(.disabled):active,
+.btn-garnet:not(:disabled):not(.disabled).active,
+.show>.btn-garnet.dropdown-toggle {
   color: #fff;
   background-color: #53202c;
   border-color: #481c26;
 }
 
-.btn-garnet:not(:disabled):not(.disabled):active:focus, .btn-garnet:not(:disabled):not(.disabled).active:focus, .show > .btn-garnet.dropdown-toggle:focus {
+.btn-garnet:not(:disabled):not(.disabled):active:focus,
+.btn-garnet:not(:disabled):not(.disabled).active:focus,
+.show>.btn-garnet.dropdown-toggle:focus {
   box-shadow: 0 0 0 0.2rem rgba(120, 47, 64, 0.5);
 }
 
@@ -90,27 +96,33 @@ body {
   border-color: #782F40;
 }
 
-.btn-outline-garnet:focus, .btn-outline-garnet.focus {
+.btn-outline-garnet:focus,
+.btn-outline-garnet.focus {
   box-shadow: 0 0 0 0.2rem rgba(120, 47, 64, 0.5);
 }
 
-.btn-outline-garnet.disabled, .btn-outline-garnet:disabled {
+.btn-outline-garnet.disabled,
+.btn-outline-garnet:disabled {
   color: #782F40;
   background-color: transparent;
 }
 
-.btn-outline-garnet:not(:disabled):not(.disabled):active, .btn-outline-garnet:not(:disabled):not(.disabled).active, .show > .btn-outline-garnet.dropdown-toggle {
+.btn-outline-garnet:not(:disabled):not(.disabled):active,
+.btn-outline-garnet:not(:disabled):not(.disabled).active,
+.show>.btn-outline-garnet.dropdown-toggle {
   color: #fff;
   background-color: #782F40;
   border-color: #782F40;
 }
 
-.btn-outline-garnet:not(:disabled):not(.disabled):active:focus, .btn-outline-garnet:not(:disabled):not(.disabled).active:focus, .show > .btn-outline-garnet.dropdown-toggle:focus {
+.btn-outline-garnet:not(:disabled):not(.disabled):active:focus,
+.btn-outline-garnet:not(:disabled):not(.disabled).active:focus,
+.show>.btn-outline-garnet.dropdown-toggle:focus {
   box-shadow: 0 0 0 0.2rem rgba(120, 47, 64, 0.5);
 }
-.blocks .btn-primary 
-{
-    padding: 10px 12px;
-    margin: 0 5px;  
-    border-radius: 0;
+
+.blocks .btn-primary {
+  padding: 10px 12px;
+  margin: 0 5px;
+  /* border-radius: 0; */
 }
