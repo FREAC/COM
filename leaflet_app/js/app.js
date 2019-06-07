@@ -6,16 +6,15 @@ const default_outline_color = "#FFFFFF";
 const selected_color = "#2BBED8";
 const selected_fill_opacity = 1;
 
-$('.geocoder-control-expanded').css({'top': '-70px','left': '40px'})
-
 // TODO: Can this be dealt with using Bootstrap components?
 $(document).ready(function () {
     $('.geocoder-control').click(function () {
         $("#map").css("width", "100%");
-        $('.geocoder-control-expanded').css({'top': '-70px','left': '40px'})
-    });
-    $('.geocoder-control-expanded').focusout(function () {
-        $('.geocoder-control').css({'top': '70px','left': '-40px'})
+        // if mobile browser true
+        if (L.Browser.mobile) {
+            console.log('thinks it a mobile device');
+            $('.geocoder-control-expanded').css({'top': '-70px','left': '40px'});
+        };
     });
     $('.sidebar').focusin(function () {
         $('#legend').addClass('col-sm-12');
@@ -115,7 +114,11 @@ var geocoder = L.esri.Geocoding.geosearch({
 }).addTo(map);
 
 geocoder.on('results', function (result) {
-    $('.geocoder-control').css({'top': '','left': ''})
+    // if mobile browser true
+    if (L.Browser.mobile) {
+        $('.geocoder-control').css({'top': '','left': ''})
+ }
+
     clearSelection();
     querySearchArea(result);
 });
