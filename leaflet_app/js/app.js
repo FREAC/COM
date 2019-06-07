@@ -13,7 +13,17 @@ $(document).ready(function () {
         // if mobile browser true
         if (L.Browser.mobile) {
             console.log('thinks it a mobile device');
-            $('.geocoder-control-expanded').css({'top': '-70px','left': '40px'});
+            $('.geocoder-control-expanded').css({
+                'top': '-70px',
+                'left': '40px'
+            });
+            // when out of focus, default to original position
+            $('.geocoder-control-expanded').focusout(function () {
+                $('.geocoder-control').css({
+                    'top': '',
+                    'left': ''
+                })
+            });
         };
     });
     $('.sidebar').focusin(function () {
@@ -116,8 +126,11 @@ var geocoder = L.esri.Geocoding.geosearch({
 geocoder.on('results', function (result) {
     // if mobile browser true
     if (L.Browser.mobile) {
-        $('.geocoder-control').css({'top': '','left': ''})
- }
+        $('.geocoder-control').css({
+            'top': '',
+            'left': ''
+        })
+    }
 
     clearSelection();
     querySearchArea(result);
