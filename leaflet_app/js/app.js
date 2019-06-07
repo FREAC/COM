@@ -89,7 +89,7 @@ map.on({
     },
     // Turn off mobile locate control after zoom
 
-    locationfound: function () {
+    locationfound: function (e) {
         // query search area on location found
         querySearchArea(e);
         // disable locate when flyTo(); method ends
@@ -436,6 +436,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
 
 // This both places a circle on the map AND counts the # of points in that circle
 function querySearchArea(location) {
+    console.log('what is the location ', location)
 
     clearSelection();
     let r_size;
