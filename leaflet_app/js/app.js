@@ -10,6 +10,11 @@ const selected_fill_opacity = 1;
 $(document).ready(function () {
     $('.geocoder-control').click(function () {
         $("#map").css("width", "100%");
+        // if mobile browser true
+        if (L.Browser.mobile) {
+            console.log('thinks it a mobile device');
+            $('.geocoder-control-expanded').css({'top': '-70px','left': '40px'});
+        };
     });
     $('.sidebar').focusin(function () {
         $('#legend').addClass('col-sm-12');
@@ -83,7 +88,8 @@ map.on({
         querySearchArea(e);
     },
     // Turn off mobile locate control after zoom
-    locationfound: function (e) {
+
+    locationfound: function () {
         // query search area on location found
         querySearchArea(e);
         // disable locate when flyTo(); method ends
@@ -99,6 +105,31 @@ setup();
 // Base map
 L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 
+// ESRI Geocoder 
+var geocoder = L.esri.Geocoding.geosearch({
+    zoomToResult: false,
+    useMapBounds: false,
+    placeholder: 'Search for an address',
+    searchBounds: [bottomLeft, topRight]
+}).addTo(map);
+
+geocoder.on('results', function (result) {
+    // if mobile browser true
+    if (L.Browser.mobile) {
+        $('.geocoder-control').css({'top': '','left': ''})
+ }
+
+    clearSelection();
+    querySearchArea(result);
+});
+
+// check whether on mobile devices
+// Commented out based on issue #54
+// if (!L.Browser.mobile) {
+//     map.removeControl(locate);
+// }
+
+
 // Locate Button
 const locate = L.control.locate({
     flyTo: true,
@@ -113,27 +144,6 @@ const locate = L.control.locate({
     drawCircle: false,
     showPopup: false
 }).addTo(map);
-
-
-
-// check whether on mobile devices
-// Commented out based on issue #54
-// if (!L.Browser.mobile) {
-//     map.removeControl(locate);
-// }
-
-// ESRI Geocoder 
-var geocoder = L.esri.Geocoding.geosearch({
-    zoomToResult: false,
-    useMapBounds: false,
-    placeholder: 'Search for an address',
-    searchBounds: [bottomLeft, topRight]
-}).addTo(map);
-
-geocoder.on('results', function (result) {
-    clearSelection();
-    querySearchArea(result);
-});
 
 function clearSelection({
     provider = true,
