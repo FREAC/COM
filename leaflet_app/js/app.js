@@ -436,8 +436,6 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
 
 // This both places a circle on the map AND counts the # of points in that circle
 function querySearchArea(location) {
-    console.log('what is the location ', location)
-
     clearSelection();
     let r_size;
     if ($radius.val()) {
