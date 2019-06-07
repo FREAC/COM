@@ -83,8 +83,8 @@ map.on({
         querySearchArea(e);
     },
     // Turn off mobile locate control after zoom
-    locationfound: function() {
-        map.on('moveend', function() {
+    locationfound: function () {
+        map.on('moveend', function () {
             locate.stop();
         });
     }
@@ -95,6 +95,19 @@ setup();
 
 // Base map
 L.tileLayer.provider('CartoDB.Voyager').addTo(map);
+
+// ESRI Geocoder 
+var geocoder = L.esri.Geocoding.geosearch({
+    zoomToResult: false,
+    useMapBounds: false,
+    placeholder: 'Search for an address',
+    searchBounds: [bottomLeft, topRight]
+}).addTo(map);
+
+geocoder.on('results', function (result) {
+    clearSelection();
+    querySearchArea(result);
+});
 
 // Locate Button
 const locate = L.control.locate({
@@ -111,20 +124,10 @@ const locate = L.control.locate({
     showPopup: false
 }).addTo(map);
 
-// ESRI Geocoder 
-var geocoder = L.esri.Geocoding.geosearch({
-    zoomToResult: false,
-    useMapBounds: false,
-    placeholder: 'Search for an address',
-    searchBounds: [bottomLeft, topRight]
-}).addTo(map);
-
-geocoder.on('results', function (result) {
-    clearSelection();
-    querySearchArea(result);
-});
-
-function clearSelection({provider=true, radius=false}={}) {
+function clearSelection({
+    provider = true,
+    radius = false
+} = {}) {
     $('#map').css('z-index', '22')
     if (search_marker) {
         map.removeLayer(search_marker);
@@ -149,7 +152,9 @@ function clearSelection({provider=true, radius=false}={}) {
 
 // Clear button functionality
 $('#clear-search').click(function () {
-    clearSelection({radius: true});
+    clearSelection({
+        radius: true
+    });
 });
 
 // Radius dropdown functionality
@@ -168,7 +173,9 @@ function createPopup(data) {
     const content = `<b>${data['Agency']}</b><br>
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}`;
-    return L.popup({closeButton: false}).setContent(content);
+    return L.popup({
+        closeButton: false
+    }).setContent(content);
 }
 
 // JQuery Easy Autocomplete: http://easyautocomplete.com
@@ -182,7 +189,10 @@ $easyAuto.easyAutocomplete({
             enabled: true
         },
         onChooseEvent: function () {
-            clearSelection({provider: false, radius: true});
+            clearSelection({
+                provider: false,
+                radius: true
+            });
             const data = $easyAuto.getSelectedItemData();
             var zzoom = undefined;
             // $('#map').css('z-index', '11');
@@ -211,11 +221,11 @@ $("input[type='checkbox']").change(async function (event) {
 // function that will configure a popup for housing info
 function configurePopup(data) {
     try {
-        
+
         if (data['Unit'] === undefined || data['Unit'] === null) {
             data['Unit'] = ''
         }
-        
+
         var pop_text = `<b>${data['Agency']}</b><br>
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}`;
@@ -253,11 +263,11 @@ function zoomToLocation(lat, lng, z = 11, data) {
     map.addLayer(selection_marker);
 
     try {
-        
+
         if (data['Unit'] === undefined || data['Unit'] === null) {
             data['Unit'] = ''
         }
-        
+
         var pop_text = `<b>${data['Agency']}</b><br>
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}`;
@@ -462,7 +472,7 @@ function markerLogic(data, selection_marker) {
             selection_marker = undefined;
             event.target.setStyle(markerStyle(default_fill_color, default_outline_color));
         },
-        contextmenu: function() {}
+        contextmenu: function () {}
     });
 
     // Add a data object for use in the table
