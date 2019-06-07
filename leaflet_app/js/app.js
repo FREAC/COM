@@ -83,7 +83,11 @@ map.on({
         querySearchArea(e);
     },
     // Turn off mobile locate control after zoom
+
     locationfound: function () {
+        // query search area on location found
+        querySearchArea(e);
+        // disable locate when flyTo(); method ends
         map.on('moveend', function () {
             locate.stop();
         });
@@ -108,6 +112,13 @@ geocoder.on('results', function (result) {
     clearSelection();
     querySearchArea(result);
 });
+
+// check whether on mobile devices
+// Commented out based on issue #54
+// if (!L.Browser.mobile) {
+//     map.removeControl(locate);
+// }
+
 
 // Locate Button
 const locate = L.control.locate({
@@ -304,7 +315,6 @@ function insertTabulator(data) {
             const lng = row.getData().lng;
             const zoom = map.getZoom();
             if (zoom < 12) {
-                zzoom = undefined
                 zoomToLocation(lat, lng, zoom, row._row.data);
             } else {
                 zoomToLocation(lat, lng, zoom, row._row.data);

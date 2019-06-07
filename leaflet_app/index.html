@@ -49,25 +49,27 @@
 				<h3>FSU College of Medicine<br>Maternal Mental Health Resource Directory</h3>
 				<form>
 					<div class="form-row">
-						<div class="col-sm-6">
+						<div class="col-sm-12 mb-2">
 							<input type="text" class="form-control" id="easy-auto">
 						</div>
+					</div>
 
-						<div class="col-sm-6 mb-2 mt-2 mt-sm-0 btn-group-vertical btn-group-toggle"
+					<div class="form-row">
+						<div class="col-sm-12 mb-2 mt-2 mt-sm-0 btn-group btn-group-toggle blocks"
 							data-toggle="buttons">
-							<label class="btn btn-garnet">
+							<label class="btn btn-garnet text-wrap btn-primary p-3">
 								<input type="checkbox" name="options" id="insurance" autocomplete="off">
-								Tallahassee/insurance
+								Ttallahassee insurance
 							</label>
-							<label class="btn btn-garnet">
+							<label class="btn btn-garnet text-wrap btn-primary p-3">
 								<input type="checkbox" name="options" id="medicare" autocomplete="off">
-								zipcode	32309/medicare
+								zipcode 32309/medicare
 							</label>
 						</div>
 					</div>
 
 					<div class="form-row">
-						<div class="col">
+						<div class="col-6">
 							<select class="form-control" id="radius">
 								<option value="default" selected disabled hidden>Search radius</option>
 								<!-- Value is distance in meters -->
@@ -77,12 +79,13 @@
 								<option value="53467">50 miles</option>
 							</select>
 						</div>
-						<div class="col">
-							<button type="button" class="btn btn-light" id="clear-search">Clear</button>
+						<div class="col-6 d-flex">
+							<button type="button" class="btn btn-light flex-fill" id="clear-search">Clear</button>
 						</div>
 					</div>
 				</form>
 
+				<!-- Results div -->
 				<div class="row p-3">
 					<div class="col">
 						<!-- TODO Combine this with the results-table div -->
@@ -91,15 +94,21 @@
 									id="json_one_title">providers</span></span>
 							are within the given radius.</p>
 						<div id="results-table"></div>
-
+					</div>
+				</div>
+				<div class="row p-3">
+					<div class="col">
 						<div id='about-section'>
 							<h3>About</h3>
 							<p>
-								This demo counts the number of group care facilities within a radius of a given point and
-								displays them on a map using <a href="https://leafletjs.com/" target="_blank" rel="noopener">Leaflet</a>.
+								This demo counts the number of group care facilities within a radius of a given point
+								and
+								displays them on a map using <a href="https://leafletjs.com/" target="_blank"
+									rel="noopener">Leaflet</a>.
 							</p>
 							<p>This project is sponsored by:<br><br>
-								<a href="https://www.sagerx.com/" target="_blank" rel="noopener"><img alt="Sage Therapeutics" src="images/logo-sagerx.svg"></a>
+								<a href="https://www.sagerx.com/" target="_blank" rel="noopener"><img
+										alt="Sage Therapeutics" src="images/logo-sagerx.svg"></a>
 							</p>
 						</div>
 					</div>
