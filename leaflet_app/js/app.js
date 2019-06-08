@@ -164,7 +164,7 @@ function clearSelection({
     provider = true,
     radius = false
 } = {}) {
-    $('#map').css('z-index', '22')
+    // $('#map').css('z-index', '22')
     if (search_marker) {
         map.removeLayer(search_marker);
     }
@@ -201,7 +201,7 @@ $radius.change(function () {
         searchArea.setRadius(r_size);
         map.flyToBounds(searchArea.getBounds());
         pointsInCircle(searchArea, r_size, activeLayer);
-        $('#map').css('z-index', '2')
+        // $('#map').css('z-index', '2')
     }
 });
 
@@ -315,7 +315,7 @@ function zoomToLocation(lat, lng, z = 11, data) {
             .openOn(map);
     } catch {}
     //make sure the map is the top most div
-    $('#map').css('z-index', '11');
+    // $('#map').css('z-index', '11');
 }
 
 // create a reusable Tabulator object
