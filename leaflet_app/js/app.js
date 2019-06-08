@@ -28,7 +28,8 @@ $(document).ready(function () {
     });
     $('.sidebar').focusin(function () {
         $('#legend').addClass('col-sm-12');
-    })
+    });
+    insertTabulator([]);
 });
 
 // This sets the marker styles for any of the circleMarker symbols
@@ -432,6 +433,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
         }
         // add tabulator object to screen
         insertTabulator(tableResults);
+
 
         // If we have just one result, we'll change the wording
         // So it reflects the category's singular form
