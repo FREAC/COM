@@ -29,6 +29,7 @@ $(document).ready(function () {
     $('.sidebar').focusin(function () {
         $('#legend').addClass('col-sm-12');
     });
+    // insert an empty tabulator table on page load
     insertTabulator([]);
 });
 
