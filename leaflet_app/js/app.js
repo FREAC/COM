@@ -47,7 +47,17 @@ function markerStyle(fillColor, strokeColor, fillOpacity = 0.75) {
 // current selection
 let selection_marker;
 // We'll append our markers to this global variable
-const json_group = new L.FeatureGroup();
+//const json_group = new L.FeatureGroup();
+const json_group = new L.markerClusterGroup({
+    maxClusterRadius: 0,
+    iconCreateFunction: function(cluster) {
+        return L.divIcon({ html: '<b>' + cluster.getChildCount() + '</b>', 
+                            className: 'clustered_sites', 
+                            iconSize: L.point(10, 10)
+                         });
+    
+    }
+});
 //This is our selection group
 const selection_group = new L.FeatureGroup();
 // This is the circle on the map that will be determine how many markers are around
@@ -495,7 +505,7 @@ function markerLogic(data, selection_marker) {
         },
         click: function (event) {
             if (selection_marker === undefined) {
-                selection_marker = event.target;
+                selection_marker = event.target
                 event.target.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity));
             } else {
                 selection_marker.setStyle(markerStyle(default_fill_color, default_outline_color));

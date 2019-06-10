@@ -125,3 +125,12 @@ body {
   padding: 10px 12px;
   margin: 0 5px;
 }
+.clustered_sites {
+  border-radius: 90%;
+  width: 5px;
+  height: 5px;
+  background-color: #ED9118;
+  /* background-color:red; */
+  text-align: center;
+  font-size: 7px;
+}
