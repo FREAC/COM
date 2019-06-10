@@ -13,12 +13,24 @@ $(document).ready(function () {
         // if mobile browser true
         if (L.Browser.mobile) {
             console.log('thinks it a mobile device');
-            $('.geocoder-control-expanded').css({'top': '-70px','left': '40px'});
+            $('.geocoder-control-expanded').css({
+                'top': '-70px',
+                'left': '40px'
+            });
+            // when out of focus, default to original position
+            $('.geocoder-control-expanded').focusout(function () {
+                $('.geocoder-control').css({
+                    'top': '',
+                    'left': ''
+                })
+            });
         };
     });
     $('.sidebar').focusin(function () {
         $('#legend').addClass('col-sm-12');
-    })
+    });
+    // insert an empty tabulator table on page load
+    insertTabulator([]);
 });
 
 // This sets the marker styles for any of the circleMarker symbols
@@ -116,8 +128,11 @@ var geocoder = L.esri.Geocoding.geosearch({
 geocoder.on('results', function (result) {
     // if mobile browser true
     if (L.Browser.mobile) {
-        $('.geocoder-control').css({'top': '','left': ''})
- }
+        $('.geocoder-control').css({
+            'top': '',
+            'left': ''
+        })
+    }
 
     clearSelection();
     querySearchArea(result);
@@ -149,7 +164,7 @@ function clearSelection({
     provider = true,
     radius = false
 } = {}) {
-    $('#map').css('z-index', '22')
+    // $('#map').css('z-index', '22')
     if (search_marker) {
         map.removeLayer(search_marker);
     }
@@ -186,7 +201,7 @@ $radius.change(function () {
         searchArea.setRadius(r_size);
         map.flyToBounds(searchArea.getBounds());
         pointsInCircle(searchArea, r_size, activeLayer);
-        $('#map').css('z-index', '2')
+        // $('#map').css('z-index', '2')
     }
 });
 
@@ -300,7 +315,7 @@ function zoomToLocation(lat, lng, z = 11, data) {
             .openOn(map);
     } catch {}
     //make sure the map is the top most div
-    $('#map').css('z-index', '11');
+    // $('#map').css('z-index', '11');
 }
 
 // create a reusable Tabulator object
@@ -419,6 +434,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
         }
         // add tabulator object to screen
         insertTabulator(tableResults);
+
 
         // If we have just one result, we'll change the wording
         // So it reflects the category's singular form
