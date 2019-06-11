@@ -48,6 +48,7 @@ function markerStyle(fillColor, strokeColor, fillOpacity = 0.75) {
 let selection_marker;
 // We'll append our markers to this global variable
 //const json_group = new L.FeatureGroup();
+//const json_group = new L.markerClusterGroup.withList({
 const json_group = new L.markerClusterGroup({
     maxClusterRadius: 0,
     iconCreateFunction: function(cluster) {
