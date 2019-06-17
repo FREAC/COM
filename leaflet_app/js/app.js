@@ -5,7 +5,15 @@ const default_fill_color = "#ED9118";
 const default_outline_color = "#FFFFFF";
 const selected_color = "#2BBED8";
 const selected_fill_opacity = 1;
-
+$('input[name="insurance"]').amsifySuggestags({
+    suggestions: ['Aetna', 'Beacon', 'Beech Street', 'Cigna', 'Coventry','First Health','Healthy Kids',
+    'Magellan','Medicare'
+    ],
+    whiteList: true
+});
+$(function(){
+	$(".mselect").multiselect();
+});
 // TODO: Can this be dealt with using Bootstrap components?
 $(document).ready(function () {
     $('.geocoder-control').click(function () {
