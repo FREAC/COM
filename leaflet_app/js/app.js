@@ -9,8 +9,8 @@ $(function() {
     $('.mpick').fSelect();
 });
 $('input[name="insurance"]').amsifySuggestags({
-    suggestions: ['Aetna', 'Beacon', 'Beech Street', 'Cigna', 'Coventry','First Health','Healthy Kids',
-    'Magellan','Medicare'
+    suggestions: ['Aetna', 'Beacon', 'Beech Street', 'Cigna', 'Coventry', 'First Health', 'Healthy Kids',
+        'Magellan', 'Medicare'
     ],
     whiteList: true
 });
@@ -62,12 +62,13 @@ let selection_marker;
 //const json_group = new L.markerClusterGroup.withList({
 const json_group = new L.markerClusterGroup({
     maxClusterRadius: 0,
-    iconCreateFunction: function(cluster) {
-        return L.divIcon({ html: '<b>' + cluster.getChildCount() + '</b>', 
-                            className: 'clustered_sites', 
-                            iconSize: L.point(10, 10)
-                         });
-    
+    iconCreateFunction: function (cluster) {
+        return L.divIcon({
+            html: '<b>' + cluster.getChildCount() + '</b>',
+            className: 'clustered_sites',
+            iconSize: L.point(10, 10)
+        });
+
     }
 });
 //This is our selection group
