@@ -2,7 +2,18 @@
 // set up event handler to watch when any checkboxes are checked
 
 async function filterLocations(event) {
-
+    console.log('starting to filter locations')
+    // first we need to get all the filters
+    var insurance = $('.insurance').val()
+    console.log('what did we get for insurance ',insurance)
+    var pcat = $('.pcat').val()
+    console.log('what did we get for pcat ', pcat)
+    var clients = $('.clients').val()
+    console.log('what did we get for clients ',clients)
+    var telehealth = $('.telehealth').val()
+    console.log('what did we get for telehealth ',telehealth)
+    var newpatients = $('.newpatients').val()
+    console.log('what did we get for new patients ',newpatients)
     // assign button ids to variables
     const acceptMedicare = $('#medicare');
     const acceptInsurance = $('#insurance');

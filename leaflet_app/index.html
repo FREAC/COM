@@ -78,56 +78,60 @@
 						</div>
 					</div>
 						<h5>Pick insurance options</h5>
-							<input type="text" class="form-control" name="insurance"/>
-
+							<input type="text" class="form-control insurance" name="insurance"/>
 						<h5 style="margin-bottom:1px;">Practice Categories</h4>
-						<select class="mpick" multiple="multiple">
-								<option value="cp">C++</option>
-								<option value="cs">C#</option>
-								<option value="oc">Object C</option>
-								<option value="c">C</option>
-								<option value="js">JavaScript</option>
-								<option value="php">PHP</option>
-								<option value="asp">ASP</option>
-								<option value="jsp">JSP</option>
+						<select class="mpick pcat" multiple="multiple">
+							<option value="lmft">LMFT</option>
+							<option value="lmhc">LMHC</option>
+							<option value="psychiatrist">Psychiatrist</option>
+							<option value="psychologist">Psychologist</option>
+							<option value="treatmentcenter">Treatment Center & Support Services</option>
+							<option value="abuse">Abuse</option>
+							<option value="addictions">Addictions</option>
+							<option value="anxiety">Anxiety</option>
+							<option value="counseling">Counseling</option>
+							<option value="crisis Counseling">Crisis Counseling</option>
+							<option value="depression">Depression</option>
+							<option value="domesticviolence">Domestic Violence</option>
+							<option value="eatingdisorder">Eating Disorder</option>
+							<option value="eatvaluations">Evaluations</option>
+							<option value="grief">Grief</option>
+							<option value="homelessness">Homelessness</option>
+							<option value="housingassistance">Housing Assistance</option>
+							<option value="inpatient">Inpatient</option>
+							<option value="lgbtq">LGBTQ</option>
+							<option value="marriagerelationship">Marriage/Relationship</option>
+							<option value="parenting">Parenting</option>
+							<option value="psychotherapy">Psychotherapy</option>
+							<option value="referrals">Referrals</option>
+							<option value="resource">Resource</option>
+							<option value="suicideprevention">Suicide Prevention</option>
+							<option value="trauma">Trauma</option>
 						</select>
 					<p>
 							<h5>Types of Clients Served</h4>
-						<select title="Basic example" class='mpick' multiple="multiple" name="client_types" size="5">
-						<option value="option1">Individuals</option>
-						<option value="option2">Adolescents</option>
-						<option value="option3">Caregivers</option>
-						<option value="option4">Children</option>
-						<option value="option5">Family</option>
-						<option value="option6">Geriatrics</option>
-						<option value="option7">Groups</option>
-						<option value="option8">Women</option>
+						<select title="Basic example" class='mpick clients' multiple="multiple" name="client_types" size="5">
+						<option value="Individuals">Individuals</option>
+						<option value="Adolescents">Adolescents</option>
+						<option value="Caregivers">Caregivers</option>
+						<option value="Children">Children</option>
+						<option value="Family">Family</option>
+						<option value="Geriatrics">Geriatrics</option>
+						<option value="Groups">Groups</option>
+						<option value="Women">Women</option>
 						</select>
 					</p>
 
 					<p>
 							<h5>Telehealth services if applicable</h4>
-						<select title="Basic example" class='mpick' multiple="multiple" name="telehealth" size="5">
+						<select title="Basic example" class='mpick telehealth' multiple="multiple" name="telehealth" size="5">
 						<option value="phone">Phone</option>
 						<option value="video">Video</option>
 						<option value="other">Other</option>
 						</select>
 					</p>
-					<p>
-						<h5>Agency Practice categories</h4>
-						<select title="Basic example" class='mpick' multiple="multiple" name="client_types" size="5">
-						<option value="option1">Individuals</option>
-						<option value="option2">Adolescents</option>
-						<option value="option3">Caregivers</option>
-						<option value="option4">Children</option>
-						<option value="option5">Family</option>
-						<option value="option6">Geriatrics</option>
-						<option value="option7">Groups</option>
-						<option value="option8">Women</option>
-						</select>
-					</p>
 							<h5>Accepting New Patients? </h4>
-							<select class="form-control" id="new_patients">
+							<select class="form-control newpatients" id="newpatients">
 								<option value="default" selected disabled hidden>New patient status</option>
 								<!-- Value is distance in meters -->
 								<option value="yes">Yes</option>
@@ -135,18 +139,7 @@
 								<option value="waitlist">Waitlist</option>
 							</select>
 							-------------------------------------
-							<h5>Search Radius</h4>
-							<select class="form-control" id="radius">
-								<option value="default" selected disabled hidden>Search radius</option>
-								<!-- Value is distance in meters -->
-								<option value="5347">5 miles</option>
-								<option value="10693">10 miles</option>
-								<option value="26734">25 miles</option>
-								<option value="53467">50 miles</option>
-							</select>
-						<div class="col-6 d-flex">
-							<button type="button" class="btn btn-light flex-fill" id="clear-search">Clear Search Results</button>
-					</div>
+
 				</form>
 
 				<!-- Results div -->
@@ -159,6 +152,18 @@
 							are within the given radius.</p>
 						<div id="results-table"></div>
 					</div>
+				</div>
+				<h5>Search Radius</h4>
+					<select class="form-control" id="radius">
+						<option value="default" selected disabled hidden>Search radius</option>
+						<!-- Value is distance in meters -->
+						<option value="5347">5 miles</option>
+						<option value="10693">10 miles</option>
+						<option value="26734">25 miles</option>
+						<option value="53467">50 miles</option>
+					</select>
+				<div class="col-6 d-flex">
+					<button type="button" class="btn btn-light flex-fill" id="clear-search">Clear Search Results</button>
 				</div>
 				<div class="row p-3">
 					<div class="col">

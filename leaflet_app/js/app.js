@@ -126,6 +126,8 @@ map.on({
 
     locationfound: function (e) {
         // query search area on location found
+        console.log('get the filters here too')
+        filterLocations(event)
         querySearchArea(e);
         // disable locate when flyTo(); method ends
         map.on('moveend', function () {
@@ -158,6 +160,8 @@ geocoder.on('results', function (result) {
     }
 
     clearSelection();
+    console.log('Get the filters here')
+    filterLocations(event)
     querySearchArea(result);
 });
 
@@ -255,7 +259,6 @@ $easyAuto.easyAutocomplete({
             const data = $easyAuto.getSelectedItemData();
             var zzoom = undefined;
             // $('#map').css('z-index', '11');
-
             zoomToLocation(data.Latitude, data.Longitude, zzoom, data);
         }
     },
