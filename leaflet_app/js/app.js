@@ -6,13 +6,13 @@ const default_outline_color = "#FFFFFF";
 const selected_color = "#2BBED8";
 const selected_fill_opacity = 1;
 $('input[name="insurance"]').amsifySuggestags({
-    suggestions: ['Aetna', 'Beacon', 'Beech Street', 'Cigna', 'Coventry','First Health','Healthy Kids',
-    'Magellan','Medicare'
+    suggestions: ['Aetna', 'Beacon', 'Beech Street', 'Cigna', 'Coventry', 'First Health', 'Healthy Kids',
+        'Magellan', 'Medicare'
     ],
     whiteList: true
 });
-$(function(){
-	$(".mselect").multiselect();
+$(function () {
+    $(".mselect").multiselect();
 });
 // TODO: Can this be dealt with using Bootstrap components?
 $(document).ready(function () {
@@ -59,12 +59,13 @@ let selection_marker;
 //const json_group = new L.markerClusterGroup.withList({
 const json_group = new L.markerClusterGroup({
     maxClusterRadius: 0,
-    iconCreateFunction: function(cluster) {
-        return L.divIcon({ html: '<b>' + cluster.getChildCount() + '</b>', 
-                            className: 'clustered_sites', 
-                            iconSize: L.point(10, 10)
-                         });
-    
+    iconCreateFunction: function (cluster) {
+        return L.divIcon({
+            html: '<b>' + cluster.getChildCount() + '</b>',
+            className: 'clustered_sites',
+            iconSize: L.point(10, 10)
+        });
+
     }
 });
 //This is our selection group
