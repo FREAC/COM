@@ -13,21 +13,26 @@
 		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
 		integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+	<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+
 	<link rel="stylesheet" href="css/lib/leaflet.min.css" />
 	<link rel="stylesheet" href="css/lib/tabulator.min.css" />
 	<link rel="stylesheet" href="css/lib/easy-autocomplete.min.css" />
 	<link rel="stylesheet" href="css/lib/locate-control.min.css" />
 	<link rel="stylesheet" href="css/lib/esri-leaflet-geocoder.min.css" />
+	
 	<link rel="stylesheet" href="plugin/Leaflet.markercluster-1.4.1/dist/MarkerCluster.Default.css" >
 	<link rel="stylesheet" href="plugin/Leaflet.MarkerCluster.List-master/dist/leaflet-markercluster-list.css" />
-	<link rel="stylesheet" href="plugin/Tagging-System-Autocomplete-Amsify-Suggestags/css/amsify.suggestags.css" type="text/css" >
 	<link rel="stylesheet" href="plugin/jQuery-UI-Multiple-Select-Widget/css/jquery.multiselect.css" />
-	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/flick/jquery-ui.css">
-
+	<link rel="stylesheet" href="plugin/jQuery-UI-Multiple-Select-Widget/css/jquery.multiselect.filter.css" />
+	<link rel="stylesheet" href="plugin/Tagging-System-Autocomplete-Amsify-Suggestags/css/amsify.suggestags.css" type="text/css" >
+	<link rel="stylesheet" href="plugin/jQuery-Plugin-For-Filterable-Multiple-Select-with-Checkboxes-fSelect/fSelect.css" type="text/css">
 	<!-- CSS: Custom fix -->
 	<link rel="stylesheet" href="css/styles.css" />
 
 	<!-- JS: Libs -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
 	<script type="text/javascript" src="js/lib/jquery-3.4.1.min.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
@@ -41,15 +46,17 @@
 	<script type="text/javascript" src="js/lib/locate-control-0.66.1.min.js"></script>
 	<script type="text/javascript" src="js/lib/esri-leaflet-2.2.4.min.js"></script>
 	<script type="text/javascript" src="js/lib/esri-leaflet-geocoder-2.2.14.min.js"></script>
+
 	<script type="text/javascript" src="plugin/Leaflet.markercluster-1.4.1/dist/leaflet.markercluster.js"></script>
 	<script type="text/javascript" src="plugin/Leaflet.MarkerCluster.List-master/dist/leaflet-markercluster-list.src.js"></script>
+
 	<script type="text/javascript" src="plugin/Tagging-System-Autocomplete-Amsify-Suggestags/js/jquery.amsify.suggestags.js"></script>
 	<script type="text/javascript" src="plugin/jQuery-UI-Multiple-Select-Widget/src/jquery.multiselect.js"></script>
-	
+
+	<script src="plugin/jQuery-Plugin-For-Filterable-Multiple-Select-with-Checkboxes-fSelect/fSelect.js"></script>
 </head>
 
 <body>
-
 	<div class="container-fluid d-flex h-100">
 		<div class="row flex-fill d-flex">
 			<!-- Map -->
@@ -70,36 +77,23 @@
 							data-toggle="buttons">
 						</div>
 					</div>
-					<div class="container">
-						<h4>Pick insurance options</h4>
-						<div class="form-group">
+						<h5>Pick insurance options</h5>
 							<input type="text" class="form-control" name="insurance"/>
-						</div>
-					</div>
-					<p>
-							<h4>Types of Clients Servec</h4>
-						<select title="Basic example" class='mselect' multiple="multiple" name="client_types" size="5">
-						<option value="option1">Individuals</option>
-						<option value="option2">Adolescents</option>
-						<option value="option3">Caregivers</option>
-						<option value="option4">Children</option>
-						<option value="option5">Family</option>
-						<option value="option6">Geriatrics</option>
-						<option value="option7">Groups</option>
-						<option value="option8">Women</option>
+
+						<h5 style="margin-bottom:1px;">Practice Categories</h4>
+						<select class="mpick" multiple="multiple">
+								<option value="cp">C++</option>
+								<option value="cs">C#</option>
+								<option value="oc">Object C</option>
+								<option value="c">C</option>
+								<option value="js">JavaScript</option>
+								<option value="php">PHP</option>
+								<option value="asp">ASP</option>
+								<option value="jsp">JSP</option>
 						</select>
-					</p>
 					<p>
-							<h4>Telehealth services if applicable</h4>
-						<select title="Basic example" class='mselect' multiple="multiple" name="telehealth" size="5">
-						<option value="phone">Phone</option>
-						<option value="video">Video</option>
-						<option value="other">Other</option>
-						</select>
-					</p>
-					<p>
-						<h4>Agency Practice categories</h4>
-						<select title="Basic example" class='mselect' multiple="multiple" name="client_types" size="5">
+							<h5>Types of Clients Served</h4>
+						<select title="Basic example" class='mpick' multiple="multiple" name="client_types" size="5">
 						<option value="option1">Individuals</option>
 						<option value="option2">Adolescents</option>
 						<option value="option3">Caregivers</option>
@@ -111,8 +105,28 @@
 						</select>
 					</p>
 
-					<div class="form-row">
-						<div class="col-6"> Accepting New Patients?
+					<p>
+							<h5>Telehealth services if applicable</h4>
+						<select title="Basic example" class='mpick' multiple="multiple" name="telehealth" size="5">
+						<option value="phone">Phone</option>
+						<option value="video">Video</option>
+						<option value="other">Other</option>
+						</select>
+					</p>
+					<p>
+						<h5>Agency Practice categories</h4>
+						<select title="Basic example" class='mpick' multiple="multiple" name="client_types" size="5">
+						<option value="option1">Individuals</option>
+						<option value="option2">Adolescents</option>
+						<option value="option3">Caregivers</option>
+						<option value="option4">Children</option>
+						<option value="option5">Family</option>
+						<option value="option6">Geriatrics</option>
+						<option value="option7">Groups</option>
+						<option value="option8">Women</option>
+						</select>
+					</p>
+							<h5>Accepting New Patients? </h4>
 							<select class="form-control" id="new_patients">
 										<option value="default" selected disabled hidden>New patient status</option>
 										<!-- Value is distance in meters -->
@@ -120,7 +134,8 @@
 										<option value="no">No</option>
 										<option value="waitlist">Waitlist</option>
 							</select>
-							Search Radius
+							-------------------------------------
+							<h5>Search Radius</h4>
 							<select class="form-control" id="radius">
 								<option value="default" selected disabled hidden>Search radius</option>
 								<!-- Value is distance in meters -->
@@ -129,10 +144,8 @@
 								<option value="26734">25 miles</option>
 								<option value="53467">50 miles</option>
 							</select>
-						</div>
 						<div class="col-6 d-flex">
-							<button type="button" class="btn btn-light flex-fill" id="clear-search">Clear</button>
-						</div>
+							<button type="button" class="btn btn-light flex-fill" id="clear-search">Clear Search Results</button>
 					</div>
 				</form>
 
