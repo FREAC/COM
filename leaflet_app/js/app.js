@@ -290,7 +290,8 @@ const filterObject = {
 
 };
 
-// on change, add 
+// on change, print out this and value
+// TODO: add selected values to corresponding key:value pairs in filterObject
 $("select").change(function (event) {
     const value = $(this).val();
     console.log({
