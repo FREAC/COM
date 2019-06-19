@@ -291,7 +291,7 @@ const filterObject = {
 
 // on change, print out this and value
 // TODO: add selected values to corresponding key:value pairs in filterObject
-$("select").change(function (event) {
+$(".mpick").change(function (event) {
     const value = $(this).val();
     const id = $(this).context.id;
     console.log({
