@@ -5,7 +5,7 @@ const default_fill_color = "#ED9118";
 const default_outline_color = "#FFFFFF";
 const selected_color = "#2BBED8";
 const selected_fill_opacity = 1;
-$(function() {
+$(function () {
     $('.mpick').fSelect();
 });
 $('input[name="insurance"]').amsifySuggestags({
@@ -279,6 +279,45 @@ $("input[type='checkbox']").change(async function (event) {
     // perform a filter based on which checkboxes are checked
     filterLocations(event);
 });
+
+// create filter object to hold all selected elements based on type
+const filterObject = {
+    "insurance": [],
+    "categories": [],
+    "client-types": [],
+    "tele-health": [],
+    "patients-accepted": [],
+};
+
+// on change, print out this and value
+// TODO: add selected values to corresponding key:value pairs in filterObject
+$("select").change(function (event) {
+    const value = $(this).val();
+    const id = $(this).context.id;
+    console.log({
+        "value": value,
+        "this": $(this),
+        "id": id
+    });
+
+    // find the corresponding id within the filter object
+    for (const key in filterObject) {
+        console.log(key);
+        if (key === id) {
+            console.log(key + " is equal to " + id);
+            // swap array of values into object at this location
+        }
+    }
+
+    // either loop through the array inside of the elements corresponding with the id
+    // or filter()/includes() to update and make sure there are no repeats
+
+    // execute filter in leaflet - must expand on this
+
+
+});
+
+
 
 // function that will configure a popup for housing info
 function configurePopup(data) {
