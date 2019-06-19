@@ -294,10 +294,21 @@ const filterObject = {
 // TODO: add selected values to corresponding key:value pairs in filterObject
 $("select").change(function (event) {
     const value = $(this).val();
+    const id = $(this).context.id;
     console.log({
         "value": value,
-        "this": $(this)
+        "this": $(this),
+        "id": id
     });
+
+    // find the corresponding id within the filter object
+
+
+    // either loop through the array inside of the elements corresponding with the id
+    // or filter()/includes() to update and make sure there are no repeats
+
+    // execute filter in leaflet
+
 
 });
 
