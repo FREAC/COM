@@ -301,7 +301,13 @@ $("select").change(function (event) {
     });
 
     // find the corresponding id within the filter object
-
+    for (const key in filterObject) {
+        console.log(key);
+        if (key === id) {
+            console.log(key + " is equal to " + id);
+            // swap array of values into object at this location
+        }
+    }
 
     // either loop through the array inside of the elements corresponding with the id
     // or filter()/includes() to update and make sure there are no repeats
