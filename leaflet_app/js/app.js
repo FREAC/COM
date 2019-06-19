@@ -287,7 +287,6 @@ const filterObject = {
     "client-types": [],
     "tele-health": [],
     "patients-accepted": [],
-
 };
 
 // on change, print out this and value
@@ -307,7 +306,7 @@ $("select").change(function (event) {
     // either loop through the array inside of the elements corresponding with the id
     // or filter()/includes() to update and make sure there are no repeats
 
-    // execute filter in leaflet
+    // execute filter in leaflet - must expand on this
 
 
 });
