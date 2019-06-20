@@ -154,38 +154,40 @@
 							<option value="suicideprevention">Suicide Prevention</option>
 							<option value="trauma">Trauma</option>
 						</select>
-						<p>
-							<h5>Types of Clients Served</h4>
-						<select title="Basic example" class='mpick clients' multiple="multiple" name="client_types" size="5">
-						<option value="Individuals">Individuals</option>
-						<option value="Adolescents">Adolescents</option>
-						<option value="Caregivers">Caregivers</option>
-						<option value="Children">Children</option>
-						<option value="Couples">Couples</option>
-						<option value="Family">Family</option>
-						<option value="Geriatrics">Geriatrics</option>
-						<option value="Groups">Groups</option>
-						<option value="Women">Women</option>
+					</p>
+					<p>
+						<h5>Types of Clients Served</h5>
+						<select id="serves" title="Basic example" class='mpick clients' multiple="multiple"
+							name="client_types" size="5">
+							<option value="Individuals">Individuals</option>
+							<option value="Adolescents">Adolescents</option>
+							<option value="Caregivers">Caregivers</option>
+							<option value="Children">Children</option>
+							<option value="Couples">Couples</option>
+							<option value="Family">Family</option>
+							<option value="Geriatrics">Geriatrics</option>
+							<option value="Groups">Groups</option>
+							<option value="Women">Women</option>
 						</select>
 					</p>
 
 					<p>
-							<h5>Telehealth services if applicable</h4>
-								<select id="tele-health" title="Basic example" class='mpick telehealth'
-									multiple="multiple" name="telehealth" size="5">
-									<option value="phone">Phone</option>
-									<option value="video">Video</option>
-									<option value="other">Other</option>
-								</select>
-						</p>
-						<h5>Accepting New Patients? </h4>
-							<select id="patients-accepted" class="form-control newpatients" id="newpatients">
-								<option value="default" selected disabled hidden>New patient status</option>
-								<!-- Value is distance in meters -->
-								<option value="yes">Yes</option>
-								<option value="no">No</option>
-								<option value="waitlist">Waitlist</option>
+						<h5>Telehealth services if applicable</h4>
+							<select id="telehealth" title="Basic example" class='mpick telehealth' multiple="multiple"
+								name="telehealth" size="5">
+								<option value="phone">Phone</option>
+								<option value="video">Video</option>
+								<option value="other">Other</option>
 							</select>
+					</p>
+					<h5>Accepting New Patients? </h4>
+						<select id="new-client" class="form-control newpatients" id="newpatients">
+							<option value="default" selected disabled hidden>New patient status</option>
+							<!-- Value is distance in meters -->
+							<option value="yes">Yes</option>
+							<option value="no">No</option>
+							<option value="waitlist">Waitlist</option>
+						</select>
 
 				</form>
 

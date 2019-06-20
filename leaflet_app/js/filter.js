@@ -1,5 +1,17 @@
 // this performs dynamic filtering when the user wants to limit their search
 // set up event handler to watch when any checkboxes are checked
+function filterOptions(filterObject) {
+
+    console.log(json_group);
+
+
+    for (layer in json_group._map._layers) {
+        console.log(json_group._map._layers[layer].data);
+    }
+
+}
+
+
 
 // first get an array ready to hold the filters
 

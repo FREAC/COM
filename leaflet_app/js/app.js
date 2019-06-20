@@ -90,6 +90,7 @@ async function setup() {
     selection_group.clearLayers();
     $.get("./data/COM.json", function (json_data) {
         $.each(json_data, function (object) {
+            console.log(json_data[object]);
             const provider = json_data[object];
             const marker = markerLogic(provider);
             marker.addTo(json_group);
@@ -289,36 +290,42 @@ $easyAuto.easyAutocomplete({
 
 // create filter object to hold all selected elements based on type
 const filterObject = {
-    "insurance": [],
-    "categories": [],
-    "client-types": [],
-    "tele-health": [],
-    "patients-accepted": [],
+    insurance: [],
+    specialty: undefined,
+    serves: undefined,
+    telehealth: undefined,
+    new_client: undefined,
 };
 
 // on change, print out this and value
 // TODO: add selected values to corresponding key:value pairs in filterObject
 $(".mpick").change(function (event) {
     const value = $(this).val();
+    const typeofValue = typeof (value);
     const id = $(this).context.id;
+
     console.log({
         "value": value,
         "this": $(this),
-        "id": id
+        "id": id,
+        "typeofvalue": typeofValue
     });
 
     // find the corresponding id within the filter object
     for (const key in filterObject) {
         console.log(key);
+
+        // if the id of the select and the key of the filter object match
         if (key === id) {
-            console.log(key + " is equal to " + id);
-            // swap array of values into object at this location
+
+            // swap array of values into object at this location\
+            filterObject[key.toString()] = value;
         }
     }
 
-    // either loop through the array inside of the elements corresponding with the id
-    // or filter()/includes() to update and make sure there are no repeats
+    // find objects that contain a matching attribute
 
+    filterOptions(filterObject);
     // execute filter in leaflet - must expand on this
 
 
@@ -593,7 +600,12 @@ function markerLogic(data, selection_marker) {
         'Unit': data['Unit'],
         'City': data['City'],
         'State': data['State'],
-        'PostalCode': data['PostalCode']
+        'PostalCode': data['PostalCode'],
+        'Specialty': data['Specialty'],
+        'New Client': data['New_Client'],
+        'Insurance': data['Insurance'],
+        'Serves': data['Serves']
+
     };
 
     return circle_marker;
