@@ -556,7 +556,7 @@ function querySearchArea(location) {
 
 // Assign these properties to each marker in the data
 function markerLogic(data, selection_marker) {
-
+    console.log('starting the markerlogic routine ', data)
     // Create marker for data
     const popup = createPopup(data);
     const marker_location = new L.LatLng(data['Latitude'], data['Longitude']);

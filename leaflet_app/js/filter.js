@@ -63,9 +63,9 @@ async function filterLocations(event) {
 
     // set up cases for checkbox combinations
     // if ((acceptMedicare[0].checked === true) && (acceptInsurance[0].checked === true)) {
-    //     await map.removeLayer(json_group);
-    //     selection_group.clearLayers();
-    //     await map.removeLayer(selection_group);
+        //  await map.removeLayer(json_group);
+        //  selection_group.clearLayers();
+        //  await map.removeLayer(selection_group);
 
         // for each feature in our json
         // map.eachLayer(function(layer){     //iterate over map rather than clusters
@@ -79,28 +79,37 @@ async function filterLocations(event) {
         filter_is = filter[j]
         console.log('STARTING the LOOP for filter ',j,' - ',filter_is,' has these options ', filter[j+1])
         for (layer in json_group._featureGroup._layers) {
-             // current target layer that we're looking at
-             const targetLayer = json_group._featureGroup._layers[layer];
-                //console.log('did we get the target layer ', targetLayer.data)
-                //console.log('how many did the user pick')
-                for (m=0; m<filter[j+1].length; m++){
+            // current target layer that we're looking at
+            const targetLayer = json_group._featureGroup._layers[layer];
+            console.log('did we get the target layer ', targetLayer.data)
+            //console.log('how many did the user pick')
+            for (m=0; m<filter[j+1].length; m++){
                     try {
+                        // THis is for single points
                         //console.log('going to see if ', filter[j+1][m],' is in this record ',targetLayer.data[filter[j]])
                         if ( (targetLayer.data[filter[j]]).includes(filter[j+1][m])) {
+                            console.log('make the marker now ', targetLayer.data)
+                            markerLogic(targetLayer.data, selection_group);
                             console.log('FOUND ONE THAT WE NEED ',targetLayer.data[filter[j]])
+                        } else {
+                            // Need to drop this record because we do NOT need it
                         }
                     }catch {
+                        // Gets in here if the thing we are looking at is a cluster rather than a single point
                         const num_in_cluster = targetLayer._childCount
                         // console.log('----Found a cluster with ', num_in_cluster,' pieces')
                         each_layer = targetLayer.getAllChildMarkers()
                         for(i=0; i<num_in_cluster; i++){
                             // console.log('----here is the clustered agency ',i,' ',each_layer[i].data.Insurance)
                             if ( (each_layer[i].data[filter[j]]).includes(filter[j+1][m])) {
+                                markerLogic(targetLayer.data, selection_group);
                                 console.log('CLUSTER----FOUND ONE THAT WE NEED ',each_layer[i].data[filter[j]])
+                            } else {
+                                // This member of the cluster is not needed so it need dropping
                             }
                         }
                     }
-                }
+            }
              // if EITHER meets the condition, add it to the map
     //         if ((targetLayer.data.City === "Tallahassee") && (targetLayer.data.PostalCode === "32308")) {
     //             markerLogic(targetLayer.data, selection_group);
