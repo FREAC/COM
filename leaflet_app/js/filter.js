@@ -39,11 +39,11 @@ async function filterLocations(event) {
     }
     // console.log('what does the filter look like ',filter)
     // now we need to look through the filter options and reset the json
-    num_filters = (filter.length / 2) ;
-    console.log('number of filters to process ', num_filters)
-    for (j=0; j <= num_filters; j+=2){
-        console.log('filter ',j,' - ',filter[j],' has these options ', filter[j+1])
-    }
+    // num_filters = (filter.length / 2) ;
+    // console.log('number of filters to process ', num_filters)
+    // for (j=0; j <= num_filters; j+=2){
+    //     console.log('filter ',j,' - ',filter[j],' has these options ', filter[j+1])
+    // }
 
     // console.log('starting to filter locations')
     // // first we need to get all the filters
@@ -74,33 +74,40 @@ async function filterLocations(event) {
         //      console.log('the cluster has ',layer.getAllChildMarkers())
         //      }
         //    });
-        j = 0
+    num_filters = (filter.length / 2) ;
+    for (j=0; j <= num_filters; j+=2){
+        filter_is = filter[j]
+        console.log('STARTING the LOOP for filter ',j,' - ',filter_is,' has these options ', filter[j+1])
         for (layer in json_group._featureGroup._layers) {
-            j += 1;
              // current target layer that we're looking at
              const targetLayer = json_group._featureGroup._layers[layer];
-             try {
-                console.log('did we get the target layer ', targetLayer.data.Agency)
-
-             // extract latitude and longitude
-    //         targetLayer.data['Latitude'] = targetLayer._latlng.lat;
-    //         targetLayer.data['Longitude'] = targetLayer._latlng.lng;
-                targetLayer.data['Agency'] = targetLayer.data.Agency;
-             }catch {
-                const num_in_cluster = targetLayer._childCount
-                console.log('----Found a cluster with ', num_in_cluster,' pieces')
-                each_layer = targetLayer.getAllChildMarkers()
-                for(i=0; i<num_in_cluster; i++){
-                    console.log('----here is the clustered agency ',i,' ',each_layer[i].data.Agency)
+                //console.log('did we get the target layer ', targetLayer.data)
+                //console.log('how many did the user pick')
+                for (m=0; m<filter[j+1].length; m++){
+                    try {
+                        //console.log('going to see if ', filter[j+1][m],' is in this record ',targetLayer.data[filter[j]])
+                        if ( (targetLayer.data[filter[j]]).includes(filter[j+1][m])) {
+                            console.log('FOUND ONE THAT WE NEED ',targetLayer.data[filter[j]])
+                        }
+                    }catch {
+                        const num_in_cluster = targetLayer._childCount
+                        // console.log('----Found a cluster with ', num_in_cluster,' pieces')
+                        each_layer = targetLayer.getAllChildMarkers()
+                        for(i=0; i<num_in_cluster; i++){
+                            // console.log('----here is the clustered agency ',i,' ',each_layer[i].data.Insurance)
+                            if ( (each_layer[i].data[filter[j]]).includes(filter[j+1][m])) {
+                                console.log('CLUSTER----FOUND ONE THAT WE NEED ',each_layer[i].data[filter[j]])
+                            }
+                        }
+                    }
                 }
-
-             }
-
              // if EITHER meets the condition, add it to the map
     //         if ((targetLayer.data.City === "Tallahassee") && (targetLayer.data.PostalCode === "32308")) {
     //             markerLogic(targetLayer.data, selection_group);
     //         }
         }
+        console.log('FINISHED LOOPING FOR FILTER ', filter[j])
+    }
     //     // Add our selection markers in our JSON file on the map
     //     map.addLayer(selection_group);
 

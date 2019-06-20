@@ -90,7 +90,7 @@ async function setup() {
     selection_group.clearLayers();
     $.get("./data/COM.json", function (json_data) {
         $.each(json_data, function (object) {
-            console.log(json_data[object]);
+            // console.log(json_data[object]);
             const provider = json_data[object];
             const marker = markerLogic(provider);
             marker.addTo(json_group);
