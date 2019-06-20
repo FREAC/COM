@@ -120,19 +120,25 @@ const map = new L.Map('map', {
 
 map.on({
     contextmenu: function (e) {
+        console.log('in the contextmenu part---------------')
         querySearchArea(e);
     },
     // Turn off mobile locate control after zoom
 
     locationfound: function (e) {
         // query search area on location found
-        console.log('get the filters here too')
-        filterLocations(event)
+        // console.log('get the filters here too')
+        // filterLocations(e)
+        // console.log('back from the filter function')
         querySearchArea(e);
+        // console.log('done with querysearch')
         // disable locate when flyTo(); method ends
         map.on('moveend', function () {
+            // console.log('in the moveend thing')
             locate.stop();
+            // console.log('map stopped')
         });
+        
     }
 });
 
@@ -175,6 +181,7 @@ geocoder.on('results', function (result) {
 // Locate Button
 const locate = L.control.locate({
     flyTo: true,
+    keepCurrentZoomLevel: false,
     clickBehavior: {
         inView: 'stop',
         outOfView: 'stop',
@@ -274,11 +281,11 @@ $easyAuto.easyAutocomplete({
 
 /// Alert for checkbox change
 
-$("input[type='checkbox']").change(async function (event) {
+// $("input[type='checkbox']").change(async function (event) {
 
-    // perform a filter based on which checkboxes are checked
-    filterLocations(event);
-});
+//     // perform a filter based on which checkboxes are checked
+//     filterLocations(event);
+// });
 
 // create filter object to hold all selected elements based on type
 const filterObject = {
@@ -517,6 +524,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
 
 // This both places a circle on the map AND counts the # of points in that circle
 function querySearchArea(location) {
+    //console.log('STARTING querysearcharea NOWWWWWW')
     clearSelection();
     let r_size;
     if ($radius.val()) {
@@ -534,6 +542,7 @@ function querySearchArea(location) {
     }).addTo(map);
 
     map.flyToBounds(searchArea.getBounds());
+    filterLocations(event)
     pointsInCircle(searchArea, r_size, activeLayer);
 }
 
