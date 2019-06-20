@@ -1,13 +1,25 @@
 // this performs dynamic filtering when the user wants to limit their search
 // set up event handler to watch when any checkboxes are checked
+function filterOptions(filterObject) {
+
+    console.log(json_group);
+
+
+    for (layer in json_group._map._layers) {
+        console.log(json_group._map._layers[layer].data);
+    }
+
+}
+
+
 
 async function filterLocations(event) {
     var restrict2 = $('.mpick')
     console.log('which have values ', restrict2)
-    for (j=0; j<restrict2.length; j++){
-        var sv = restrict2[j].name
-        console.log('j ',j, ' name is ',sv)
-        console.log('And... ',restrict2[j].value)
+    for (let index = 0; index < restrict2.length; index++) {
+        var name = restrict2[index].name
+        console.log('index ', index, ' name is ', name)
+        console.log('And... ', restrict2[index].value)
     }
     // console.log('starting to filter locations')
     // // first we need to get all the filters
