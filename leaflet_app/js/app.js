@@ -66,7 +66,7 @@ const json_group = new L.markerClusterGroup({
         return L.divIcon({
             html: '<b>' + cluster.getChildCount() + '</b>',
             className: 'clustered_sites',
-            iconSize: L.point(10, 10)
+            iconSize: L.point(15, 15)
         });
 
     }
@@ -556,15 +556,11 @@ function querySearchArea(location) {
 
 // Assign these properties to each marker in the data
 function markerLogic(data, selection_marker) {
-    console.log('starting the markerlogic routine ', data)
     // Create marker for data
     const popup = createPopup(data);
-    console.log('.1')
     const marker_location = new L.LatLng(data['Latitude'], data['Longitude']);
-    console.log('.5')
     const circle_marker = L.circleMarker(marker_location, markerStyle(default_fill_color, default_outline_color))
         .bindPopup(popup);
-    console.log('1')
 
     circle_marker.on({
         mouseover: function (event) {
@@ -596,7 +592,6 @@ function markerLogic(data, selection_marker) {
 
     // Add a data object for use in the table
     // TODO -- SWH - not sure we need all of these fields - maybe just Agency (5/17/19)
-    console.log('ready to make the circle marker by adding in all the text')
     circle_marker.data = {
         'Agency': data['Agency'],
         'HouseNumber': data['HouseNumber'],
@@ -611,7 +606,6 @@ function markerLogic(data, selection_marker) {
         'Serves': data['Serves']
 
     };
-    console.log('routine is done')
 
     return circle_marker;
 }
