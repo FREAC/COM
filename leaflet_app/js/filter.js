@@ -29,7 +29,7 @@ async function filterLocations(event) {
         for (jj=0; jj<vals.length-1; jj++){
             //console.log('looking at each option, ',jj, vals[jj])
             if (vals[jj].selected) {
-                // console.log('for ', sv, ' the selections are ',vals[jj].innerHTML)
+                console.log('for ', sv, ' the selections are ',vals[jj].innerHTML)
                 filter_vals.push(vals[jj].innerHTML)
             }
         }
@@ -74,128 +74,67 @@ async function filterLocations(event) {
         //      console.log('the cluster has ',layer.getAllChildMarkers())
         //      }
         //    });
+    var all_layers = json_group._featureGroup._layers
     num_filters = (filter.length / 2) ;
     for (j=0; j <= num_filters; j+=2){
         filter_is = filter[j]
         console.log('STARTING the LOOP for filter ',j,' - ',filter_is,' has these options ', filter[j+1])
-        for (layer in json_group._featureGroup._layers) {
+        for (layer in all_layers) {
             // current target layer that we're looking at
             const targetLayer = json_group._featureGroup._layers[layer];
-            console.log('did we get the target layer ', targetLayer.data)
+            //console.log('did we get the target layer ', targetLayer.data)
             //console.log('how many did the user pick')
             for (m=0; m<filter[j+1].length; m++){
                     try {
                         // THis is for single points
                         //console.log('going to see if ', filter[j+1][m],' is in this record ',targetLayer.data[filter[j]])
                         if ( (targetLayer.data[filter[j]]).includes(filter[j+1][m])) {
-                            console.log('make the marker now ', targetLayer.data)
-                            markerLogic(targetLayer.data, selection_group);
                             console.log('FOUND ONE THAT WE NEED ',targetLayer.data[filter[j]])
+                            //console.log('make the marker now ', targetLayer.data)
+                            targetLayer.data['Latitude'] = targetLayer._latlng.lat;
+                            targetLayer.data['Longitude'] = targetLayer._latlng.lng;
+                            targetLayer.data['Agency'] = targetLayer.data.Agency;
+                            const marker = markerLogic(targetLayer.data);
+                            marker.addTo(selection_group);
                         } else {
                             // Need to drop this record because we do NOT need it
                         }
                     }catch {
                         // Gets in here if the thing we are looking at is a cluster rather than a single point
                         const num_in_cluster = targetLayer._childCount
-                        // console.log('----Found a cluster with ', num_in_cluster,' pieces')
+                        console.log('----Found a cluster with ', num_in_cluster,' pieces')
                         each_layer = targetLayer.getAllChildMarkers()
+                        console.log('here should be the whole cluster ',each_layer)
                         for(i=0; i<num_in_cluster; i++){
-                            // console.log('----here is the clustered agency ',i,' ',each_layer[i].data.Insurance)
+                            console.log('----here is the clustered agency ',i,' ',each_layer[i].data.Insurance, ' | ', 
+                                each_layer[i].data.Agency, each_layer[i].data)
                             if ( (each_layer[i].data[filter[j]]).includes(filter[j+1][m])) {
-                                markerLogic(targetLayer.data, selection_group);
                                 console.log('CLUSTER----FOUND ONE THAT WE NEED ',each_layer[i].data[filter[j]])
+                                each_layer[i].data['Latitude'] =  each_layer[i]._latlng.lat;
+                                each_layer[i].data['Longitude'] = each_layer[i]._latlng.lng;
+                                each_layer[i].data['Agency'] =    each_layer[i].data.Agency;
+                                const marker =  markerLogic(each_layer[i].data);
+                                marker.addTo(selection_group);
                             } else {
                                 // This member of the cluster is not needed so it need dropping
                             }
                         }
                     }
             }
-             // if EITHER meets the condition, add it to the map
-    //         if ((targetLayer.data.City === "Tallahassee") && (targetLayer.data.PostalCode === "32308")) {
-    //             markerLogic(targetLayer.data, selection_group);
-    //         }
         }
         console.log('FINISHED LOOPING FOR FILTER ', filter[j])
+        // we now have filtered all data by the given filter.  We need to set the next filter
+        // to only work with the remaining records
+        all_layers = selection_group._layers
     }
-    //     // Add our selection markers in our JSON file on the map
-    //     map.addLayer(selection_group);
+    await map.removeLayer(json_group);
+    //selection_group.clearLayers();
+    await map.removeLayer(selection_group);
+    // Add our selection markers in our JSON file on the map
+    map.addLayer(selection_group);
 
-    //     // configureAutocomplete(selection_group);
+    // configureAutocomplete(selection_group);
 
-    //     // set active layer
-    //     activeLayer = selection_group;
-
-    //     // if only one of the checkboxes is checked,
-    //     // target only that checkbox
-    // } else if ((acceptMedicare[0].checked === true) || (acceptInsurance[0].checked == true)) {
-
-    //     // remove/clear both layers from map
-    //     await map.removeLayer(json_group);
-    //     selection_group.clearLayers();
-    //     if (acceptMedicare[0].checked === true) {
-
-    //         // for each feature in our json
-    //         for (layer in json_group._layers) {
-    //             const targetLayer = json_group._layers[layer];
-
-
-    //             // extract latitude and longitude
-    //             targetLayer.data['Latitude'] = targetLayer._latlng.lat;
-    //             targetLayer.data['Longitude'] = targetLayer._latlng.lng;
-    //             targetLayer.data['Agency'] = targetLayer.data.Agency;
-
-    //             // if the feature has a matching attribute, add it to the map
-    //             if (targetLayer.data.PostalCode === "32308") {
-    //                 // markerLogic(targetLayer.data, selection_group);
-    //                 const marker = markerLogic(targetLayer.data);
-    //                 marker.addTo(selection_group);
-    //             }
-    //         }
-    //         // Add our selection markers in our JSON file on the map
-    //         map.addLayer(selection_group);
-
-    //         // configureAutocomplete(selection_group);
-
-    //         // set active layer
-    //         activeLayer = selection_group;
-
-    //     } else if (acceptInsurance[0].checked === true) {
-
-    //         // for each feature in our json
-    //         for (layer in json_group._layers) {
-    //             const targetLayer = json_group._layers[layer];
-
-    //             // extract latitude and longitude
-    //             targetLayer.data['Latitude'] = targetLayer._latlng.lat;
-    //             targetLayer.data['Longitude'] = targetLayer._latlng.lng;
-    //             targetLayer.data['Agency'] = targetLayer.data.agency;
-
-    //             // if the feature has a matching attribute, add it to the map
-    //             if (targetLayer.data.City === "Tallahassee") {
-    //                 const marker = markerLogic(targetLayer.data);
-    //                 marker.addTo(selection_group);
-    //             }
-    //         }
-
-    //         // Add our selection markers in our JSON file on the map
-    //         map.addLayer(selection_group);
-
-    //         // configureAutocomplete(selection_group);
-
-    //         // set active layer
-    //         activeLayer = selection_group;
-    //     }
-    // } else {
-
-    //     await map.removeLayer(json_group);
-    //     // clear the selection layer
-    //     selection_group.clearLayers();
-    //     // add the full layer back to the map
-    //     map.addLayer(json_group);
-
-    //     // configureAutocomplete(json_group);
-
-    //     // set active layer
-    //     activeLayer = json_group;
-    // }
+    // set active layer
+    activeLayer = selection_group;
 }
