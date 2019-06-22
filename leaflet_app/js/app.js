@@ -99,6 +99,8 @@ async function setup() {
         map.addLayer(json_group);
         activeLayer = json_group;
     });
+    console.log(map);
+    
 }
 
 ///////////////////////////////////////////////
@@ -168,7 +170,7 @@ geocoder.on('results', function (result) {
 
     clearSelection();
     console.log('Get the filters here')
-    filterLocations(event)
+    // filterLocations(event)
     querySearchArea(result);
 });
 
@@ -289,12 +291,8 @@ $easyAuto.easyAutocomplete({
 // });
 
 // create filter object to hold all selected elements based on type
-const filterObject = {
-    insurance: [],
-    specialty: undefined,
-    serves: undefined,
-    telehealth: undefined,
-    new_client: undefined,
+let filterObject = {
+    "Insurance": undefined
 };
 
 // on change, print out this and value
@@ -303,12 +301,18 @@ $(".mpick").change(function (event) {
     const value = $(this).val();
     const typeofValue = typeof (value);
     const id = $(this).context.id;
+    const name = $(this).context.name;
+    const parent = this.parentElement
+
 
     console.log({
         "value": value,
         "this": $(this),
         "id": id,
-        "typeofvalue": typeofValue
+        "typeofvalue": typeofValue,
+        "name": name,
+        "thisnojquery": this,
+        "parent" : parent
     });
 
     // find the corresponding id within the filter object
@@ -317,15 +321,17 @@ $(".mpick").change(function (event) {
 
         // if the id of the select and the key of the filter object match
         if (key === id) {
+            console.log('found a match!')
 
             // swap array of values into object at this location\
             filterObject[key.toString()] = value;
         }
+        console.log(filterObject)
     }
 
     // find objects that contain a matching attribute
 
-    filterOptions(filterObject);
+    filterOptions(filterObject, id);
     // execute filter in leaflet - must expand on this
 
 
@@ -549,7 +555,7 @@ function querySearchArea(location) {
     }).addTo(map);
 
     map.flyToBounds(searchArea.getBounds());
-    filterLocations(event)
+    // filterLocations(event)
     pointsInCircle(searchArea, r_size, activeLayer);
 }
 

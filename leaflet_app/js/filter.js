@@ -1,17 +1,41 @@
 // this performs dynamic filtering when the user wants to limit their search
 // set up event handler to watch when any checkboxes are checked
-function filterOptions(filterObject) {
+function filterOptions(filterObject, key) {
+    console.log("key: " + key);
+    
 
-    console.log('TOP of FILTER.JS and the json group looks like this ', json_group);
+    for (layer in json_group._map._layers) { const result = ( (true) && ('foo') );  
+        // json_group._map._layers[layer].data && console.log({keyIs: json_group._map._layers[layer].data[key]})
+        if (json_group._map._layers[layer].data[key] && json_group._map._layers[layer].data[key]) {
+            console.log({keyIs: json_group._map._layers[layer].data[key]})
+        }
+        const res = json_group._map._layers[layer].data && function() {
+            // see if the filter object array contents is seen
+            // within the json_group._map._layers[layer].data
 
+            // 
 
-    for (layer in json_group._map._layers) {
-        console.log(json_group._map._layers[layer].data);
+            return true
+        }
+
     }
+
+    // json_group._map._layers.filter(layer => {
+    // return 
+    // })
+
+
 
 }
 
+/*
+var words = [{key: 'Aetna', foo: 'spray'}, {key: 'Aea', foo: 'pray'} ];
 
+const result = words.filter(word => { return (word.key) === "Aetna" && word });
+
+console.log(result);
+// expected output: Array [Object { key: "Aetna", foo: "spray" }]
+ */
 
 // first get an array ready to hold the filters
 

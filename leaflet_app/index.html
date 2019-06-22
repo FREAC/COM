@@ -82,9 +82,11 @@
 						<div class="col-sm-12 mb-2 mt-2 mt-sm-0 btn-group btn-group-toggle blocks"
 							data-toggle="buttons">
 						</div>
-					</div>
-						<h5>Pick insurance options</h5>
-							<select class="mpick insurance" multiple="multiple" name="Insurance">
+					</div> 
+					<div id="filters">
+						<p>
+							<h5>Pick insurance options</h5>
+							<select class="mpick insurance" multiple="multiple" name="Insurance" id="Insurance">
 									<option value="acceptsmostinsuranceplans">Accepts most insurance plans</option>
 									<option value="aetna">Aetna</option>
 									<option value="beacon">Beacon</option>
@@ -123,9 +125,11 @@
 									<option value="valueoptions">Valueoptions</option>
 									<option value="wellcare">Wellcare</option>
 									<option value="other">Other</option>
-							</select>			
-						<h5 style="margin-bottom:1px;">Practice Categories</h4>
-						<select class="mpick pcat" multiple="multiple" name='Specialty'>
+							</select>		
+						</p>	
+						<h5 style="margin-bottom:1px;">Practice Categories</h5>
+						<p>						
+						<select class="mpick pcat" multiple="multiple" name="Specialty" id="Specialty">
 							<option value="lmft">LMFT</option>
 							<option value="lmhc">LMHC</option>
 							<option value="psychiatrist">Psychiatrist</option>
@@ -158,7 +162,7 @@
 					<p>
 						<h5>Types of Clients Served</h5>
 						<select id="Serves" title="Basic example" class='mpick Serves' multiple="multiple"
-							name="Serves" size="5">
+							name="Serves" size="5" id="Serves">
 							<option value="Individual">Individual</option>
 							<option value="Adolescents">Adolescents</option>
 							<option value="Caregivers">Caregivers</option>
@@ -172,7 +176,7 @@
 					</p>
 
 					<p>
-						<h5>Telehealth services if applicable</h4>
+						<h5>Telehealth services if applicable</h5>
 							<select id="telehealth" title="Basic example" class='mpick telehealth' multiple="multiple"
 								name="telehealth" size="5">
 								<option value="phone">Phone</option>
@@ -180,14 +184,16 @@
 								<option value="other">Other</option>
 							</select>
 					</p>
-					<h5>Accepting New Patients? </h4>
-						<select id="new-client" class="form-control newpatients" id="newpatients">
+					<h5>Accepting New Patients? </h5>
+						<select id="new-client" class="form-control newpatients">
 							<option value="default" selected disabled hidden>New patient status</option>
 							<!-- Value is distance in meters -->
 							<option value="yes">Yes</option>
 							<option value="no">No</option>
 							<option value="waitlist">Waitlist</option>
 						</select>
+					</div>
+						
 
 				</form>
 
@@ -202,7 +208,7 @@
 						<div id="results-table"></div>
 					</div>
 				</div>
-				<h5>Search Radius</h4>
+				<h5>Search Radius</h5>
 					<select class="form-control" id="radius">
 						<option value="default" selected disabled hidden>Search radius</option>
 						<!-- Value is distance in meters -->
