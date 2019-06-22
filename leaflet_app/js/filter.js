@@ -1,15 +1,33 @@
 // this performs dynamic filtering when the user wants to limit their search
 // set up event handler to watch when any checkboxes are checked
 function filterOptions(filterObject, key) {
+    let selection = [];
     console.log("key: " + key);
-    
 
-    for (layer in json_group._map._layers) { const result = ( (true) && ('foo') );  
-        // json_group._map._layers[layer].data && console.log({keyIs: json_group._map._layers[layer].data[key]})
-        if (json_group._map._layers[layer].data[key] && json_group._map._layers[layer].data[key]) {
-            console.log({keyIs: json_group._map._layers[layer].data[key]})
+    // array of options we are wanting to find in the json_group data
+    const filterArr = filterObject[key];
+
+
+    // for each layer in the map data
+    for (layer in json_group._map._layers) {
+
+        // check if SOME part of the array matches
+        if (json_group._map._layers[layer].data && json_group._map._layers[layer].data[key]) {
+            const currentLayer = json_group._map._layers[layer].data[key];
+
+            // convert comma separated string to array
+            const currentLayerArr = currentLayer.split(',')
+            console.log(currentLayerArr);
         }
-        const res = json_group._map._layers[layer].data && function() {
+
+
+        // if true, add to selection group
+
+        // else, do nothing
+
+        // json_group._map._layers[layer].data && console.log({keyIs: json_group._map._layers[layer].data[key]})
+
+        const res = json_group._map._layers[layer].data && function () {
             // see if the filter object array contents is seen
             // within the json_group._map._layers[layer].data
 
@@ -45,20 +63,20 @@ async function filterLocations(event) {
     // console.log('lets see filter now ',filter)
     var restrict2 = $('.mpick')
     // console.log('which have values ', restrict2)
-    for (j=0; j<restrict2.length; j++){
+    for (j = 0; j < restrict2.length; j++) {
         var sv = restrict2[j].name
         // console.log('j ',j, ' name is ',sv)
         var vals = restrict2[j].options
         filter_vals = []
-        for (jj=0; jj<vals.length-1; jj++){
+        for (jj = 0; jj < vals.length - 1; jj++) {
             //console.log('looking at each option, ',jj, vals[jj])
             if (vals[jj].selected) {
-                console.log('for ', sv, ' the selections are ',vals[jj].innerHTML)
+                console.log('for ', sv, ' the selections are ', vals[jj].innerHTML)
                 filter_vals.push(vals[jj].innerHTML)
             }
         }
         if (filter_vals.length > 0) {
-            filter.push(sv,filter_vals)
+            filter.push(sv, filter_vals)
         }
     }
     // console.log('what does the filter look like ',filter)
@@ -87,18 +105,18 @@ async function filterLocations(event) {
 
     // set up cases for checkbox combinations
     // if ((acceptMedicare[0].checked === true) && (acceptInsurance[0].checked === true)) {
-        //  await map.removeLayer(json_group);
-        //  selection_group.clearLayers();
-        //  await map.removeLayer(selection_group);
+    //  await map.removeLayer(json_group);
+    //  selection_group.clearLayers();
+    //  await map.removeLayer(selection_group);
 
-        // for each feature in our json
-        // map.eachLayer(function(layer){     //iterate over map rather than clusters
-        //     if (layer.getChildCount){         // if layer is markerCluster
-        //      console.log('here is a cluster count ',layer._childCount);  // return count of points within each cluster
-        //      console.log('the cluster has ',layer.getAllChildMarkers())
-        //      }
-        //    });
-    
+    // for each feature in our json
+    // map.eachLayer(function(layer){     //iterate over map rather than clusters
+    //     if (layer.getChildCount){         // if layer is markerCluster
+    //      console.log('here is a cluster count ',layer._childCount);  // return count of points within each cluster
+    //      console.log('the cluster has ',layer.getAllChildMarkers())
+    //      }
+    //    });
+
     const selection_group = new L.markerClusterGroup();
     console.log(' what does the empty sel group look like ', selection_group)
     var all_layers = json_group._featureGroup._layers
@@ -107,77 +125,77 @@ async function filterLocations(event) {
     // }
 
     console.log('BEFORE ANYTHING starts and the all layers looks like ', all_layers)
-    console.log('JSON group is ',json_group._featureGroup)
-    num_filters = (filter.length / 2) ;
-    for (j=0; j <= num_filters; j+=2){
+    console.log('JSON group is ', json_group._featureGroup)
+    num_filters = (filter.length / 2);
+    for (j = 0; j <= num_filters; j += 2) {
         filter_is = filter[j]
-        console.log('STARTING the LOOP for filter ',j,' - ',filter_is,' has these options ', filter[j+1])
+        console.log('STARTING the LOOP for filter ', j, ' - ', filter_is, ' has these options ', filter[j + 1])
         for (layer in json_group._featureGroup._layers) {
             // current target layer that we're looking at
             const targetLayer = json_group._featureGroup._layers[layer];
             //console.log('did we get the target layer ', targetLayer.data)
             //console.log('how many did the user pick')
             var need_it = false
-            for (m=0; m<filter[j+1].length; m++){
-                    try {
-                        // be careful not to add the point in twice because it accepts, say, Aetna and Cigna
-                        // THis is for single points
-                        //console.log('going to see if ', filter[j+1][m],' is in this record ',targetLayer.data[filter[j]])
-                        if ( (targetLayer.data[filter[j]]).includes(filter[j+1][m])) {
-                            console.log('m is ',m,' and length is ', filter[j+1].length-1)
-                            console.log('--FOUNDfound one but not written yet')
-                            if (! need_it && m === filter[j+1].length-1) {
-                                console.log('FOUND ONE THAT WE NEED ',targetLayer.data[filter[j]])
-                                //console.log('make the marker now ', targetLayer.data)
-                                targetLayer.data['Latitude'] = targetLayer._latlng.lat;
-                                targetLayer.data['Longitude'] = targetLayer._latlng.lng;
-                                targetLayer.data['Agency'] = targetLayer.data.Agency;
-                                const marker =  markerLogic(targetLayer.data);
+            for (m = 0; m < filter[j + 1].length; m++) {
+                try {
+                    // be careful not to add the point in twice because it accepts, say, Aetna and Cigna
+                    // THis is for single points
+                    //console.log('going to see if ', filter[j+1][m],' is in this record ',targetLayer.data[filter[j]])
+                    if ((targetLayer.data[filter[j]]).includes(filter[j + 1][m])) {
+                        console.log('m is ', m, ' and length is ', filter[j + 1].length - 1)
+                        console.log('--FOUNDfound one but not written yet')
+                        if (!need_it && m === filter[j + 1].length - 1) {
+                            console.log('FOUND ONE THAT WE NEED ', targetLayer.data[filter[j]])
+                            //console.log('make the marker now ', targetLayer.data)
+                            targetLayer.data['Latitude'] = targetLayer._latlng.lat;
+                            targetLayer.data['Longitude'] = targetLayer._latlng.lng;
+                            targetLayer.data['Agency'] = targetLayer.data.Agency;
+                            const marker = markerLogic(targetLayer.data);
+                            marker.addTo(selection_group);
+                            need_it = true;
+                            //marker.addTo(json_group);
+                            //json_group.addLayer(marker);
+                            continue
+                        }
+                    } else {
+                        // we dont need this record
+                    }
+                } catch {
+                    // Gets in here if the thing we are looking at is a cluster rather than a single point
+                    const num_in_cluster = targetLayer._childCount
+                    // console.log('----Found a cluster with ', num_in_cluster,' pieces')
+                    each_layer = targetLayer.getAllChildMarkers()
+                    //console.log('here should be the whole cluster ',each_layer)
+                    for (i = 0; i < num_in_cluster; i++) {
+                        //console.log('----here is the clustered agency ',i,' ',each_layer[i].data.Insurance, ' | ', 
+                        // each_layer[i].data.Agency, each_layer[i].data)
+                        need_it_c = false;
+                        if ((each_layer[i].data[filter[j]]).includes(filter[j + 1][m])) {
+                            console.log('CLUSTER----FOUND ONE THAT WE NEED not yet written', each_layer[i].data[filter[j]])
+                            if (!need_it_c && m === filter[j + 1].length - 1) {
+                                each_layer[i].data['Latitude'] = each_layer[i]._latlng.lat;
+                                each_layer[i].data['Longitude'] = each_layer[i]._latlng.lng;
+                                each_layer[i].data['Agency'] = each_layer[i].data.Agency;
+                                const marker = markerLogic(each_layer[i].data);
                                 marker.addTo(selection_group);
-                                need_it = true;
+                                need_it_c = true;
+                                console.log('adding ', marker, ' to the json group')
                                 //marker.addTo(json_group);
                                 //json_group.addLayer(marker);
                                 continue
                             }
                         } else {
-                            // we dont need this record
+                            // This member of the cluster is not needed so it need dropping
+
+                        } // end of looking at one piece of a cluster
+                        if (!need_it_c) {
+                            console.log(' just removed from a cluster ', each_layer[i].data[filter[j]])
+                            each_layer[i].removeLayer
                         }
-                    } catch {
-                        // Gets in here if the thing we are looking at is a cluster rather than a single point
-                        const num_in_cluster = targetLayer._childCount
-                        // console.log('----Found a cluster with ', num_in_cluster,' pieces')
-                        each_layer = targetLayer.getAllChildMarkers()
-                        //console.log('here should be the whole cluster ',each_layer)
-                        for(i=0; i<num_in_cluster; i++){
-                            //console.log('----here is the clustered agency ',i,' ',each_layer[i].data.Insurance, ' | ', 
-                                // each_layer[i].data.Agency, each_layer[i].data)
-                            need_it_c = false;
-                            if ( (each_layer[i].data[filter[j]]).includes(filter[j+1][m])) {
-                                console.log('CLUSTER----FOUND ONE THAT WE NEED not yet written',each_layer[i].data[filter[j]])
-                                if (! need_it_c && m === filter[j+1].length-1) {
-                                    each_layer[i].data['Latitude'] =  each_layer[i]._latlng.lat;
-                                    each_layer[i].data['Longitude'] = each_layer[i]._latlng.lng;
-                                    each_layer[i].data['Agency'] =    each_layer[i].data.Agency;
-                                    const marker =  markerLogic(each_layer[i].data);
-                                    marker.addTo(selection_group);
-                                    need_it_c = true;
-                                    console.log('adding ',marker,' to the json group')
-                                    //marker.addTo(json_group);
-                                    //json_group.addLayer(marker);
-                                    continue
-                                }
-                            } else {
-                                // This member of the cluster is not needed so it need dropping
- 
-                            } // end of looking at one piece of a cluster
-                            if (!need_it_c){
-                                console.log(' just removed from a cluster ', each_layer[i].data[filter[j]])
-                                each_layer[i].removeLayer
-                            }
-                        } // end of loop looking at pieces of a cluster
-                    }
+                    } // end of loop looking at pieces of a cluster
+                }
             } // end of loop looking at different selected filter values
-            if (!need_it){
+            if (!need_it) {
                 console.log(' just removed ', json_group._featureGroup._layers[layer].data)
                 // json_group._featureGroup._layers[layer].removeLayer
                 json_group._featureGroup.removeLayer(layer)
@@ -187,7 +205,7 @@ async function filterLocations(event) {
         console.log('FINISHED LOOPING FOR FILTER ', filter[j])
         // we now have filtered all data by the given filter.  We need to set the next filter
         // to only work with the remaining records
-        console.log('how many records did we save ',selection_group.length)
+        console.log('how many records did we save ', selection_group.length)
         console.log('what does the json look like after the filter ', selection_group)
         // regenerate the json group so we can start the loop over again with the same structure
         // map.addLayer(selection_group);
