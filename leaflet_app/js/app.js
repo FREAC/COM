@@ -90,7 +90,6 @@ async function setup() {
     selection_group.clearLayers();
     $.get("./data/COM.json", function (json_data) {
         $.each(json_data, function (object) {
-            console.log(json_data[object]);
             const provider = json_data[object];
             const marker = markerLogic(provider);
             marker.addTo(json_group);
@@ -99,8 +98,7 @@ async function setup() {
         map.addLayer(json_group);
         activeLayer = json_group;
     });
-    console.log(map);
-    
+
 }
 
 ///////////////////////////////////////////////
@@ -141,7 +139,7 @@ map.on({
             locate.stop();
             // console.log('map stopped')
         });
-        
+
     }
 });
 
@@ -312,21 +310,16 @@ $(".mpick").change(function (event) {
         "typeofvalue": typeofValue,
         "name": name,
         "thisnojquery": this,
-        "parent" : parent
+        "parent": parent
     });
 
     // find the corresponding id within the filter object
     for (const key in filterObject) {
-        console.log(key);
-
         // if the id of the select and the key of the filter object match
         if (key === id) {
-            console.log('found a match!')
-
-            // swap array of values into object at this location\
+            // swap array of values into object at this location
             filterObject[key.toString()] = value;
         }
-        console.log(filterObject)
     }
 
     // find objects that contain a matching attribute
@@ -563,8 +556,7 @@ function querySearchArea(location) {
 
 // Assign these properties to each marker in the data
 function markerLogic(data, selection_marker) {
-    console.log(data);
-    
+
     // Create marker for data
     const popup = createPopup(data);
     const marker_location = new L.LatLng(data['Latitude'], data['Longitude']);

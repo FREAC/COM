@@ -1,40 +1,45 @@
 // this performs dynamic filtering when the user wants to limit their search
 function filterOptions(filterObject, key) {
-
     // array of options we are wanting to find in the json_group data
     const filterArr = filterObject[key];
 
-    const isChecked = (filterObject,key,filterArr) => filterObject[key] && filterArr.length > 0 && filterArr !== null
-    const checkInsurancePresent = (currentLayerArr) => (
+    // check to see whether 
+    const isChecked = (filterObject, key, filterArr) => filterObject[key] && filterArr.length > 0 && filterArr !== null
+    const checkFilterPresence = (currentLayerArr) => (
         currentLayerArr.length && currentLayerArr.filter(
-            element => filterArr.includes(element.toLowerCase())
+            element => filterArr.includes(element.toLowerCase().replace(/\s/g, '')) // lowercase and remove spaces between words
         )
     );
-    if (isChecked(filterObject,key,filterArr)) {
-        const filteredLayersArray = Object.values(json_group._map._layers).filter(layer => {
-            if ( !layer.data ) { return false } else {
-            const currentLayer = layer.data[key]; // current layer in json_group
-            const currentLayerArr = currentLayer.split(',') // convert , separated string to arr
-            // 
-            const intersectionFilter = checkInsurancePresent(currentLayerArr)
-            return intersectionFilter.length > 0 
+    if (isChecked(filterObject, key, filterArr)) {
+
+        const filteredLayersArray = Object.values(activeLayer._map._layers).filter(layer => {
+            if (!layer.data) {
+                return false
+            } else {
+                const currentLayer = layer.data[key]; // current layer in json_group
+                const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
+                // find intersections within data and filter object selections
+                const intersectionFilter = checkFilterPresence(currentLayerArr)
+                return intersectionFilter.length > 0 // return if there are more than 0 results
             }
         });
-        console.log(filteredLayersArray);
         displayFilteredData(filteredLayersArray);
-    }
-    else {
-        // do nothing
+    } else {
+        // re-insert (original) json_group
+        map.removeLayer(selection_group);
+        map.addLayer(json_group);
+        activeLayer = json_group;
     }
 }
 
-function displayFilteredData (layers) {
+function displayFilteredData(layers) {
     // remove current map layers
     map.removeLayer(json_group);
     selection_group.clearLayers();
     // for each object in the subset
+
+    // are there layers? If yes, assign Lat and Long
     layers ? layers.map((layer) => {
-        console.log({"layer" : layer.data});
         // assign Latitude and Longitude to data
         layer.data['Latitude'] = layer._latlng.lat;
         layer.data['Longitude'] = layer._latlng.lng;
@@ -42,22 +47,13 @@ function displayFilteredData (layers) {
         const data = layer.data;
         const marker = markerLogic(data);
         marker.addTo(selection_group);
-        
+
     }) : console.log('nothing found');
-    
+
     map.addLayer(selection_group);
     activeLayer = selection_group;
 
 }
-
-/*
-var words = [{key: 'Aetna', foo: 'spray'}, {key: 'Aea', foo: 'pray'} ];
-
-const result = words.filter(word => { return (word.key) === "Aetna" && word });
-
-console.log(result);
-// expected output: Array [Object { key: "Aetna", foo: "spray" }]
- */
 
 // first get an array ready to hold the filters
 
@@ -210,7 +206,7 @@ async function filterLocations(event) {
         // we now have filtered all data by the given filter.  We need to set the next filter
         // to only work with the remaining records
         console.log('how many records did we save ', selection_group.length)
-            console.log('what does the json look like after the filter ', selection_group)
+        console.log('what does the json look like after the filter ', selection_group)
         // regenerate the json group so we can start the loop over again with the same structure
         // map.addLayer(selection_group);
         // all_layers = selection_group._featureGroup._layers
