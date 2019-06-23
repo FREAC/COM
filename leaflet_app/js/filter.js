@@ -1,60 +1,31 @@
 // this performs dynamic filtering when the user wants to limit their search
-// set up event handler to watch when any checkboxes are checked
 function filterOptions(filterObject, key) {
-    let selection = [];
-    console.log("key: " + key);
 
     // array of options we are wanting to find in the json_group data
     const filterArr = filterObject[key];
 
-
-    // for each layer in the map data
-    for (layer in json_group._map._layers) {
-
-        // check if SOME part of the array matches
-        if (json_group._map._layers[layer].data && json_group._map._layers[layer].data[key]) {
-            const currentLayer = json_group._map._layers[layer].data[key];
-
-            // convert comma separated string to array
-            // now we have an array of elements based on the key we are looking at
-            const currentLayerArr = currentLayer.split(',')
-            console.log({
-                "currentLayerArr": currentLayerArr,
-                "filterArray": filterArr
-            });
-
-
-            // check if some part of the array matches with our filterObject array
-            const intersection = currentLayerArr.some(element => filterArr.includes(element.toLowerCase()));
-            console.log(intersection);
-
-
-        }
-
-
-        // if true, add to selection group
-
-        // else, do nothing
-
-        // json_group._map._layers[layer].data && console.log({keyIs: json_group._map._layers[layer].data[key]})
-
-        const res = json_group._map._layers[layer].data && function () {
-            // see if the filter object array contents is seen
-            // within the json_group._map._layers[layer].data
-
+    const isChecked = (filterObject,key,filterArr) => filterObject[key] && filterArr.length > 0 && filterArr !== null
+    const checkInsurancePresent = (currentLayerArr) => (
+        currentLayerArr.length && currentLayerArr.filter(
+            element => filterArr.includes(element.toLowerCase())
+        )
+    );
+    if (isChecked(filterObject,key,filterArr)) {
+        const filteredLayersArray = Object.values(json_group._map._layers).filter(layer => {
+            if ( !layer.data ) { return false } else {
+            const currentLayer = layer.data[key]; // current layer in json_group
+            const currentLayerArr = currentLayer.split(',') // convert , separated string to arr
             // 
-
-            return true
-        }
-
+            const intersectionFilter = checkInsurancePresent(currentLayerArr)
+            return intersectionFilter.length > 0 
+            }
+        });
+        console.log(filteredLayersArray);
+        // displayFilteredData(filteredLayersArray);
     }
-
-    // json_group._map._layers.filter(layer => {
-    // return 
-    // })
-
-
-
+    else {
+        // do nothing
+    }
 }
 
 /*
@@ -217,7 +188,7 @@ async function filterLocations(event) {
         // we now have filtered all data by the given filter.  We need to set the next filter
         // to only work with the remaining records
         console.log('how many records did we save ', selection_group.length)
-        console.log('what does the json look like after the filter ', selection_group)
+            console.log('what does the json look like after the filter ', selection_group)
         // regenerate the json group so we can start the loop over again with the same structure
         // map.addLayer(selection_group);
         // all_layers = selection_group._featureGroup._layers

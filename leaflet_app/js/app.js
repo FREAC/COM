@@ -90,11 +90,11 @@ async function setup() {
     selection_group.clearLayers();
     $.get("./data/COM.json", function (json_data) {
         $.each(json_data, function (object) {
-            // console.log(json_data[object]);
+            console.log(json_data[object]);
             const provider = json_data[object];
             const marker = markerLogic(provider);
             marker.addTo(json_group);
-            json_group.addLayer(marker);
+            // json_group.addLayer(marker);
         });
         map.addLayer(json_group);
         activeLayer = json_group;
@@ -332,6 +332,9 @@ $(".mpick").change(function (event) {
     // find objects that contain a matching attribute
 
     filterOptions(filterObject, id);
+
+    // add matching object to map 
+    displayFilteredData();
     // execute filter in leaflet - must expand on this
 
 
@@ -562,6 +565,8 @@ function querySearchArea(location) {
 
 // Assign these properties to each marker in the data
 function markerLogic(data, selection_marker) {
+    console.log(data);
+    
     // Create marker for data
     const popup = createPopup(data);
     const marker_location = new L.LatLng(data['Latitude'], data['Longitude']);
