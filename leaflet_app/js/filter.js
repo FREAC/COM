@@ -28,6 +28,28 @@ function filterOptions(filterObject, key) {
     }
 }
 
+function displayFilteredData (layers) {
+    // remove current map layers
+    map.removeLayer(json_group);
+    selection_group.clearLayers();
+    // for each object in the subset
+    console.log(layers.length);
+    layers ? layers.map((layer) => {
+        console.log({"layer" : layer.data});
+        // // assign Latitude and Longitude to data
+        // layer.data['Latitude'] = layer._latlng.lat;
+        // layer.data['Longitude'] = layer._latlng.lng;
+
+        // const data = layer.data;
+        // const marker = markerLogic(data);
+        
+    }) : console.log('nothing found');
+    
+    map.addLayer(selection_group);
+    activeLayer = selection_group;
+
+}
+
 /*
 var words = [{key: 'Aetna', foo: 'spray'}, {key: 'Aea', foo: 'pray'} ];
 
