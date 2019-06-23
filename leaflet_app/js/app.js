@@ -333,8 +333,6 @@ $(".mpick").change(function (event) {
 
     filterOptions(filterObject, id);
 
-    // add matching object to map 
-    displayFilteredData();
     // execute filter in leaflet - must expand on this
 
 

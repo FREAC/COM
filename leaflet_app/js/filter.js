@@ -21,7 +21,7 @@ function filterOptions(filterObject, key) {
             }
         });
         console.log(filteredLayersArray);
-        // displayFilteredData(filteredLayersArray);
+        displayFilteredData(filteredLayersArray);
     }
     else {
         // do nothing
@@ -33,15 +33,15 @@ function displayFilteredData (layers) {
     map.removeLayer(json_group);
     selection_group.clearLayers();
     // for each object in the subset
-    console.log(layers.length);
     layers ? layers.map((layer) => {
         console.log({"layer" : layer.data});
-        // // assign Latitude and Longitude to data
-        // layer.data['Latitude'] = layer._latlng.lat;
-        // layer.data['Longitude'] = layer._latlng.lng;
+        // assign Latitude and Longitude to data
+        layer.data['Latitude'] = layer._latlng.lat;
+        layer.data['Longitude'] = layer._latlng.lng;
 
-        // const data = layer.data;
-        // const marker = markerLogic(data);
+        const data = layer.data;
+        const marker = markerLogic(data);
+        marker.addTo(selection_group);
         
     }) : console.log('nothing found');
     
