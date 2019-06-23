@@ -16,8 +16,19 @@ function filterOptions(filterObject, key) {
             const currentLayer = json_group._map._layers[layer].data[key];
 
             // convert comma separated string to array
+            // now we have an array of elements based on the key we are looking at
             const currentLayerArr = currentLayer.split(',')
-            console.log(currentLayerArr);
+            console.log({
+                "currentLayerArr": currentLayerArr,
+                "filterArray": filterArr
+            });
+
+
+            // check if some part of the array matches with our filterObject array
+            const intersection = currentLayerArr.some(element => filterArr.includes(element.toLowerCase()));
+            console.log(intersection);
+
+
         }
 
 
