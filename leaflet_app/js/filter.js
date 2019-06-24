@@ -17,6 +17,10 @@ function filterOptions(filterObject, key) {
         )
     );
     if (isChecked(filterObject, key, filterArr)) {
+        console.log({
+            "ischecked": true
+        });
+
 
         const filteredLayersArray = Object.values(activeLayer._map._layers).filter(layer => {
             if (!layer.data) {
@@ -26,10 +30,18 @@ function filterOptions(filterObject, key) {
 
                 return false
             } else {
+
                 const currentLayer = layer.data[key]; // current layer in json_group
                 const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
                 // find intersections within data and filter object selections
                 const intersectionFilter = checkFilterPresence(currentLayerArr)
+
+                console.log({
+                    currentLayer,
+                    currentLayerArr,
+                    intersectionFilter
+                });
+
                 return intersectionFilter.length > 0 // return if there are more than 0 results
             }
         });
