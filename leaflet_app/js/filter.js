@@ -3,17 +3,27 @@ function filterOptions(filterObject, key) {
     // array of options we are wanting to find in the json_group data
     const filterArr = filterObject[key];
 
-    // check to see whether 
+    // check to see whether there are checked selections
     const isChecked = (filterObject, key, filterArr) => filterObject[key] && filterArr.length > 0 && filterArr !== null
     const checkFilterPresence = (currentLayerArr) => (
         currentLayerArr.length && currentLayerArr.filter(
-            element => filterArr.includes(element.toLowerCase().replace(/\s/g, '')) // lowercase and remove spaces between words
+            element => {
+                console.log({
+                    "filterArrFilter": filterArr.includes(element.toLowerCase().replace(/\s/g, ''))
+                });
+
+                return filterArr.includes(element.toLowerCase().replace(/\s/g, ''))
+            } // lowercase and remove spaces between words
         )
     );
     if (isChecked(filterObject, key, filterArr)) {
 
         const filteredLayersArray = Object.values(activeLayer._map._layers).filter(layer => {
             if (!layer.data) {
+                console.log({
+                    "layerData: ": layer.data
+                });
+
                 return false
             } else {
                 const currentLayer = layer.data[key]; // current layer in json_group
