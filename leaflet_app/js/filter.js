@@ -22,14 +22,16 @@ function filterOptions(filterObject, key) {
     );
     if (isChecked(filterObject, key, filterArr)) {
         console.log({
-            "ischecked": true
+            "filters checked": true
         });
 
 
         const filteredLayersArray = Object.values(activeLayer._map._layers).filter(layer => {
+            // if there is no data, return false
             if (!layer.data) {
                 console.log({
-                    "layerData: ": layer.data
+                    "layerData: ": layer.data,
+                    "false message": "There is no data in the filteredLayersArray"
                 });
 
                 return false
@@ -39,9 +41,6 @@ function filterOptions(filterObject, key) {
                 // currentLayerArr are target attributes from map (insurance, categories, etc.)
                 const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
                 // find intersections within data and filter object selections
-                console.log({
-                    "checkfilter: ": checkFilterPresence(currentLayerArr)
-                });
 
                 const intersectionFilter = checkFilterPresence(currentLayerArr)
 
@@ -57,6 +56,8 @@ function filterOptions(filterObject, key) {
         displayFilteredData(filteredLayersArray);
     } else {
         // re-insert (original) json_group
+        console.log({"filters checked": false});
+        
         map.removeLayer(selection_group);
         map.addLayer(json_group);
         activeLayer = json_group;
