@@ -5,8 +5,12 @@ function filterOptions(filterObject, key) {
 
     // check to see whether there are checked selections
     const isChecked = (filterObject, key, filterArr) => filterObject[key] && filterArr.length > 0 && filterArr !== null
+
+    // compare arrays and check for matching attributes
     const checkFilterPresence = (currentLayerArr) => (
+        // if current layer has length, then perform a filter
         currentLayerArr.length && currentLayerArr.filter(
+            // loop through arrays, compare result to result
             element => {
                 console.log({
                     "filterArrFilter": filterArr.includes(element.toLowerCase().replace(/\s/g, ''))
@@ -32,8 +36,13 @@ function filterOptions(filterObject, key) {
             } else {
 
                 const currentLayer = layer.data[key]; // current layer in json_group
+                // currentLayerArr are target attributes from map (insurance, categories, etc.)
                 const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
                 // find intersections within data and filter object selections
+                console.log({
+                    "checkfilter: ": checkFilterPresence(currentLayerArr)
+                });
+
                 const intersectionFilter = checkFilterPresence(currentLayerArr)
 
                 console.log({
