@@ -319,6 +319,8 @@ $(".mpick").change(function (event) {
         if (key === id) {
             // swap array of values into object at this location
             filterObject[key.toString()] = value;
+            console.log(value);
+
         }
     }
 

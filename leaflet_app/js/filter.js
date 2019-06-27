@@ -7,30 +7,51 @@ function filterOptions(filterObject, key) {
     const isChecked = (filterObject, key, filterArr) => filterObject[key] && filterArr.length > 0 && filterArr !== null
 
     // compare arrays and check for matching attributes
-    const checkFilterPresence = (currentLayerArr) => (
-        // if current layer has length, then perform a filter
-        currentLayerArr.length && currentLayerArr.filter(
-            // loop through arrays, compare result to result
-            element => {
-                console.log({
-                    "filterArrFilter": filterArr.includes(element.toLowerCase().replace(/\s/g, ''))
-                });
+    // const checkFilterPresence = (currentLayerArr) => (
+    // if current layer has length, then perform a filter
+    // currentLayerArr.length && currentLayerArr.filter(
+    // loop through arrays, compare result to result
+    // element => {
 
-                return filterArr.includes(element.toLowerCase().replace(/\s/g, ''))
-            } // lowercase and remove spaces between words
-        )
-    );
+    //     // console.log(element);
+
+
+    //     // lowercase and no space currentLayerArr element 
+    //     const lowerCaseElement = element.toLowerCase().replace(/\s/g, '');
+
+    //     for (let item of currentLayerArr) {
+    //         if (filterArr.includes(item.toLowerCase().replace(/\s/g, ''))) {
+    //             // console.log("trulio");
+    //             return true;
+    //         }
+
+    //     }
+
+
+    //     // return filterArr.includes(lowerCaseElement) // lowercase and remove spaces between words
+    // }
+
+
+    // )
+    // );
+
+    function checkFilterPresence(currentLayerArr) {
+        if (currentLayerArr.length > 0) {
+            console.log(currentLayerArr);
+
+        }
+    }
     if (isChecked(filterObject, key, filterArr)) {
-        console.log({
-            "ischecked": true
-        });
+        // console.log({
+        //     "ischecked": true
+        // });
 
 
         const filteredLayersArray = Object.values(activeLayer._map._layers).filter(layer => {
             if (!layer.data) {
-                console.log({
-                    "layerData: ": layer.data
-                });
+                // console.log({
+                //     "layerData: ": layer.data
+                // });
 
                 return false
             } else {
@@ -39,21 +60,30 @@ function filterOptions(filterObject, key) {
                 // currentLayerArr are target attributes from map (insurance, categories, etc.)
                 const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
                 // find intersections within data and filter object selections
-                console.log({
-                    "checkfilter: ": checkFilterPresence(currentLayerArr)
-                });
+                // console.log({
+                //     "checkfilter: ": checkFilterPresence(currentLayerArr)
+                // });
 
                 const intersectionFilter = checkFilterPresence(currentLayerArr)
 
-                console.log({
-                    currentLayer,
-                    currentLayerArr,
-                    intersectionFilter
-                });
+                // const intersectionFilter = $(currentLayerArr).filter(filterArr);
+                if (intersectionFilter.length > 0) {
+                    console.log({
+                        currentLayer,
+                        currentLayerArr,
+                        intersectionFilter
+                    });
+                }
+
 
                 return intersectionFilter.length > 0 // return if there are more than 0 results
             }
         });
+
+        console.log({
+            filteredLayersArray
+        });
+
         displayFilteredData(filteredLayersArray);
     } else {
         // re-insert (original) json_group
