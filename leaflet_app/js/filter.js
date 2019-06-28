@@ -8,9 +8,9 @@ function filterOptions(filterObject, key) {
 
     // compare arrays and check for matching attributes
     // const checkFilterPresence = (currentLayerArr) => (
-    // if current layer has length, then perform a filter
-    // currentLayerArr.length && currentLayerArr.filter(
-    // loop through arrays, compare result to result
+    // // if current layer has length, then perform a filter
+    // // currentLayerArr.length && currentLayerArr.filter(
+    // // loop through arrays, compare result to result
     // element => {
 
     //     // console.log(element);
@@ -20,7 +20,7 @@ function filterOptions(filterObject, key) {
     //     const lowerCaseElement = element.toLowerCase().replace(/\s/g, '');
 
     //     for (let item of currentLayerArr) {
-    //         if (filterArr.includes(item.toLowerCase().replace(/\s/g, ''))) {
+    //         if (filterArr.includes(lowerCaseElement)) {
     //             // console.log("trulio");
     //             return true;
     //         }
@@ -32,20 +32,24 @@ function filterOptions(filterObject, key) {
     // }
 
 
-    // )
     // );
 
     function checkFilterPresence(currentLayerArr) {
+        const matchingPoints = [];
         if (currentLayerArr.length > 0) {
-            console.log(currentLayerArr);
+            for (let item of currentLayerArr) {
+                if (filterArr.includes(item.toLowerCase().replace(/\s/g, ''))) {
+                    // console.log('We found a matching attribute in the marker');
+                    matchingPoints.push(item);
+                }
 
+            }
+            return matchingPoints;
         }
     }
     if (isChecked(filterObject, key, filterArr)) {
-        // console.log({
-        //     "ischecked": true
-        // });
-
+        map.addLayer(json_group);
+        activeLayer = json_group;
 
         const filteredLayersArray = Object.values(activeLayer._map._layers).filter(layer => {
             if (!layer.data) {
@@ -68,11 +72,11 @@ function filterOptions(filterObject, key) {
 
                 // const intersectionFilter = $(currentLayerArr).filter(filterArr);
                 if (intersectionFilter.length > 0) {
-                    console.log({
-                        currentLayer,
-                        currentLayerArr,
-                        intersectionFilter
-                    });
+                    // console.log({
+                    //     currentLayer,
+                    //     currentLayerArr,
+                    //     intersectionFilter
+                    // });
                 }
 
 
