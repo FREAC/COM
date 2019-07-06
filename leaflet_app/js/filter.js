@@ -1,3 +1,5 @@
+const filterHolder = [];
+
 // this performs dynamic filtering when the user wants to limit their search
 function filterOptions(filterObject, key) {
     // array of options we are wanting to find in the json_group data
@@ -53,11 +55,17 @@ function filterOptions(filterObject, key) {
                 return intersectionFilter.length > 0 // return if there are more than 0 results
             }
         });
+        console.log({
+            filteredLayersArray
+        });
+
         displayFilteredData(filteredLayersArray);
     } else {
         // re-insert (original) json_group
-        console.log({"filters checked": false});
-        
+        console.log({
+            "filters checked": false
+        });
+
         map.removeLayer(selection_group);
         map.addLayer(json_group);
         activeLayer = json_group;
