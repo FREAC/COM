@@ -3,10 +3,10 @@
 - For each select change
     - Assign current selections to filter object
 
-    - get current selections for all of the select dropdowns 
-        - loop through filter object by key
-            if selection[key] has selections withing it, append to filter object
-            else continue
+        - get current selections for all of the select dropdowns 
+            - loop through filter object by key
+                if selection[key] has selections withing it, append to filter object
+                else continue
 
     - Create filterHolder array to hold all active filters
 
