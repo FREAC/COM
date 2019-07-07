@@ -288,57 +288,6 @@ $easyAuto.easyAutocomplete({
 //     filterLocations(event);
 // });
 
-// create filter object to hold all selected elements based on type
-let filterObject = {
-    "Insurance": undefined,
-    "Specialty": undefined,
-    "Serves": undefined,
-    "telehealth": undefined,
-    "new-client": undefined
-
-};
-
-// on change, print out this and value
-// TODO: add selected values to corresponding key:value pairs in filterObject
-$(".mpick").change(function (event) {
-    const value = $(this).val();
-    const typeofValue = typeof (value);
-    const id = $(this).context.id;
-    const name = $(this).context.name;
-    const parent = this.parentElement
-
-
-    console.log({
-        "value": value,
-        "this": $(this),
-        "id": id,
-        "typeofvalue": typeofValue,
-        "name": name,
-        "thisnojquery": this,
-        "parent": parent
-    });
-
-    // find the corresponding id within the filter object
-    for (const key in filterObject) {
-        // if the id of the select and the key of the filter object match
-        if (key === id) {
-            // swap array of values into object at this location
-            filterObject[key.toString()] = value;
-            console.log(value);
-
-        }
-    }
-
-    // find objects that contain a matching attribute
-
-    filterOptions(filterObject, id);
-
-    // execute filter in leaflet - must expand on this
-
-
-});
-
-
 
 // function that will configure a popup for housing info
 function configurePopup(data) {

@@ -1,5 +1,91 @@
+// create filter object to hold all selected elements based on type
+let filterObject = {
+    "Insurance": undefined,
+    "Specialty": undefined,
+    "Serves": undefined,
+    "telehealth": undefined,
+    "new-client": undefined
+
+};
+
+const assignSelectToFilterObject = (id, value, filterObject) => {
+    for (let key in filterObject) {
+        // if the id of the select and the key of the filter object match
+        console.log((filterObject[key]));
+
+        if (key === id) {
+            // swap array of values into object at this location
+            filterObject[key.toString()] = value;
+            return filterObject[key];
+        }
+    }
+}
+
+
+
+$(".mpick").change(function (event) {
+    const id = this.id;
+    const value = $(this).val();
+
+
+
+    const targetFilters = assignSelectToFilterObject(id, value, filterObject);
+
+
+
+    // const targetAttribute = grabTargetFilter(filterObject, id, value);
+    // console.log(targetAttribute);
+
+
+});
+
+// on change, print out this and value
+// TODO: add selected values to corresponding key:value pairs in filterObject
+// $(".mpick").change(function (event) {
+//     const value = $(this).val();
+//     const typeofValue = typeof (value);
+//     const id = $(this).context.id;
+//     const name = $(this).context.name;
+//     const parent = this.parentElement
+
+
+//     console.log({
+//         "value": value,
+//         "this": $(this),
+//         "id": id,
+//         "typeofvalue": typeofValue,
+//         "name": name,
+//         "thisnojquery": this,
+//         "parent": parent
+//     });
+
+//     // find the corresponding id within the filter object
+//     for (const key in filterObject) {
+//         // if the id of the select and the key of the filter object match
+//         if (key === id) {
+//             // swap array of values into object at this location
+//             filterObject[key.toString()] = value;
+//             console.log(value);
+
+//         }
+//     }
+
+//     console.log(filterObject);
+
+
+//     // find objects that contain a matching attribute
+
+//     filterOptions(filterObject, id);
+
+//     // execute filter in leaflet - must expand on this
+
+
+// });
+
+
+
 // this performs dynamic filtering when the user wants to limit their search
-const filterOptions = (filterObject, key) => {
+function filterOptions(filterObject, key) {
     // array of options we are wanting to find in the json_group data
     const filterArr = filterObject[key];
 
@@ -18,34 +104,43 @@ const filterOptions = (filterObject, key) => {
             return matchingPoints;
         }
     }
-    const filteredLayers = (filterObject, key, filterArr) => {
-        if (isChecked(filterObject, key, filterArr)) {
-            // map.addLayer(json_group);
-            // activeLayer = json_group;
 
-            const filteredLayersArray = Object.values(activeLayer._map._layers).filter(layer => {
-                if (!layer.data) {
-                    return false
-                } else {
+    if (isChecked(filterObject, key, filterArr)) {
 
-                    const currentLayer = layer.data[key]; // current layer in json_group
+        map.addLayer(json_group);
+        activeLayer = json_group;
 
-                    // currentLayerArr are target attributes from map (insurance, categories, etc.)
-                    const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
-                    const intersectionFilter = checkFilterPresence(currentLayerArr)
+        const filteredLayersArray = Object.values(activeLayer._map._layers).filter(layer => {
+            if (!layer.data) {
+                return false
+            } else {
 
-                    return intersectionFilter.length > 0 // return if there are more than 0 results
-                }
-            });
-            // displayFilteredData(filteredLayersArray);
-        } else {
-            // re-insert (original) json_group
-            // map.removeLayer(selection_group);
-            // map.addLayer(json_group);
-            // activeLayer = json_group;
-        }
+                const currentLayer = layer.data[key]; // current layer in json_group
+                console.log(currentLayer);
+
+                // currentLayerArr are target attributes from map (insurance, categories, etc.)
+                const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
+                const intersectionFilter = checkFilterPresence(currentLayerArr)
+
+                return intersectionFilter.length > 0 // return if there are more than 0 results
+            }
+        });
+
+        console.log({
+            filteredLayersArray
+        });
+
+        return filteredLayersArray;
+
+        // displayFilteredData(filteredLayersArray);
+    } else {
+
+        return [];
+        // re-insert (original) json_group
+        map.removeLayer(selection_group);
+        map.addLayer(json_group);
+        activeLayer = json_group;
     }
-    return filteredLayers;
 }
 
 function displayFilteredData(layers) {
