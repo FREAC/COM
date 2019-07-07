@@ -1,5 +1,5 @@
 // this performs dynamic filtering when the user wants to limit their search
-function filterOptions(filterObject, key) {
+const filterOptions = (filterObject, key) => {
     // array of options we are wanting to find in the json_group data
     const filterArr = filterObject[key];
 
@@ -15,48 +15,37 @@ function filterOptions(filterObject, key) {
                     matchingPoints.push(item);
                 }
             }
-            console.log({
-                matchingPoints
-            });
-
             return matchingPoints;
         }
     }
+    const filteredLayers = (filterObject, key, filterArr) => {
+        if (isChecked(filterObject, key, filterArr)) {
+            // map.addLayer(json_group);
+            // activeLayer = json_group;
 
-    if (isChecked(filterObject, key, filterArr)) {
-        map.addLayer(json_group);
-        activeLayer = json_group;
+            const filteredLayersArray = Object.values(activeLayer._map._layers).filter(layer => {
+                if (!layer.data) {
+                    return false
+                } else {
 
-        const filteredLayersArray = Object.values(activeLayer._map._layers).filter(layer => {
-            if (!layer.data) {
-                return false
-            } else {
+                    const currentLayer = layer.data[key]; // current layer in json_group
 
-                const currentLayer = layer.data[key]; // current layer in json_group
-                console.log(currentLayer);
+                    // currentLayerArr are target attributes from map (insurance, categories, etc.)
+                    const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
+                    const intersectionFilter = checkFilterPresence(currentLayerArr)
 
-                // currentLayerArr are target attributes from map (insurance, categories, etc.)
-                const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
-                const intersectionFilter = checkFilterPresence(currentLayerArr)
-                console.log({
-                    intersectionFilter
-                });
-
-                return intersectionFilter.length > 0 // return if there are more than 0 results
-            }
-        });
-
-        console.log({
-            filteredLayersArray
-        });
-
-        displayFilteredData(filteredLayersArray);
-    } else {
-        // re-insert (original) json_group
-        map.removeLayer(selection_group);
-        map.addLayer(json_group);
-        activeLayer = json_group;
+                    return intersectionFilter.length > 0 // return if there are more than 0 results
+                }
+            });
+            // displayFilteredData(filteredLayersArray);
+        } else {
+            // re-insert (original) json_group
+            // map.removeLayer(selection_group);
+            // map.addLayer(json_group);
+            // activeLayer = json_group;
+        }
     }
+    return filteredLayers;
 }
 
 function displayFilteredData(layers) {
