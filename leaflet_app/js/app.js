@@ -290,7 +290,12 @@ $easyAuto.easyAutocomplete({
 
 // create filter object to hold all selected elements based on type
 let filterObject = {
-    "Insurance": undefined
+    "Insurance": undefined,
+    "Specialty": undefined,
+    "Serves": undefined,
+    "telehealth": undefined,
+    "new-client": undefined
+
 };
 
 // on change, print out this and value
