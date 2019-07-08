@@ -21,6 +21,37 @@ const assignSelectToFilterObject = (id, value, filterObject) => {
     }
 }
 
+const filteredLayersArray = (activeLayer, ) => Object.values(activeLayer._map._layers).filter(layer => {
+    if (!layer.data) {
+        return false
+    } else {
+
+        const currentLayer = layer.data[key]; // current layer in json_group
+        console.log(currentLayer);
+
+        // currentLayerArr are target attributes from map (insurance, categories, etc.)
+        const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
+        const intersectionFilter = checkFilterPresence(currentLayerArr)
+
+        return intersectionFilter.length > 0 // return if there are more than 0 results
+    }
+});
+
+// compare arrays and check for matching attributes
+const checkFilterPresence = (currentLayerArr) => {
+    const matchingPoints = [];
+    if (currentLayerArr.length > 0) {
+        for (let item of currentLayerArr) {
+            if (filterArr.includes(item.toLowerCase().replace(/\s/g, ''))) {
+                matchingPoints.push(item);
+            }
+        }
+        return matchingPoints;
+    }
+}
+
+
+
 
 
 $(".mpick").change(function (event) {
@@ -30,7 +61,7 @@ $(".mpick").change(function (event) {
 
 
     const targetFilters = assignSelectToFilterObject(id, value, filterObject);
-
+    const filteredLayers = filteredLayersArray();
 
 
     // const targetAttribute = grabTargetFilter(filterObject, id, value);
