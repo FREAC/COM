@@ -21,24 +21,24 @@ const assignSelectToFilterObject = (id, value, filterObject) => {
     }
 }
 
-const filteredLayersArray = (activeLayer, ) => Object.values(activeLayer._map._layers).filter(layer => {
+const filteredLayersArray = (activeLayer, filterArr, id) => Object.values(activeLayer._map._layers).filter(layer => {
     if (!layer.data) {
         return false
     } else {
+        console.log(layer);
 
-        const currentLayer = layer.data[key]; // current layer in json_group
-        console.log(currentLayer);
+        const currentLayer = layer.data[id]; // current layer in json_group
 
         // currentLayerArr are target attributes from map (insurance, categories, etc.)
         const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
-        const intersectionFilter = checkFilterPresence(currentLayerArr)
+        const intersectionFilter = checkFilterPresence(currentLayerArr, filterArr)
 
         return intersectionFilter.length > 0 // return if there are more than 0 results
     }
 });
 
 // compare arrays and check for matching attributes
-const checkFilterPresence = (currentLayerArr) => {
+const checkFilterPresence = (currentLayerArr, filterArr) => {
     const matchingPoints = [];
     if (currentLayerArr.length > 0) {
         for (let item of currentLayerArr) {
@@ -61,7 +61,10 @@ $(".mpick").change(function (event) {
 
 
     const targetFilters = assignSelectToFilterObject(id, value, filterObject);
-    const filteredLayers = filteredLayersArray();
+    const filteredLayers = filteredLayersArray(json_group, targetFilters, id);
+
+    console.log(filteredLayers);
+
 
 
     // const targetAttribute = grabTargetFilter(filterObject, id, value);
