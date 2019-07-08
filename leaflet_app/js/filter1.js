@@ -50,7 +50,28 @@ const checkFilterPresence = (currentLayerArr, filterArr) => {
     }
 }
 
+function displayFilteredData(layers) {
+    // remove current map layers
+    map.removeLayer(json_group);
+    selection_group.clearLayers();
+    // for each object in the subset
 
+    // are there layers? If yes, assign Lat and Long
+    layers ? layers.map((layer) => {
+        // assign Latitude and Longitude to data
+        layer.data['Latitude'] = layer._latlng.lat;
+        layer.data['Longitude'] = layer._latlng.lng;
+
+        const data = layer.data;
+        const marker = markerLogic(data);
+        marker.addTo(selection_group);
+
+    }) : console.log('nothing found');
+
+    map.addLayer(selection_group);
+    activeLayer = selection_group;
+
+}
 
 
 
@@ -62,60 +83,11 @@ $(".mpick").change(function (event) {
 
     const targetFilters = assignSelectToFilterObject(id, value, filterObject);
     const filteredLayers = filteredLayersArray(json_group, targetFilters, id);
+    displayFilteredData(filteredLayers);
 
     console.log(filteredLayers);
 
-
-
-    // const targetAttribute = grabTargetFilter(filterObject, id, value);
-    // console.log(targetAttribute);
-
-
 });
-
-// on change, print out this and value
-// TODO: add selected values to corresponding key:value pairs in filterObject
-// $(".mpick").change(function (event) {
-//     const value = $(this).val();
-//     const typeofValue = typeof (value);
-//     const id = $(this).context.id;
-//     const name = $(this).context.name;
-//     const parent = this.parentElement
-
-
-//     console.log({
-//         "value": value,
-//         "this": $(this),
-//         "id": id,
-//         "typeofvalue": typeofValue,
-//         "name": name,
-//         "thisnojquery": this,
-//         "parent": parent
-//     });
-
-//     // find the corresponding id within the filter object
-//     for (const key in filterObject) {
-//         // if the id of the select and the key of the filter object match
-//         if (key === id) {
-//             // swap array of values into object at this location
-//             filterObject[key.toString()] = value;
-//             console.log(value);
-
-//         }
-//     }
-
-//     console.log(filterObject);
-
-
-//     // find objects that contain a matching attribute
-
-//     filterOptions(filterObject, id);
-
-//     // execute filter in leaflet - must expand on this
-
-
-// });
-
 
 
 // this performs dynamic filtering when the user wants to limit their search
