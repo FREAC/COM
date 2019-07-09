@@ -7,6 +7,14 @@ let filterObject = {
     "new-client": undefined
 
 };
+// hold all data from or logic
+const andFilter = {
+    "Insurance": undefined,
+    "Specialty": undefined,
+    "Serves": undefined,
+    "telehealth": undefined,
+    "new-client": undefined
+}
 
 const assignSelectToFilterObject = (id, value, filterObject) => {
     for (let key in filterObject) {
@@ -77,21 +85,31 @@ function displayFilteredData(layers) {
 
 
 
-$(".mpick").change(function (event) {
+$(".mpick").change(async function (event) {
     const id = this.id;
     const value = $(this).val();
 
-    const targetFilters = assignSelectToFilterObject(id, value, filterObject);
+    const targetFilters = await assignSelectToFilterObject(id, value, filterObject);
     console.log({
         targetFilters
     });
 
-    const filteredLayers = filteredLayersArray(json_group, targetFilters, id);
+    const filteredLayers = await filteredLayersArray(json_group, targetFilters, id);
     console.log({
         filteredLayers
     });
 
-    // displayFilteredData(filteredLayers);
+    // add layers to andFilter object
+    andFilter[id] = filteredLayers;
+
+    console.log(andFilter);
+
+    for (let item in andFilter) {
+        console.log(andFilter[item]);
+    }
+
+
+    // const andFilterLayers = andLogic(andFilter);
 });
 
 
