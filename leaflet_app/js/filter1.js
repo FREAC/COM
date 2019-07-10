@@ -1,19 +1,19 @@
 // create filter object to hold all selected elements based on type
 let filterObject = {
-    "Insurance": undefined,
-    "Specialty": undefined,
-    "Serves": undefined,
-    "telehealth": undefined,
-    "new-client": undefined
+    "Insurance": [],
+    "Specialty": [],
+    "Serves": [],
+    "telehealth": [],
+    "new-client": []
 
 };
 // hold all data from or logic
 const andFilter = {
-    "Insurance": undefined,
-    "Specialty": undefined,
-    "Serves": undefined,
-    "telehealth": undefined,
-    "new-client": undefined
+    "Insurance": [],
+    "Specialty": [],
+    "Serves": [],
+    "telehealth": [],
+    "new-client": []
 }
 
 const assignSelectToFilterObject = (id, value, filterObject) => {
@@ -83,11 +83,42 @@ function displayFilteredData(layers) {
     activeLayer = selection_group;
 }
 
+const addToSelectGroup = (layers) => {
+    selection_group.clearLayers();
+    // are there layers? If yes, assign Lat and Long
+    layers ? layers.map((layer) => {
+        // assign Latitude and Longitude to data
+        layer.data['Latitude'] = layer._latlng.lat;
+        layer.data['Longitude'] = layer._latlng.lng;
 
+        const data = layer.data;
+        const marker = markerLogic(data);
+        marker.addTo(selection_group);
+
+    }) : console.log('nothing found');
+
+    return selection_group;
+}
+
+const checkIfAndFilterEmpty = (andFilter) => {
+
+    for (var key in andFilter) {
+        if (selection_group._layers.hasOwnProperty(key)) // is not empty
+            return false;
+    }
+    return true; // is empty
+}
 
 $(".mpick").change(async function (event) {
     const id = this.id;
     const value = $(this).val();
+
+    // true if empty; false if not empty
+    const selectionCheck = checkIfAndFilterEmpty(andFilter);
+    console.log(selectionCheck);
+
+
+
 
     const targetFilters = await assignSelectToFilterObject(id, value, filterObject);
     console.log({
@@ -99,15 +130,14 @@ $(".mpick").change(async function (event) {
         filteredLayers
     });
 
+    const selectionGroup = await addToSelectGroup(filteredLayers);
+
     // add layers to andFilter object
-    andFilter[id] = filteredLayers;
+    // andFilter[id] = filteredLayers;
 
-    console.log(andFilter);
-
-    for (let item in andFilter) {
-        console.log(andFilter[item]);
-    }
-
+    console.log({
+        selection_group
+    });
 
     // const andFilterLayers = andLogic(andFilter);
 });
