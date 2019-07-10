@@ -76,7 +76,7 @@ const checkFilterPresence = (currentLayerArr, filterArr) => {
         return matchingPoints;
     }
 }
-
+//
 function displayFilteredData(layers) {
     // remove current map layers
     map.removeLayer(json_group);
