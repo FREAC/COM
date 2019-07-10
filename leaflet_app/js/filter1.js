@@ -42,14 +42,30 @@ const filteredLayersArray = (activeLayer, filterArr, id) => Object.values(active
         }
     }
 });
-
+const filteredLayersArray2 = (activeLayer, filterArr, id) => Object.values(activeLayer).filter(layer => {
+    console.log('start of the filteredlayersarray2 routine ',layer)
+    if (!layer.data) {
+        return false
+    } else {
+        const currentLayer = layer.data[id]; // current layer in json_group
+        console.log('currentlayer set to ',currentLayer)
+        // currentLayerArr are target attributes from map (insurance, categories, etc.)
+        const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
+        const intersectionFilter = checkFilterPresence(currentLayerArr, filterArr)
+        if (intersectionFilter) {
+            return intersectionFilter.length > 0 // return if there are more than 0 results
+        }
+    }
+});
 // compare arrays and check for matching attributes
 const checkFilterPresence = (currentLayerArr, filterArr) => {
     const matchingPoints = [];
+    console.log('whats in filterrr ',filterArr)
     if (currentLayerArr.length > 0 && filterArr) {
         try {
             for (let item of currentLayerArr) {
                 if (filterArr.includes(item.toLowerCase().replace(/\s/g, ''))) {
+                    console.log('FOUND one to keep ',item)
                     matchingPoints.push(item);
                 }
             }
@@ -114,123 +130,130 @@ const checkIfAndFilterEmpty = (andFilter, id) => {
 }
 
 $(".mpick").change(async function (event) {
+    console.log('something has been picked ',andFilter['Insurance'])
     const id = this.id;
     const value = $(this).val();
 
-    let selectionGroup;
+
     // put selections into filterObject
     const targetFilters = await assignSelectToFilterObject(id, value, filterObject);
 
     // true if empty; false if not empty
     const andFilterCheck = checkIfAndFilterEmpty(andFilter, this.id);
-    console.log(andFilterCheck);
+    console.log('what is the and filter checked ',andFilterCheck);
 
     if (andFilterCheck) { // there are no other filters to compare to
+        // let selectionGroup;
+        console.log('fresh query and unfiltered json_group looks like this ', json_group)
         const filteredLayers = await filteredLayersArray(json_group, targetFilters, id);
+        console.log('filtered the FIRST time ', filteredLayers)
         selectionGroup = await addToSelectGroup(filteredLayers);
 
         // add layers to andFilter object
-        andFilter[id] = filteredLayers;
+        andFilter[1] = filteredLayers;
 
     } else { // compare selection to what has already been queried
-        const filteredLayers = await filteredLayersArray(selection_group, targetFilters, id);
+        console.log('new thing being selected -- selection group looks like this ', selection_group)
+        const filteredLayers = await filteredLayersArray2(andFilter[1], targetFilters, id);
+        console.log('filtered the SECOND time ', filteredLayers)
         selectionGroup = await addToSelectGroup(filteredLayers);
 
         // add layers to andFilter object
-        andFilter[id] = filteredLayers;
+        andFilter[1] = filteredLayers;
+
 
     }
 
-    console.log({
-        selectionGroup
-    });
+    // console.log({
+    //     selectionGroup
+    // });
 
     console.log({
         selection_group
     });
 
-    // const andFilterLayers = andLogic(andFilter);
+    //const andFilterLayers = andLogic(andFilter);
 });
 
 
-// // this performs dynamic filtering when the user wants to limit their search
-// function filterOptions(filterObject, key) {
-//     // array of options we are wanting to find in the json_group data
-//     const filterArr = filterObject[key];
+// this performs dynamic filtering when the user wants to limit their search
+function filterOptions(filterObject, key) {
+    // array of options we are wanting to find in the json_group data
+    const filterArr = filterObject[key];
 
-//     // check to see whether there are checked selections
-//     const isChecked = (filterObject, key, filterArr) => filterObject[key] && filterArr.length > 0 && filterArr !== null
+    // check to see whether there are checked selections
+    const isChecked = (filterObject, key, filterArr) => filterObject[key] && filterArr.length > 0 && filterArr !== null
 
-//     // compare arrays and check for matching attributes
-//     const checkFilterPresence = (currentLayerArr) => {
-//         const matchingPoints = [];
-//         if (currentLayerArr.length > 0) {
-//             for (let item of currentLayerArr) {
-//                 if (filterArr.includes(item.toLowerCase().replace(/\s/g, ''))) {
-//                     matchingPoints.push(item);
-//                 }
-//             }
-//             return matchingPoints;
-//         }
-//     }
+    // compare arrays and check for matching attributes
+    const checkFilterPresence = (currentLayerArr) => {
+        const matchingPoints = [];
+        if (currentLayerArr.length > 0) {
+            for (let item of currentLayerArr) {
+                if (filterArr.includes(item.toLowerCase().replace(/\s/g, ''))) {
+                    matchingPoints.push(item);
+                }
+            }
+            return matchingPoints;
+        }
+    }
 
-//     if (isChecked(filterObject, key, filterArr)) {
+    if (isChecked(filterObject, key, filterArr)) {
 
-//         map.addLayer(json_group);
-//         activeLayer = json_group;
+        map.addLayer(json_group);
+        activeLayer = json_group;
 
-//         const filteredLayersArray = Object.values(activeLayer._map._layers).filter(layer => {
-//             if (!layer.data) {
-//                 return false
-//             } else {
+        const filteredLayersArray = Object.values(activeLayer._map._layers).filter(layer => {
+            if (!layer.data) {
+                return false
+            } else {
 
-//                 const currentLayer = layer.data[key]; // current layer in json_group
-//                 console.log(currentLayer);
+                const currentLayer = layer.data[key]; // current layer in json_group
+                console.log(currentLayer);
 
-//                 // currentLayerArr are target attributes from map (insurance, categories, etc.)
-//                 const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
-//                 const intersectionFilter = checkFilterPresence(currentLayerArr)
+                // currentLayerArr are target attributes from map (insurance, categories, etc.)
+                const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
+                const intersectionFilter = checkFilterPresence(currentLayerArr)
 
-//                 return intersectionFilter.length > 0 // return if there are more than 0 results
-//             }
-//         });
+                return intersectionFilter.length > 0 // return if there are more than 0 results
+            }
+        });
 
-//         console.log({
-//             filteredLayersArray
-//         });
+        console.log({
+            filteredLayersArray
+        });
 
-//         return filteredLayersArray;
+        return filteredLayersArray;
 
-//         // displayFilteredData(filteredLayersArray);
-//     } else {
+        // displayFilteredData(filteredLayersArray);
+    } else {
 
-//         // return [];
-//         // re-insert (original) json_group
-//         map.removeLayer(selection_group);
-//         map.addLayer(json_group);
-//         activeLayer = json_group;
-//     }
-// }
+        // return [];
+        // re-insert (original) json_group
+        map.removeLayer(selection_group);
+        map.addLayer(json_group);
+        activeLayer = json_group;
+    }
+}
 
-// function displayFilteredData(layers) {
-//     // remove current map layers
-//     map.removeLayer(json_group);
-//     selection_group.clearLayers();
-//     // for each object in the subset
+function displayFilteredData(layers) {
+    // remove current map layers
+    map.removeLayer(json_group);
+    selection_group.clearLayers();
+    // for each object in the subset
 
-//     // are there layers? If yes, assign Lat and Long
-//     layers ? layers.map((layer) => {
-//         // assign Latitude and Longitude to data
-//         layer.data['Latitude'] = layer._latlng.lat;
-//         layer.data['Longitude'] = layer._latlng.lng;
+    // are there layers? If yes, assign Lat and Long
+    layers ? layers.map((layer) => {
+        // assign Latitude and Longitude to data
+        layer.data['Latitude'] = layer._latlng.lat;
+        layer.data['Longitude'] = layer._latlng.lng;
 
-//         const data = layer.data;
-//         const marker = markerLogic(data);
-//         marker.addTo(selection_group);
+        const data = layer.data;
+        const marker = markerLogic(data);
+        marker.addTo(selection_group);
 
-//     }) : console.log('nothing found');
+    }) : console.log('nothing found');
 
-//     map.addLayer(selection_group);
-//     activeLayer = selection_group;
+    map.addLayer(selection_group);
+    activeLayer = selection_group;
 
-// }
+}
