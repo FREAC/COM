@@ -129,20 +129,21 @@ $(".mpick").change(async function (event) {
         const filteredLayers = await filteredLayersArray(json_group, targetFilters, id);
         selectionGroup = await addToSelectGroup(filteredLayers);
 
+        // add layers to andFilter object
+        andFilter[id] = filteredLayers;
+
     } else { // compare selection to what has already been queried
         const filteredLayers = await filteredLayersArray(selection_group, targetFilters, id);
         selectionGroup = await addToSelectGroup(filteredLayers);
+
+        // add layers to andFilter object
+        andFilter[id] = filteredLayers;
 
     }
 
     console.log({
         selectionGroup
     });
-
-
-
-    // add layers to andFilter object
-    // andFilter[id] = filteredLayers;
 
     console.log({
         selection_group
