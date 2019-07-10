@@ -100,12 +100,16 @@ const addToSelectGroup = (layers) => {
     return selection_group;
 }
 
-const checkIfAndFilterEmpty = (andFilter) => {
+const checkIfAndFilterEmpty = (andFilter, id) => {
 
     for (var key in andFilter) {
-        if (selection_group._layers.hasOwnProperty(key)) // is not empty
+        if (key !== id && andFilter[key].length > 0) { // is not empty
+            console.log('andFilter not empty');
+
             return false;
+        }
     }
+    console.log('andFilter empty');
     return true; // is empty
 }
 
@@ -114,12 +118,14 @@ $(".mpick").change(async function (event) {
     const value = $(this).val();
 
     // true if empty; false if not empty
-    const selectionCheck = checkIfAndFilterEmpty(andFilter);
-    console.log(selectionCheck);
+    const andFilterCheck = checkIfAndFilterEmpty(andFilter, this.id);
+    console.log(andFilterCheck);
 
 
 
-
+    if (andFilterCheck) {
+        // there are no other filteres to compare to
+    }
     const targetFilters = await assignSelectToFilterObject(id, value, filterObject);
     console.log({
         targetFilters
@@ -133,7 +139,7 @@ $(".mpick").change(async function (event) {
     const selectionGroup = await addToSelectGroup(filteredLayers);
 
     // add layers to andFilter object
-    // andFilter[id] = filteredLayers;
+    andFilter[id] = filteredLayers;
 
     console.log({
         selection_group
