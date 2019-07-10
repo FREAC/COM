@@ -117,29 +117,32 @@ $(".mpick").change(async function (event) {
     const id = this.id;
     const value = $(this).val();
 
+    let selectionGroup;
+    // put selections into filterObject
+    const targetFilters = await assignSelectToFilterObject(id, value, filterObject);
+
     // true if empty; false if not empty
     const andFilterCheck = checkIfAndFilterEmpty(andFilter, this.id);
     console.log(andFilterCheck);
 
+    if (andFilterCheck) { // there are no other filters to compare to
+        const filteredLayers = await filteredLayersArray(json_group, targetFilters, id);
+        selectionGroup = await addToSelectGroup(filteredLayers);
 
+    } else { // compare selection to what has already been queried
+        const filteredLayers = await filteredLayersArray(selection_group, targetFilters, id);
+        selectionGroup = await addToSelectGroup(filteredLayers);
 
-    if (andFilterCheck) {
-        // there are no other filteres to compare to
     }
-    const targetFilters = await assignSelectToFilterObject(id, value, filterObject);
+
     console.log({
-        targetFilters
+        selectionGroup
     });
 
-    const filteredLayers = await filteredLayersArray(json_group, targetFilters, id);
-    console.log({
-        filteredLayers
-    });
 
-    const selectionGroup = await addToSelectGroup(filteredLayers);
 
     // add layers to andFilter object
-    andFilter[id] = filteredLayers;
+    // andFilter[id] = filteredLayers;
 
     console.log({
         selection_group
