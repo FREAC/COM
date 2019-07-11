@@ -75,17 +75,17 @@ async function filterLocations(event) {
         //      }
         //    });
     
-    const selection_group = new L.markerClusterGroup({
-        maxClusterRadius: 0,
-        iconCreateFunction: function (cluster) {
-            return L.divIcon({
-                html: '<b>' + cluster.getChildCount() + '</b>',
-                className: 'clustered_sites',
-                iconSize: L.point(15, 15)
-            });
+    // const selection_group = new L.markerClusterGroup({
+    //     maxClusterRadius: 0,
+    //     iconCreateFunction: function (cluster) {
+    //         return L.divIcon({
+    //             html: '<b>' + cluster.getChildCount() + '</b>',
+    //             className: 'clustered_sites',
+    //             iconSize: L.point(15, 15)
+    //         });
     
-        }
-    });
+    //     }
+    // });
     console.log(' what does the empty sel group look like ', selection_group)
     var all_layers = json_group._featureGroup._layers
     // for (junk in all_layers){
@@ -96,17 +96,7 @@ async function filterLocations(event) {
     console.log('JSON group is ',json_group._featureGroup)
     num_filters = (filter.length / 2) ;
     for (j=0; j <= num_filters; j+=2){
-        // const selection_group = new L.markerClusterGroup({
-        //     maxClusterRadius: 0,
-        //     iconCreateFunction: function (cluster) {
-        //         return L.divIcon({
-        //             html: '<b>' + cluster.getChildCount() + '</b>',
-        //             className: 'clustered_sites',
-        //             iconSize: L.point(15, 15)
-        //         });
-        
-        //     }
-        // });
+        selection_group.clearLayers()
         filter_is = filter[j]
         console.log('STARTING the LOOP for filter ',j,' - ',filter_is,' has these options ', filter[j+1])
         for (layer in json_group._featureGroup._layers) {
@@ -202,16 +192,35 @@ async function filterLocations(event) {
             if (!need_it){
                 if(need_it_c) {continue}
                 console.log('must not need this',j)
-                if (j===0) {
+                // if (j===0) {
                     //console.log(' just removed ', json_group._featureGroup._layers[layer].data)
                     // json_group._featureGroup._layers[layer].removeLayer
                     json_group._featureGroup.removeLayer(layer)
                     console.log(' we able to remove this layer ')
-                }
+                // }
             } else {console.log('need it is ',need_it)}
             console.log('end of the m loop')
         } // end of the filters
         console.log('FINISHED LOOPING FOR FILTER ', filter[j])
+        console.log('resetting selection group to blank ', j, num_filters)
+        if (j === num_filters) { 
+            // dont reset
+        } else {
+            const selection_group = undefined
+            console.log('RESET selection group ')
+            // const selection_group = new L.markerClusterGroup({
+            //     maxClusterRadius: 0,
+            //     iconCreateFunction: function (cluster) {
+            //         return L.divIcon({
+            //             html: '<b>' + cluster.getChildCount() + '</b>',
+            //             className: 'clustered_sites',
+            //             iconSize: L.point(15, 15)
+            //         });
+        
+            //     }
+            // });
+            
+        }
         // we now have filtered all data by the given filter.  We need to set the next filter
         // to only work with the remaining records
         console.log('how many records did we save ',selection_group.length)
@@ -232,7 +241,7 @@ async function filterLocations(event) {
     // Add our selection markers in our JSON file on the map
     console.log('adding the selection group to the map')
     map.addLayer(selection_group);
-    //map.addLayer(json_group)
+    // map.addLayer(json_group)
 
     // configureAutocomplete(selection_group);
 
