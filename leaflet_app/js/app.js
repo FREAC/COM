@@ -71,8 +71,53 @@ const json_group = new L.markerClusterGroup({
 
     }
 });
+// on a click of a cluster
+json_group.on('clusterclick', function (event) {
+    console.log(json_group);
+    console.log(selection_group);
+
+
+    // declare the empty content variable to append to
+    let clusterPopupContent = "";
+
+    async function getChildMarkerContent() {
+        await $.each(event.layer.getAllChildMarkers(), function (index, value) {
+            // append content 
+            clusterPopupContent += value._popup._content + '<br><br>';
+            return clusterPopupContent
+        });
+    }
+
+    // get the content of each marker
+    getChildMarkerContent().then(
+        // assign content to new leaflet popup
+        function () {
+            // make sure last popup instance is removed
+            $('#clusterPopupContent').remove();
+
+            // set content and add to map
+            const clusterPopup = L.popup({
+                    closeButton: true,
+                    maxHeight: 150,
+                    maxWidth: 200,
+                })
+                .setLatLng(event.layer.getLatLng())
+                .setContent(clusterPopupContent)
+                .openOn(map);
+        });
+});
 //This is our selection group
-const selection_group = new L.FeatureGroup();
+const selection_group = new L.markerClusterGroup({
+    maxClusterRadius: 0,
+    iconCreateFunction: function (cluster) {
+        return L.divIcon({
+            html: '<b>' + cluster.getChildCount() + '</b>',
+            className: 'clustered_sites',
+            iconSize: L.point(15, 15)
+        });
+
+    }
+});
 // This is the circle on the map that will be determine how many markers are around
 let searchArea;
 // this is the icon in the middle of the circle
@@ -94,9 +139,10 @@ async function setup() {
             const provider = json_data[object];
             const marker = markerLogic(provider);
             marker.addTo(json_group);
-            json_group.addLayer(marker);
+            //json_group.addLayer(marker);
         });
         map.addLayer(json_group);
+        map.addLayer(selection_group)
         activeLayer = json_group;
     });
 }
@@ -549,7 +595,7 @@ function querySearchArea(location) {
     }).addTo(map);
 
     map.flyToBounds(searchArea.getBounds());
-    filterLocations(event)
+    //filterLocations(event)
     pointsInCircle(searchArea, r_size, activeLayer);
 }
 
