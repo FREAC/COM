@@ -122,7 +122,7 @@ const addToSelectGroup = (layers) => {
 
 const checkIfAndFilterEmpty = (andFilter, id) => {
 
-    Object.keys(andFilter).map(key => {
+    const isFilterEmpty = Object.keys(andFilter).map(key => {
         console.log({
             key,
             id
@@ -136,6 +136,7 @@ const checkIfAndFilterEmpty = (andFilter, id) => {
             return true;
         }
     });
+    return isFilterEmpty;
 }
 
 $(".mpick").change(async function (event) {
@@ -163,17 +164,27 @@ $(".mpick").change(async function (event) {
 
 
         // add layers to andFilter object
-        andFilter[1] = filteredLayers;
+        andFilter[this.id] = filteredLayers;
 
     } else { // compare selection to what has already been queried
         // console.log('new thing being selected -- selection group looks like this ', selection_group)
         // const filteredLayers = await filteredLayersArray2(selection_group, targetFilters, id);
+        console.log({
+            msg: "andfilter check was false",
+            selection_group
+        });
+
         const filteredLayers = await filteredLayersArray(selection_group, targetFilters, id);
         console.log('filtered the SECOND time ', filteredLayers)
+        filteredLayers.map(layer => {
+            console.log(layer.data.Agency);
+
+        });
+
         selectionGroup = await addToSelectGroup(filteredLayers);
 
         // add layers to andFilter object
-        andFilter[1] = filteredLayers;
+        andFilter[this.id] = filteredLayers;
 
 
     }
