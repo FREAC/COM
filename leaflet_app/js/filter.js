@@ -96,17 +96,17 @@ async function filterLocations(event) {
     console.log('JSON group is ',json_group._featureGroup)
     num_filters = (filter.length / 2) ;
     for (j=0; j <= num_filters; j+=2){
-        const selection_group = new L.markerClusterGroup({
-            maxClusterRadius: 0,
-            iconCreateFunction: function (cluster) {
-                return L.divIcon({
-                    html: '<b>' + cluster.getChildCount() + '</b>',
-                    className: 'clustered_sites',
-                    iconSize: L.point(15, 15)
-                });
+        // const selection_group = new L.markerClusterGroup({
+        //     maxClusterRadius: 0,
+        //     iconCreateFunction: function (cluster) {
+        //         return L.divIcon({
+        //             html: '<b>' + cluster.getChildCount() + '</b>',
+        //             className: 'clustered_sites',
+        //             iconSize: L.point(15, 15)
+        //         });
         
-            }
-        });
+        //     }
+        // });
         filter_is = filter[j]
         console.log('STARTING the LOOP for filter ',j,' - ',filter_is,' has these options ', filter[j+1])
         for (layer in json_group._featureGroup._layers) {
@@ -144,14 +144,14 @@ async function filterLocations(event) {
                             }
                         } else {
                             // we dont need this record but only throw it out if this is the second or higher
-                            if (j>0){
-                                need_it = false
-                                console.log(' on the 2nd or higher filter and we dont need this ',selection_group)
-                                //json_group._featureGroup.removeLayer(layer)
-                                //selection_group.removeLayer(layer)
-                                console.log('removed after on the 2nd or hihger')
-                                continue
-                            }
+                            // if (j>0){
+                            //     need_it = false
+                            //     console.log(' on the 2nd or higher filter and we dont need this ',selection_group)
+                            //     //json_group._featureGroup.removeLayer(layer)
+                            //     //selection_group.removeLayer(layer)
+                            //     console.log('removed after on the 2nd or hihger')
+                            //     continue
+                            // }
                         }
                     } catch {
                         // Gets in here if the thing we are looking at is a cluster rather than a single point
@@ -206,7 +206,7 @@ async function filterLocations(event) {
                     //console.log(' just removed ', json_group._featureGroup._layers[layer].data)
                     // json_group._featureGroup._layers[layer].removeLayer
                     json_group._featureGroup.removeLayer(layer)
-                    console.log('were we able to remove this layer ')
+                    console.log(' we able to remove this layer ')
                 }
             } else {console.log('need it is ',need_it)}
             console.log('end of the m loop')
@@ -225,10 +225,12 @@ async function filterLocations(event) {
         // }
         // all_layers = selection_group._layers
     }
+    console.log('end of the filtering')
     await map.removeLayer(json_group);
     //selection_group.clearLayers();
     await map.removeLayer(selection_group);
     // Add our selection markers in our JSON file on the map
+    console.log('adding the selection group to the map')
     map.addLayer(selection_group);
     //map.addLayer(json_group)
 
