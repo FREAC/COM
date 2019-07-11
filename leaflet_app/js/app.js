@@ -74,6 +74,10 @@ const json_group = new L.markerClusterGroup({
 
 // on a click of a cluster
 json_group.on('clusterclick', function (event) {
+    console.log(json_group);
+    console.log(selection_group);
+
+
     // declare the empty content variable to append to
     let clusterPopupContent = "";
 
@@ -106,7 +110,17 @@ json_group.on('clusterclick', function (event) {
 
 
 //This is our selection group
-const selection_group = new L.FeatureGroup();
+const selection_group = new L.markerClusterGroup({
+    maxClusterRadius: 0,
+    iconCreateFunction: function (cluster) {
+        return L.divIcon({
+            html: '<b>' + cluster.getChildCount() + '</b>',
+            className: 'clustered_sites',
+            iconSize: L.point(15, 15)
+        });
+
+    }
+});
 // This is the circle on the map that will be determine how many markers are around
 let searchArea;
 // this is the icon in the middle of the circle
@@ -129,8 +143,14 @@ async function setup() {
             marker.addTo(json_group);
             // json_group.addLayer(marker);
         });
+
+        console.log({
+            json_group
+        });
         map.addLayer(json_group);
+        map.addLayer(selection_group)
         activeLayer = json_group;
+
     });
 
 }
