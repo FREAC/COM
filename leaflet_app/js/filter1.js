@@ -29,7 +29,7 @@ const assignSelectToFilterObject = (id, value, filterObject) => {
     }
 }
 
-const filteredLayersArray = (activeLayer, filterArr, id) => Object.values(activeLayer._map._layers).filter(layer => {
+const filteredLayersArray = (activeLayer, filterArr, id) => Object.values(activeLayer._featureGroup._layers).filter(layer => {
 
     if (!layer.data) {
         return false
@@ -101,15 +101,21 @@ function displayFilteredData(layers) {
 }
 
 const addToSelectGroup = (layers) => {
-    selection_group.clearLayers();
+    // selection_group.clearLayers();
+
     // are there layers? If yes, assign Lat and Long
     layers ? layers.map((layer) => {
+        console.log({
+            layer
+        });
+
         // assign Latitude and Longitude to data
         layer.data['Latitude'] = layer._latlng.lat;
         layer.data['Longitude'] = layer._latlng.lng;
 
         const data = layer.data;
         const marker = markerLogic(data);
+
         marker.addTo(selection_group);
 
     }) : console.log('nothing found');
@@ -117,26 +123,31 @@ const addToSelectGroup = (layers) => {
         selection_group
     });
 
+    map.removeLayer(json_group);
+
+
     return selection_group;
 }
 
-const checkIfAndFilterEmpty = (andFilter, id) => {
+const checkIfAndFilterNotEmpty = (andFilter, id) => {
 
-    const isFilterEmpty = Object.keys(andFilter).map(key => {
-        console.log({
-            key,
-            id
-        });
-
+    const andFilterTruthArr = Object.keys(andFilter).map(key => {
         if (key !== id && andFilter[key].length > 0) {
-            console.log('andFilter not empty');
             return false;
         } else {
-            console.log("andFilter is empty");
             return true;
         }
     });
-    return isFilterEmpty;
+    // if empty return true; if not empty return false
+    andFilterNotEmpty = andFilterTruthArr.some(element => {
+        element === false;
+    });
+
+    console.log({
+        andFilterNotEmpty
+    });
+
+    return andFilterNotEmpty;
 }
 
 $(".mpick").change(async function (event) {
@@ -150,11 +161,10 @@ $(".mpick").change(async function (event) {
     // put selections into filterObject
     const targetFilters = await assignSelectToFilterObject(id, value, filterObject);
 
-    // true if empty; false if not empty
-    const andFilterCheck = checkIfAndFilterEmpty(andFilter, this.id);
+    const andFilterCheck = checkIfAndFilterNotEmpty(andFilter, this.id);
     console.log('what is the and filter checked ', andFilterCheck);
 
-    if (andFilterCheck) { // there are no other filters to compare to
+    if (!andFilterCheck) { // there are no other filters to compare to
         // let selectionGroup;
         // console.log('fresh query and unfiltered json_group looks like this ', json_group)
         const filteredLayers = await filteredLayersArray(json_group, targetFilters, id);
@@ -171,7 +181,7 @@ $(".mpick").change(async function (event) {
         // const filteredLayers = await filteredLayersArray2(selection_group, targetFilters, id);
         console.log({
             msg: "andfilter check was false",
-            selection_group
+            andFilterCheck
         });
 
         const filteredLayers = await filteredLayersArray(selection_group, targetFilters, id);

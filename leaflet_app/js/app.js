@@ -135,7 +135,7 @@ let activeLayer;
 // initial setup function to loop through json that
 // assigns marker and add to map
 async function setup() {
-    selection_group.clearLayers();
+    // selection_group.clearLayers();
     $.get("./data/COM.json", function (json_data) {
         $.each(json_data, function (object) {
             const provider = json_data[object];
@@ -149,6 +149,7 @@ async function setup() {
         });
         map.addLayer(json_group);
         map.addLayer(selection_group)
+
         activeLayer = json_group;
 
     });
