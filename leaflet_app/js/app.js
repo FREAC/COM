@@ -376,7 +376,7 @@ $(".mpick").change(function (event) {
 
     // find objects that contain a matching attribute
 
-    filterOptions(filterObject);
+    //filterOptions(filterObject);
     // execute filter in leaflet - must expand on this
 
 
@@ -514,6 +514,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
                 //console.log('layer data looks like this? ', layer.data)
                 // We need all of the fields below for the popup from the Results table to work with all 
                 // the fields
+                //console.log(' show me ALLLLLLLLLLL the data ',layer.data)
                 results.push({
                     agency: layer.data.Agency,
                     housenumber: layer.data.HouseNumber,
@@ -654,7 +655,10 @@ function markerLogic(data, selection_marker) {
         'Specialty': data['Specialty'],
         'Accepting': data['Accepting'],
         'Insurance': data['Insurance'],
-        'Serves': data['Serves']
+        'Serves': data['Serves'],
+        'Which_cate': data['Which_cate'],
+        'Practice_a': data['Practice_A'],
+        'Areas_Serv': data['Areas_Serv']
 
     };
 

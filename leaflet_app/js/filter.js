@@ -17,11 +17,17 @@ function filterOptions(filterObject) {
 
 async function filterLocations(event) {
     var filter = []
-    var restrict2 = undefined
+    // var restrict2 = undefined
     //console.log('lets see filter now ',filter)
-    var restrict2 = $('.mpick')
+    const restrict2 = $('.mpick')
+    num_filters_to_look_at = restrict2.length
     console.log('which have values ', restrict2)
-    for (j=0; j<restrict2.length; j++){
+    console.log(' how many args are there ',restrict2.length)
+    for (j=0; j<num_filters_to_look_at; j++){
+        console.log('restrict2 ',j, ' is ',restrict2[j].name)
+    }
+
+    for (j=0; j<num_filters_to_look_at; j++){
         var sv = restrict2[j].name
         console.log('j ',j, ' name is ',sv)
         var vals = restrict2[j].options
@@ -33,7 +39,7 @@ async function filterLocations(event) {
                 if (vals[jj].innerHTML === 'not_selected'){
                     // we dont wont this 
                     console.log('skipping this dummy value ', vals[jj])
-                    restrict2.splice(j,2)
+                    //restrict2.splice(j,2)
                 } else {
                     filter_vals.push(vals[jj].innerHTML)
 

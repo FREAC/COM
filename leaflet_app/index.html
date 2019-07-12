@@ -83,8 +83,9 @@
 							data-toggle="buttons">
 						</div>
 					</div>
+					<p>
 						<h5>Pick insurance options</h5>
-							<select class="mpick insurance" multiple="multiple" name="Insurance">
+							<select class="mpick" multiple="multiple" name="Insurance">
 									<option value="acceptsmostinsuranceplans">Accepts most insurance plans</option>
 									<option value="aetna">Aetna</option>
 									<option value="beacon">Beacon</option>
@@ -123,14 +124,47 @@
 									<option value="valueoptions">Valueoptions</option>
 									<option value="wellcare">Wellcare</option>
 									<option value="other">Other</option>
-							</select>			
-						<h5 style="margin-bottom:1px;">Practice Categories</h4>
-						<select class="mpick pcat" multiple="multiple" name='Specialty'>
-							<option value="lmft">LMFT</option>
+							</select>
+					</p>
+					<p>
+						<h5>Practice Location</h5>
+								<select class="mpick" name="Practice_a" id='Practice_a'>
+										<option value="not_selected" default selected disabled hidden>not_selected</option>
+										<option value="leon">Leon</option>
+										<option value="alachua">Alachua</option>
+										<option value="baker">Baker</option>	
+										<option value="telehealthonly">Telehealth Only</option>	
+								</select>
+					</p>
+					<p>
+							<h5>Areas Served</h5>
+									<select class="mpick" multiple="multiple" name="Areas_Serv" id='Areas_Serv'>
+											<option value="leon">Leon</option>
+											<option value="alachua">Alachua</option>
+											<option value="baker">Baker</option>	
+											<option value="telehealthonly">Telehealth Only</option>	
+									</select>
+						</p>
+					<p>
+								<h5 style="margin-bottom:1px;">Primary practice activity</h5>
+									<select class="mpick"  name='Which_cate' id="Which_cate">
+										<option value="not_selected" default selected disabled hidden>not_selected</option>
+										<option value="certifiedlactationconsultant">Certified Lactation Consutant</option>
+										<option value="lmft">Licensed Mental ft</option>
+										<option value="lmhc">LMHC</option>
+										<option value="psychiatrist">Psychiatrist</option>
+										<option value="psychologist">Psychologist</option>
+										<option value="treatmentcenter">Treatment Center & Support Services</option>
+									</select>	
+					</p>
+					<p>
+						<h5 style="margin-bottom:1px;">Practice Categories</h5>
+						<select class="mpick" multiple="multiple" name='Specialty' id="Specialty">
+							<!-- <option value="lmft">LMFT</option>
 							<option value="lmhc">LMHC</option>
 							<option value="psychiatrist">Psychiatrist</option>
 							<option value="psychologist">Psychologist</option>
-							<option value="treatmentcenter">Treatment Center & Support Services</option>
+							<option value="treatmentcenter">Treatment Center & Support Services</option> -->
 							<option value="abuse">Abuse</option>
 							<option value="addictions">Addictions</option>
 							<option value="anxiety">Anxiety</option>
@@ -157,7 +191,7 @@
 					</p>
 					<p>
 						<h5>Types of Clients Served</h5>
-						<select id="Serves" title="Basic example" class='mpick Serves' multiple="multiple"
+						<select id="Serves" title="Basic example" class='mpick' multiple="multiple"
 							name="Serves" size="5">
 							<option value="Individual">Individual</option>
 							<option value="Adolescents">Adolescents</option>
@@ -172,16 +206,17 @@
 					</p>
 
 					<p>
-						<h5>Telehealth services if applicable</h4>
-							<select id="telehealth" title="Basic example" class='mpick telehealth' multiple="multiple"
+						<h5>Telehealth services if applicable</h5>
+							<select id="telehealth" title="Basic example" class='mpick' multiple="multiple"
 								name="telehealth" size="5">
 								<option value="phone">Phone</option>
 								<option value="video">Video</option>
 								<option value="other">Other</option>
 							</select>
 					</p>
-					<h5>Accepting New Patients? </h4>
-						<select id="Accepting" class="mpick Accepting" name="Accepting">
+					<p>
+					<h5>Accepting New Patients? </h5>
+						<select id="Accepting" class="mpick" name="Accepting">
 							<option value="not_selected" default selected disabled hidden>not_selected</option>
 							<option value="yes">Yes</option>
 							<option value="no">No</option>
@@ -189,8 +224,9 @@
 						</select>
 						<div class="col-6 d-flex">
 							<button type="button" class="btn btn-light flex-fill" id="filter_by">Filter by My Selections
-								Results</button>
+							</button>
 						</div>
+					</p>
 				</form>
 
 				<!-- Results div -->
