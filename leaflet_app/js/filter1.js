@@ -139,11 +139,12 @@ const checkIfAndFilterNotEmpty = (andFilter, id) => {
         }
     });
     // if empty return true; if not empty return false
-    andFilterNotEmpty = andFilterTruthArr.some(element => {
-        element === false;
+    andFilterNotEmpty = andFilterTruthArr.every(element => {
+        element === true;
     });
 
     console.log({
+        andFilterTruthArr,
         andFilterNotEmpty
     });
 
@@ -164,7 +165,7 @@ $(".mpick").change(async function (event) {
     const andFilterCheck = checkIfAndFilterNotEmpty(andFilter, this.id);
     console.log('what is the and filter checked ', andFilterCheck);
 
-    if (!andFilterCheck) { // there are no other filters to compare to
+    if (andFilterCheck === false) { // there are no other filters to compare to
         // let selectionGroup;
         // console.log('fresh query and unfiltered json_group looks like this ', json_group)
         const filteredLayers = await filteredLayersArray(json_group, targetFilters, id);
