@@ -130,7 +130,7 @@ const addToSelectGroup = (layers) => {
     return selection_group;
 }
 
-const checkIfAndFilterNotEmpty = (andFilter, id) => {
+const checkIfAndFilterNotEmpty = async (andFilter, id) => {
 
     const andFilterTruthArr = Object.keys(andFilter).map(key => {
         if (key !== id && andFilter[key].length > 0) {
@@ -142,16 +142,12 @@ const checkIfAndFilterNotEmpty = (andFilter, id) => {
 
     console.log(andFilterTruthArr);
 
+    const checkTruth = (item) => item === true;
+
     // if empty return true; if not empty return false
-    const andFilterNotEmpty = andFilterTruthArr.every(element => {
-        console.log(element);
+    const andFilterNotEmpty = await andFilterTruthArr.every(checkTruth);
 
-        element === true;
-    });
-
-    console.log({
-        andFilterNotEmpty
-    });
+    console.log(andFilterNotEmpty);
 
     return andFilterNotEmpty;
 }
