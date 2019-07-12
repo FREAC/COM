@@ -214,7 +214,7 @@ geocoder.on('results', function (result) {
 
     clearSelection();
     console.log('Get the filters here')
-    filterLocations(event)
+    //filterLocations(event)
     querySearchArea(result);
 });
 
@@ -272,6 +272,11 @@ $('#clear-search').click(function () {
     clearSelection({
         radius: true
     });
+});
+
+// Filter by my selections
+$('#filter_by').click(function () {
+    filterLocations(event)
 });
 
 // Radius dropdown functionality
