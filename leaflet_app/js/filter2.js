@@ -130,11 +130,6 @@ $(".mpick").change(async function (event) {
             // add results to andFilter
         });
         console.log(andFilter);
-
-        // add layers to andFilter object
-        // andFilter[this.id] = filteredLayers;
-
-
     }
 });
 
