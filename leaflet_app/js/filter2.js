@@ -1,0 +1,166 @@
+// create filter object to hold all selected elements based on type
+let filterObject = {
+    "Insurance": undefined,
+    "Specialty": undefined,
+    "Serves": undefined,
+    "telehealth": undefined,
+    "new-client": undefined
+
+};
+// hold all data from or logic
+const andFilter = {
+    "Insurance": undefined,
+    "Specialty": undefined,
+    "Serves": undefined,
+    "telehealth": undefined,
+    "new-client": undefined
+}
+
+const assignSelectToFilterObject = (id, value, filterObject) => {
+    if (value) {
+        filterObject[id] = value;
+    } else {
+        filterObject[id] = undefined;
+    }
+
+    return filterObject[id];
+}
+
+const filteredLayersArray = (activeLayer, filterArr, id) => Object.values(activeLayer._layers).filter(layer => {
+
+    if (!layer.data) {
+        return false
+    } else {
+        const currentLayer = layer.data[id]; // current layer in json_group
+        // currentLayerArr are target attributes from map (insurance, categories, etc.)
+        const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
+        const intersectionFilter = checkFilterPresence(currentLayerArr, filterArr)
+        if (intersectionFilter) {
+            return intersectionFilter.length > 0 // return if there are more than 0 results
+        }
+    }
+});
+
+// compare arrays and check for matching attributes
+const checkFilterPresence = (currentLayerArr, filterArr) => {
+    const matchingPoints = [];
+    // console.log('whats in filterrr ', filterArr)
+    if (currentLayerArr.length > 0 && filterArr) {
+        try {
+            for (let item of currentLayerArr) {
+                if (filterArr.includes(item.toLowerCase().replace(/\s/g, ''))) {
+                    // console.log('FOUND one to keep ', item)
+                    matchingPoints.push(item);
+                }
+            }
+        } catch (error) {
+            console.error(error);
+        }
+
+        return matchingPoints;
+    }
+}
+
+const addToSelectGroup = (layers) => {
+    // selection_group.clearLayers();
+
+    // are there layers? If yes, assign Lat and Long
+    layers ? layers.map((layer) => {
+        // assign Latitude and Longitude to data
+        layer.data['Latitude'] = layer._latlng.lat;
+        layer.data['Longitude'] = layer._latlng.lng;
+
+        const data = layer.data;
+        const marker = markerLogic(data);
+
+        marker.addTo(selection_group);
+
+    }) : console.log('nothing found');
+
+    map.removeLayer(json_group);
+    return selection_group;
+}
+
+const checkIfAndFilterEmpty = async (andFilter, id) => {
+
+    const andFilterTruthArr = Object.keys(andFilter).map(key => {
+        if (key !== id && andFilter[key] !== undefined && andFilter[key].length > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    });
+
+    const checkTruth = (item) => item === true;
+    // if empty return true; if not empty return false
+    const andFilterEmpty = await andFilterTruthArr.every(checkTruth);
+    return andFilterEmpty;
+}
+
+$(".mpick").change(async function (event) {
+
+    const id = this.id; //id of select box
+    const value = $(this).val(); // the selection value
+
+    // check to see if we need to perform AND logic
+    const andFilterCheck = await checkIfAndFilterEmpty(andFilter, this.id);
+    const targetFilters = await assignSelectToFilterObject(id, value, filterObject);
+
+    if (andFilterCheck) { // there are no other filters to compare to
+
+        const filteredLayers = await filteredLayersArray(json_group, targetFilters, id);
+        console.log('filtered the FIRST time ', filteredLayers)
+        selectionGroup = await addToSelectGroup(filteredLayers);
+        // add layers to andFilter object
+        andFilter[this.id] = filteredLayers;
+
+    } else { // perform and operation
+
+        const orFilters = Object.keys(filterObject).map(async item => {
+            console.log(item);
+
+            console.log(filterObject[item]);
+            // perform OR filter
+            if (targetFilters !== undefined) {
+                console.log({
+                    targetFilters
+                });
+
+                const filteredLayers = await filteredLayersArray(json_group, targetFilters, item);
+                andFilter[item] = filteredLayers;
+            }
+
+
+            // add results to andFilter
+        });
+        console.log(orFilters);
+
+        // add layers to andFilter object
+        // andFilter[this.id] = filteredLayers;
+
+
+    }
+});
+
+function displayFilteredData(layers) {
+    // remove current map layers
+    map.removeLayer(json_group);
+    selection_group.clearLayers();
+    // for each object in the subset
+
+    // are there layers? If yes, assign Lat and Long
+    layers ? layers.map((layer) => {
+        // assign Latitude and Longitude to data
+        layer.data['Latitude'] = layer._latlng.lat;
+        layer.data['Longitude'] = layer._latlng.lng;
+
+        const data = layer.data;
+        const marker = markerLogic(data);
+        marker.addTo(selection_group);
+
+    }) : console.log('nothing found');
+
+    map.addLayer(selection_group);
+    activeLayer = selection_group;
+
+}
