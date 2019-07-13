@@ -22,15 +22,13 @@ const assignSelectToFilterObject = (id, value, filterObject) => {
     } else {
         filterObject[id] = undefined;
     }
-
     return filterObject[id];
 }
 
 const filteredLayersArray = (activeLayer, filterArr, id) => Object.values(activeLayer._layers).filter(layer => {
-
-    if (!layer.data) {
+    if (!layer.data) { // if there's no data, false
         return false
-    } else {
+    } else { // if there IS data
         const currentLayer = layer.data[id]; // current layer in json_group
         // currentLayerArr are target attributes from map (insurance, categories, etc.)
         const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
