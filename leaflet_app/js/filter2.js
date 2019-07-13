@@ -54,7 +54,6 @@ const checkFilterPresence = (currentLayerArr, filterArr) => {
         } catch (error) {
             console.error(error);
         }
-
         return matchingPoints;
     }
 }
@@ -107,10 +106,11 @@ $(".mpick").change(async function (event) {
     if (andFilterCheck) { // there are no other filters to compare to
 
         const filteredLayers = await filteredLayersArray(json_group, targetFilters, id);
-        console.log('filtered the FIRST time ', filteredLayers)
         selectionGroup = await addToSelectGroup(filteredLayers);
         // add layers to andFilter object
         andFilter[this.id] = filteredLayers;
+        console.log(filteredLayers);
+
 
     } else { // perform and operation
 
@@ -119,19 +119,17 @@ $(".mpick").change(async function (event) {
 
             console.log(filterObject[item]);
             // perform OR filter
-            if (targetFilters !== undefined) {
-                console.log({
-                    targetFilters
-                });
+            if (filterObject[item] !== undefined) {
+                const filteredLayers = await filteredLayersArray(json_group, filterObject[item], item);
+                console.log(filteredLayers);
 
-                const filteredLayers = await filteredLayersArray(json_group, targetFilters, item);
                 andFilter[item] = filteredLayers;
             }
 
 
             // add results to andFilter
         });
-        console.log(orFilters);
+        console.log(andFilter);
 
         // add layers to andFilter object
         // andFilter[this.id] = filteredLayers;
