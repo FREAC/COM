@@ -19,8 +19,6 @@ const andFilter = {
 const assignSelectToFilterObject = (id, value, filterObject) => {
     for (let key in filterObject) {
         // if the id of the select and the key of the filter object match
-        console.log((filterObject[key]));
-
         if (key === id) {
             // swap array of values into object at this location
             filterObject[key.toString()] = value;
@@ -29,7 +27,7 @@ const assignSelectToFilterObject = (id, value, filterObject) => {
     }
 }
 
-const filteredLayersArray = (activeLayer, filterArr, id) => Object.values(activeLayer._featureGroup._layers).filter(layer => {
+const filteredLayersArray = (activeLayer, filterArr, id) => Object.values(activeLayer).filter(layer => {
 
     if (!layer.data) {
         return false
@@ -44,21 +42,6 @@ const filteredLayersArray = (activeLayer, filterArr, id) => Object.values(active
     }
 });
 
-// const filteredLayersArray2 = (activeLayer, filterArr, id) => Object.values(activeLayer).filter(layer => {
-//     console.log('start of the filteredlayersarray2 routine ', layer)
-//     if (!layer.data) {
-//         return false
-//     } else {
-//         const currentLayer = layer.data[id]; // current layer in json_group
-//         console.log('currentlayer set to ', currentLayer)
-//         // currentLayerArr are target attributes from map (insurance, categories, etc.)
-//         const intersectionFilter = checkFilterPresence(currentLayerArr, filterArr)
-//         const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
-//         if (intersectionFilter) {
-//             return intersectionFilter.length > 0 // return if there are more than 0 results
-//         }
-//     }
-// });
 // compare arrays and check for matching attributes
 const checkFilterPresence = (currentLayerArr, filterArr) => {
     const matchingPoints = [];
@@ -102,14 +85,10 @@ function displayFilteredData(layers) {
 }
 
 const addToSelectGroup = (layers) => {
-    // selection_group.clearLayers();
+    selection_group.clearLayers();
 
     // are there layers? If yes, assign Lat and Long
     layers ? layers.map((layer) => {
-        console.log({
-            layer
-        });
-
         // assign Latitude and Longitude to data
         layer.data['Latitude'] = layer._latlng.lat;
         layer.data['Longitude'] = layer._latlng.lng;
@@ -130,7 +109,7 @@ const addToSelectGroup = (layers) => {
     return selection_group;
 }
 
-const checkIfAndFilterNotEmpty = async (andFilter, id) => {
+const checkIfAndFilterEmpty = async (andFilter, id) => {
 
     const andFilterTruthArr = Object.keys(andFilter).map(key => {
         if (key !== id && andFilter[key].length > 0) {
@@ -140,15 +119,9 @@ const checkIfAndFilterNotEmpty = async (andFilter, id) => {
         }
     });
 
-    console.log(andFilterTruthArr);
-
     const checkTruth = (item) => item === true;
-
     // if empty return true; if not empty return false
     const andFilterNotEmpty = await andFilterTruthArr.every(checkTruth);
-
-    console.log(andFilterNotEmpty);
-
     return andFilterNotEmpty;
 }
 
@@ -159,46 +132,127 @@ $(".mpick").change(async function (event) {
     const id = this.id;
     const value = $(this).val();
 
+    console.log({
+        id,
+        value
+    });
 
     // put selections into filterObject
     const targetFilters = await assignSelectToFilterObject(id, value, filterObject);
 
-    const andFilterCheck = await checkIfAndFilterNotEmpty(andFilter, this.id);
-    console.log('what is the and filter checked ', andFilterCheck);
+    const orFilterCheck = await checkIfAndFilterEmpty(andFilter, this.id)
 
-    if (andFilterCheck) { // there are no other filters to compare to
-        // let selectionGroup;
-        // console.log('fresh query and unfiltered json_group looks like this ', json_group)
-        const filteredLayers = await filteredLayersArray(json_group, targetFilters, id);
-        console.log('filtered the FIRST time ', filteredLayers)
-        selectionGroup = await addToSelectGroup(filteredLayers);
-        console.log(selectionGroup);
+    const filteredLayers = await filteredLayersArray(json_group._layers, targetFilters, id);
+    console.log('filtered the FIRST time ', filteredLayers)
+    selectionGroup = await addToSelectGroup(filteredLayers);
+
+    // add layers to andFilter object
+    andFilter[this.id] = filteredLayers;
+
+    /* 
+    let filterObject = { // copied from above
+        "Insurance": [],
+        "Specialty": [],
+        "Serves": [],
+        "telehealth": [],
+        "new-client": []
+
+    };
+    // hold all data from or logic
+    const andFilter = { // copied from above
+        "Insurance": [],
+        "Specialty": [],
+        "Serves": [],
+        "telehealth": [],
+        "new-client": []
+    }
+    let andAccumulator = { // estimate/example
+        "Insurance": undefined,
+        "Specialty": undefined,
+        "Serves": undefined,
+        "telehealth": undefined,
+        "new-client": undefined
+    }
+    const accumulateFilers = (bigData, andFilter, andAccumulator) =>
+    {
+        for(let i = 0;i < andFilter, i++){
+            const key = Object.keys(andFilter[i])
+            if(andFilter[key] !== undefined){
+                andAccumulator[key] = filterThisStuff(bigData, andFilter[key])
+            }
+        }
+        return andAccumulator
+    }
+    */
+
+    // var andFilter = (array1, array2) => array1.filter(value => array2.includes(value))
+    // let andAccumulator = {
+    //   "Insurance": [1, 2, 3],
+    //   "Specialty": [1, 2, 3],
+    //   "Serves": [2, 3],
+    //   "telehealth": [1, 2, 3],
+    //   "new-client": []
+    // }
+
+    // const intersectionArray = (andAccumulator) => {
+    //   let accum = undefined
+    //   for(let i = 0; i < Object.keys(andAccumulator).length; i++){
+    //     const key = Object.keys(andAccumulator)[i]
+
+    //     if(andAccumulator[key].length > 0){
+    //       accum = accum === undefined ? // if a result of none is found then [] is returned not undefined.
+    //           andAccumulator[key] : 
+    //           andFilter(accum, andAccumulator[key]) 
+    //       }
+    //       // console.log({accum})
+    //   }
+    //   return accum
+    // }
+    // console.log(intersectionArray(andAccumulator))
 
 
-        // add layers to andFilter object
-        andFilter[this.id] = filteredLayers;
 
-    } else { // compare selection to what has already been queried
-        // console.log('new thing being selected -- selection group looks like this ', selection_group)
-        // const filteredLayers = await filteredLayersArray2(selection_group, targetFilters, id);
-        console.log({
-            msg: "andfilter check was false",
-            andFilterCheck
+    andAccumulator = accumulateFilers(andFilter, andAccumulator)
+    if (!orFilterCheck) { // compare selection to what has already been queried
+        /*
+        const accumulateFilers = (andFilter, andAccumulator) =>
+        {
+            for(let i = 0;i < andAccumulator, i++){
+                const key = Object.keys(andAccumulator[i])
+                if(
+                    andAccumulator[key]
+                ){
+                    
+                }
+            }
+            return andAccumulator
+        }
+        */
+        intersectionFilter(andAccumulator, andFilter)
+        const filterKeys = Object.keys(filterObject).map(key => {
+            console.log(filterObject[key]);
         });
 
-        const filteredLayers = await filteredLayersArray(selection_group, targetFilters, id);
+        console.log(filterKeys);
+
+
+
+
+        const filteredLayers = await filteredLayersArray(selection_group._featureGroup._layers, targetFilters, id);
         console.log('filtered the SECOND time ', filteredLayers)
         filteredLayers.map(layer => {
             console.log(layer.data.Agency);
 
         });
 
-        selectionGroup = await addToSelectGroup(filteredLayers);
-
         // add layers to andFilter object
         andFilter[this.id] = filteredLayers;
+        console.log({
+            andFilter
+        });
 
 
+        selectionGroup = await addToSelectGroup(filteredLayers);
     }
 
     // console.log({
