@@ -58,28 +58,8 @@ const checkFilterPresence = (currentLayerArr, filterArr) => {
     }
 }
 
-const addToSelectGroup = (layers) => {
-    // selection_group.clearLayers();
-
-    // are there layers? If yes, assign Lat and Long
-    layers ? layers.map((layer) => {
-        // assign Latitude and Longitude to data
-        layer.data['Latitude'] = layer._latlng.lat;
-        layer.data['Longitude'] = layer._latlng.lng;
-
-        const data = layer.data;
-        const marker = markerLogic(data);
-
-        marker.addTo(selection_group);
-
-    }) : console.log('nothing found');
-
-    map.removeLayer(json_group);
-    return selection_group;
-}
-
 const checkIfAndFilterEmpty = async (andFilter, id) => {
-
+    // return true if we only perform or logic; false if we perform and logic
     const andFilterTruthArr = Object.keys(andFilter).map(key => {
         if (key !== id && andFilter[key] !== undefined && andFilter[key].length > 0) {
             return false;
@@ -175,6 +155,6 @@ function displayFilteredData(layers) {
     }) : console.log('nothing found');
 
     map.addLayer(selection_group);
-    activeLayer = selection_group;
+    // activeLayer = selection_group;
 
 }
