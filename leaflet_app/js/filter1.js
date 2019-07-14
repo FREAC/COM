@@ -185,7 +185,7 @@ $(".mpick").change(async function (event) {
     }
     */
 
-    // var andFilter = (array1, array2) => array1.filter(value => array2.includes(value))
+    // var andFilter = (array1, array2) => array1.filter(value.data => array2.includes(value.data))
     // let andAccumulator = {
     //   "Insurance": [1, 2, 3],
     //   "Specialty": [1, 2, 3],
@@ -197,9 +197,9 @@ $(".mpick").change(async function (event) {
     // const intersectionArray = (andAccumulator) => {
     //   let accum = undefined
     //   for(let i = 0; i < Object.keys(andAccumulator).length; i++){
-    //     const key = Object.keys(andAccumulator)[i]
 
-    //     if(andAccumulator[key].length > 0){
+    //     const key = Object.keys(andAccumulator)[i]
+    //     if(andAccumulator[key] !== undefined && andAccumulator[key].length > 0){
     //       accum = accum === undefined ? // if a result of none is found then [] is returned not undefined.
     //           andAccumulator[key] : 
     //           andFilter(accum, andAccumulator[key]) 
