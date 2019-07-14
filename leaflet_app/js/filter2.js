@@ -94,6 +94,18 @@ const checkIfAndFilterEmpty = async (andFilter, id) => {
     return andFilterEmpty;
 }
 
+const orFilters = (filterObject) => {
+    Object.keys(filterObject).map(async (item) => {
+        // perform OR filter
+        if (filterObject[item] !== undefined) {
+            const filteredLayers = await filteredLayersArray(json_group, filterObject[item], item);
+            // add results to andFilter
+            return andFilter[item] = filteredLayers;
+        }
+    });
+    return andFilter;
+}
+
 $(".mpick").change(async function (event) {
 
     const id = this.id; //id of select box
@@ -113,23 +125,11 @@ $(".mpick").change(async function (event) {
 
 
     } else { // perform and operation
-
-        const orFilters = Object.keys(filterObject).map(async item => {
-            console.log(item);
-
-            console.log(filterObject[item]);
-            // perform OR filter
-            if (filterObject[item] !== undefined) {
-                const filteredLayers = await filteredLayersArray(json_group, filterObject[item], item);
-                console.log(filteredLayers);
-
-                andFilter[item] = filteredLayers;
-            }
+        // assign or filters to andFilter object
+        const orFilters = await orFilters(filterObject);
+        // find common data
 
 
-            // add results to andFilter
-        });
-        console.log(andFilter);
     }
 });
 
