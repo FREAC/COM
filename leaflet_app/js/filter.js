@@ -129,6 +129,7 @@ $(".mpick").change(async function (event) {
             console.log(filteredLayers);
             displayFilteredData(filteredLayers);
         } else {
+            // if there are no selections, add the whole json_group back
             map.addLayer(json_group);
         }
 
