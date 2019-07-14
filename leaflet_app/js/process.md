@@ -1,6 +1,6 @@
 ### remaining tasks
 
-- display data dynamically
+<!-- - display data dynamically -->
 
 - figure out how to incorporate clustering again
 
