@@ -101,6 +101,8 @@ const orFilters = (filterObject) => {
             const filteredLayers = await filteredLayersArray(json_group, filterObject[item], item);
             // add results to andFilter
             return andFilter[item] = filteredLayers;
+        } else {
+            andFilter[item] = undefined;
         }
     });
     return andFilter;
@@ -141,6 +143,8 @@ $(".mpick").change(async function (event) {
             return accum
         }
         console.log(intersectionArray(orResults));
+        console.log(orResults);
+
 
     }
 });
