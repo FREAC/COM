@@ -117,13 +117,20 @@ $(".mpick").change(async function (event) {
     const andFilterCheck = await checkIfAndFilterEmpty(andFilter, this.id);
     const targetFilters = await assignSelectToFilterObject(id, value, filterObject);
 
+    console.log(andFilterCheck);
+
     if (andFilterCheck) { // there are no other filters to compare to
 
-        const filteredLayers = await filteredLayersArray(json_group, targetFilters, id);
-        selectionGroup = await addToSelectGroup(filteredLayers);
-        // add layers to andFilter object
-        andFilter[this.id] = filteredLayers;
-        console.log(filteredLayers);
+        if (value !== null) {
+            const filteredLayers = await filteredLayersArray(json_group, targetFilters, id);
+            // selectionGroup = await addToSelectGroup(filteredLayers);
+            // add layers to andFilter object
+            andFilter[this.id] = filteredLayers;
+            console.log(filteredLayers);
+            displayFilteredData(filteredLayers);
+        } else {
+            map.addLayer(json_group);
+        }
 
 
     } else { // perform and operation
@@ -142,8 +149,8 @@ $(".mpick").change(async function (event) {
             }
             return accum
         }
-        console.log(intersectionArray(orResults));
-        console.log(orResults);
+        const andResults = intersectionArray(orResults);
+        displayFilteredData(andResults);
 
 
     }
@@ -154,7 +161,6 @@ function displayFilteredData(layers) {
     map.removeLayer(json_group);
     selection_group.clearLayers();
     // for each object in the subset
-
     // are there layers? If yes, assign Lat and Long
     layers ? layers.map((layer) => {
         // assign Latitude and Longitude to data
