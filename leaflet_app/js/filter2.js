@@ -126,8 +126,11 @@ $(".mpick").change(async function (event) {
 
     } else { // perform and operation
         // assign or filters to andFilter object
-        const orFilters = await orFilters(filterObject);
+        const orResults = await orFilters(filterObject);
+        console.log(orResults);
+
         // find common data
+        // maybe mixmatch through andFilter mixing the queries?
 
 
     }
