@@ -7,7 +7,7 @@ let filterObject = {
     "new-client": undefined
 
 };
-// hold all data from or logic
+// hold all returned data from orFilters selections
 const andFilter = {
     "Insurance": undefined,
     "Specialty": undefined,
