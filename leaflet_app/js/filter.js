@@ -130,10 +130,7 @@ $(".mpick").change(async function (event) {
         }
         const andResults = intersectionArray(orResults);
         console.log(andResults);
-
         displayFilteredData(andResults);
-
-
     }
 });
 
@@ -152,9 +149,6 @@ function displayFilteredData(layers) {
         const marker = markerLogic(data);
         marker.addTo(selection_group);
 
-    }) : console.log('nothing found');
-
+    }) : console.log('no data found');
     map.addLayer(selection_group);
-    // activeLayer = selection_group;
-
 }
