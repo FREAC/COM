@@ -16,7 +16,8 @@ body {
 }
 
 #legend {
-  background-color: #E1D4B7;
+  /* background-color: #E1D4B7;   */
+  background-color: #35b6b9;
 }
 
 #json_one_results {
@@ -112,7 +113,7 @@ body {
 .show>.btn-outline-garnet.dropdown-toggle {
   color: #fff;
   background-color: #782F40;
-  border-color: #782F40;
+  border-color: #782F40; 
 }
 
 .btn-outline-garnet:not(:disabled):not(.disabled):active:focus,

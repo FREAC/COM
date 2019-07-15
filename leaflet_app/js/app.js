@@ -213,17 +213,19 @@ L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 // ESRI Geocoder 
 
 var arcgisOnline = L.esri.Geocoding.arcgisOnlineProvider();
-var gisDay = L.esri.Geocoding.featureLayerProvider({
-  url: 'https://services.arcgis.com/uCXeTVveQzP4IIcx/arcgis/rest/services/GIS_Day_Final/FeatureServer/0',
-  searchFields: ['Name', 'Organization'], // Search these fields for text matches
-  label: 'GIS Day Events', // Group suggestions under this header
+var mmp = L.esri.Geocoding.featureLayerProvider({
+  url: 'https://maps.freac.fsu.edu/arcgis/rest/services/FREAC/mmh_test_service/MapServer',
+  searchFields: ['agency'], // Search these fields for text matches
+  label: 'Mental Health Agencies', // Group suggestions under this header
   formatSuggestion: function(feature){
-    return feature.properties.Name + ' - ' + feature.properties.Organization; // format suggestions like this.
+    return feature.properties.agency; // format suggestions like this.
   }
 });
 
 var geocoder = L.esri.Geocoding.geosearch({
-    providers: [arcgisOnline, gisDay], // will geocode via ArcGIS Online and search the GIS Day feature service.
+    // providers: [arcgisOnline,mmp], // will geocode via ArcGIS Online and search the GIS Day feature service.
+    // providers: [arcgisOnline], // will geocode via ArcGIS Online and search the GIS Day feature service.
+    providers: [mmp], // will geocode via ArcGIS Online and search the GIS Day feature service.
     zoomToResult: false,
     expanded: true,
     useMapBounds: false,
@@ -362,7 +364,7 @@ $easyAuto.easyAutocomplete({
         }
     },
     requestDelay: 250,
-    placeholder: "Search for a provider"
+    placeholder: 'Know the provider?  Type the name here'
 });
 
 ///////////////////////////////////////
