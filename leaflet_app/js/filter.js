@@ -111,35 +111,35 @@ async function filterLocations(event) {
     num_filters = ((filter.length / 2)) ;
     console.log('how many types of filters will there be ',num_filters)
     //setup2();
-
-    for (j=0; j <= num_filters+2; j+=2){
+    for (layer in json_group._layers) {
+        console.log('before the re-load ',json_group._layers[layer].data);
+                    json_group.removeLayer(layer)
+    }
+    await $.get("./data/COM.json", function (json_data) {
+        $.each(json_data, function (object) {
+            // console.log(json_data[object]);
+            const provider = json_data[object];
+            const marker = markerLogic(provider);
+            console.log('######adding a new item to json_group ',marker)
+            marker.addTo(json_group);
+            json_group.addLayer(marker);
+        });
+        //map.removeLayer(json_group);
+        //map.removeLayer(selection_group)
+        // activeLayer = json_group;
+    });
+    for (j=0; j <= num_filters+1; j+=2){
         if (j === 2 && num_filters === 1) {continue}
         console.log("filter number ",j , ' is being processed')
         selection_group.clearLayers()
         filter_is = filter[j]
         //setup2(json_group);
 
-        for (layer in json_group._layers) {
-            console.log('before the re-load ',json_group._layers[layer].data);
-                        json_group.removeLayer(layer)
-        }
-        await $.get("./data/COM.json", function (json_data) {
-            $.each(json_data, function (object) {
-                // console.log(json_data[object]);
-                const provider = json_data[object];
-                const marker = markerLogic(provider);
-                console.log('######adding a new item to json_group ',marker)
-                marker.addTo(json_group);
-                json_group.addLayer(marker);
-            });
-            //map.removeLayer(json_group);
-            //map.removeLayer(selection_group)
-            // activeLayer = json_group;
-        });
 
-        for (layer in json_group._layers) {
-            console.log('back from setup2 and  all the data looks like this ',json_group._layers[layer].data);
-        }
+
+        // for (layer in json_group._layers) {
+        //     console.log('back from setup2 and  all the data looks like this ',json_group._layers[layer].data);
+        // }
         console.log('STARTING the LOOP for filter ',j,' - ',filter_is,' has these options ', filter[j+1])
         for (layer in json_group._layers) {
             // current target layer that we're looking at

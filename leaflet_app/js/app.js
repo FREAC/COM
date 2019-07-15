@@ -313,7 +313,7 @@ $('#clear-search').click(function () {
 $('#filter_by').click(function () {
     selection_group.clearLayers();
     map.removeLayer(selection_group);
-    setup2();
+    //setup2();
     filterLocations(event)
     console.log('finished the filterlocations function')
 });
