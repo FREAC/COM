@@ -131,6 +131,8 @@ $(".mpick").change(async function (event) {
             return accum
         }
         const andResults = intersectionArray(orResults);
+        console.log(andResults);
+
         displayFilteredData(andResults);
 
 
