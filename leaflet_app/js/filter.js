@@ -95,17 +95,15 @@ $(".mpick").change(async function (event) {
 
     // check to see if we need to perform AND logic
     const andFilterCheck = await checkIfAndFilterEmpty(andFilter, this.id);
-    const targetFilters = await assignSelectToFilterObject(id, value, filterObject);
+    // currently selected filters
+    const orFilterSelections = await assignSelectToFilterObject(id, value, filterObject);
 
-    console.log(andFilterCheck);
-
-    if (andFilterCheck) { // there are no other filters to compare to
+    if (andFilterCheck) { // if true, there are no other filters to compare to; only and filter will be executed
 
         if (value !== null) {
-            const filteredLayers = await filteredLayersArray(json_group, targetFilters, id);
-            // selectionGroup = await addToSelectGroup(filteredLayers);
+            const filteredLayers = await filteredLayersArray(json_group, orFilterSelections, id);
             // add layers to andFilter object
-            andFilter[this.id] = filteredLayers;
+            andFilter[this.id] = filteredLayers; // 
             console.log(filteredLayers);
             displayFilteredData(filteredLayers);
         } else {
