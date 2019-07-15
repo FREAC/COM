@@ -89,7 +89,7 @@
 
 			<!-- Sidebar-->
 			<div class="col-sm-4 order-sm-first overflow-auto mh-100" id="legend">
-				<h3>FSU College of Medicine<br>Maternal Mental Health Resource Directory</h3>
+				<h4>FSU College of Medicine<br>Maternal Mental Health Resource Directory</h4>
 				<form>
 					<div class="form-row">
 						<div class="col-sm-12 mb-2">
@@ -106,7 +106,7 @@
 <div class="row2">
 	<div class="column2">
 						<h5>Insurance options</h5>
-							<select class="mpick" multiple="multiple" name="Insurance" style="width:50% !important">
+							<select class="mpick" multiple="multiple" name="Insurance" >
 									<option value="acceptsmostinsuranceplans">Accepts most insurance plans</option>
 									<option value="aetna">Aetna</option>
 									<option value="beacon">Beacon</option>
@@ -309,13 +309,8 @@
 	</div>
 	<div class="column2">
 				
-						<h5 style="margin-bottom:1px;">Practice Categories</h5>
+						<h5 >Practice Categories</h5>
 						<select class="mpick" multiple="multiple" name='Specialty' id="Specialty">
-							<!-- <option value="lmft">LMFT</option>
-							<option value="lmhc">LMHC</option>
-							<option value="psychiatrist">Psychiatrist</option>
-							<option value="psychologist">Psychologist</option>
-							<option value="treatmentcenter">Treatment Center & Support Services</option> -->
 							<option value="abuse">Abuse</option>
 							<option value="addictions">Addictions</option>
 							<option value="anxiety">Anxiety</option>
@@ -368,6 +363,7 @@
 					
 					<h5>Accepting New Patients? </h5>
 						<select id="Accepting" class="mpick" name="Accepting">
+							<!-- <option value="" default> </option> -->
 							<option value="not_selected" default selected disabled hidden>not_selected</option>
 							<option value="yes">Yes</option>
 							<option value="no">No</option>
@@ -381,6 +377,11 @@
 		class="btn btn-light flex-fill" id="filter_by">Click here after you have made your selections
 		</button>
 	</div>
+	<div class="col-9 d-flex">
+			<button type="button" style="background-color:green;" 
+			class="btn btn-light flex-fill" id="reload_page">Click here clear all filters
+			</button>
+		</div>
 					
 				</form>
 

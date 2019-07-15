@@ -211,8 +211,21 @@ setup();
 L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 
 // ESRI Geocoder 
+
+var arcgisOnline = L.esri.Geocoding.arcgisOnlineProvider();
+var gisDay = L.esri.Geocoding.featureLayerProvider({
+  url: 'https://services.arcgis.com/uCXeTVveQzP4IIcx/arcgis/rest/services/GIS_Day_Final/FeatureServer/0',
+  searchFields: ['Name', 'Organization'], // Search these fields for text matches
+  label: 'GIS Day Events', // Group suggestions under this header
+  formatSuggestion: function(feature){
+    return feature.properties.Name + ' - ' + feature.properties.Organization; // format suggestions like this.
+  }
+});
+
 var geocoder = L.esri.Geocoding.geosearch({
+    providers: [arcgisOnline, gisDay], // will geocode via ArcGIS Online and search the GIS Day feature service.
     zoomToResult: false,
+    expanded: true,
     useMapBounds: false,
     placeholder: 'Search for an address',
     searchBounds: [bottomLeft, topRight]
@@ -300,6 +313,12 @@ $('#filter_by').click(function () {
     console.log('finished the filterlocations function')
 });
 
+// reload the page so all filters are reset
+$('#reload_page').click(function () {
+    console.log('trying to clear all filters')
+    window.location.reload();
+    console.log('got them cleared with a page reload')
+});
 // Radius dropdown functionality
 const $radius = $('#radius');
 $radius.change(function () {
