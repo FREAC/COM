@@ -115,7 +115,10 @@ async function filterLocations(event) {
         console.log('before the re-load ',json_group._layers[layer].data);
                     json_group.removeLayer(layer)
     }
+
     await $.get("./data/COM.json", function (json_data) {
+
+
         $.each(json_data, function (object) {
             // console.log(json_data[object]);
             const provider = json_data[object];
@@ -123,7 +126,9 @@ async function filterLocations(event) {
             console.log('######adding a new item to json_group ',marker)
             marker.addTo(json_group);
             json_group.addLayer(marker);
+            //selection_group.addLayer(marker)
         });
+        
         //map.removeLayer(json_group);
         //map.removeLayer(selection_group)
         // activeLayer = json_group;
@@ -313,6 +318,7 @@ async function filterLocations(event) {
     }
     console.log('end of the filtering')
     await map.removeLayer(json_group);
+    await map.removeLayer(json_group_c);
     //selection_group.clearLayers();
     await map.removeLayer(selection_group);
     // Add our selection markers in our JSON file on the map

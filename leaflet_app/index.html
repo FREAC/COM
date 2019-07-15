@@ -61,15 +61,34 @@
 
 	<script src="plugin/jQuery-Plugin-For-Filterable-Multiple-Select-with-Checkboxes-fSelect/fSelect.js"></script>
 </head>
-
+<style>
+		* {
+		  box-sizing: border-box;
+		}
+		
+		/* Create two equal columns that floats next to each other */
+		.column2 {
+		  float: left;
+		  width: 50%;
+		  padding: 10px;
+		  height: 300px; /* Should be removed. Only for demonstration */
+		}
+		
+		/* Clear floats after the columns */
+		.row2:after {
+		  content: "";
+		  display: table;
+		  clear: both;
+		}
+		</style>
 <body>
 	<div class="container-fluid d-flex h-100">
 		<div class="row flex-fill d-flex">
 			<!-- Map -->
-			<div class="col-sm-7 order-sm-last overflow-hidden" id="map"></div>
+			<div class="col-sm-8 order-sm-last overflow-hidden" id="map"></div>
 
 			<!-- Sidebar-->
-			<div class="col-sm-5 order-sm-first overflow-auto mh-100" id="legend">
+			<div class="col-sm-4 order-sm-first overflow-auto mh-100" id="legend">
 				<h3>FSU College of Medicine<br>Maternal Mental Health Resource Directory</h3>
 				<form>
 					<div class="form-row">
@@ -79,13 +98,15 @@
 					</div>
 
 					<div class="form-row">
-						<div class="col-sm-12 mb-2 mt-2 mt-sm-0 btn-group btn-group-toggle blocks"
+						<div class="row col-sm-12 mb-2 mt-2 mt-sm-0 btn-group btn-group-toggle blocks"
 							data-toggle="buttons">
 						</div>
 					</div>
-					<p>
-						<h5>Pick insurance options</h5>
-							<select class="mpick" multiple="multiple" name="Insurance">
+
+<div class="row2">
+	<div class="column2">
+						<h5>Insurance options</h5>
+							<select class="mpick" multiple="multiple" name="Insurance" style="width:50% !important">
 									<option value="acceptsmostinsuranceplans">Accepts most insurance plans</option>
 									<option value="aetna">Aetna</option>
 									<option value="beacon">Beacon</option>
@@ -125,27 +146,156 @@
 									<option value="wellcare">Wellcare</option>
 									<option value="other">Other</option>
 							</select>
-					</p>
-					<p>
+					
+				
 						<h5>Practice Location</h5>
 								<select class="mpick" name="Practice_a" id='Practice_a'>
 										<option value="not_selected" default selected disabled hidden>not_selected</option>
-										<option value="leon">Leon</option>
 										<option value="alachua">Alachua</option>
-										<option value="baker">Baker</option>	
+										<option value="baker">Baker</option>
+										<option value="bay">Bay</option>
+										<option value="bradford">Bradford</option>
+										<option value="brevard">Brevard</option>
+										<option value="broward">Broward</option>
+										<option value="calhoun">Calhoun</option>
+										<option value="charlotte">Charlotte</option>
+										<option value="citrus">Citrus</option>
+										<option value="clay">Clay</option>
+										<option value="collier">Collier</option>
+										<option value="columbia">Columbia</option>
+										<option value="desoto">DeSoto</option>
+										<option value="dixie">Dixie</option>
+										<option value="duval">Duval</option>
+										<option value="escambia">Escambia</option>
+										<option value="flagler">Flagler</option>
+										<option value="franklin">Franklin</option>
+										<option value="gadsden">Gadsden</option>
+										<option value="gilchrist">Gilchrist</option>
+										<option value="glades">Glades</option>
+										<option value="gulf">Gulf</option>
+										<option value="hamilton">Hamilton</option>
+										<option value="hardee">Hardee</option>
+										<option value="hendry">Hendry</option>
+										<option value="hernando">Hernando</option>
+										<option value="highlands">Highlands</option>
+										<option value="hills">Hillsborough</option>
+										<option value="holmes">Holmes</option>
+										<option value="indian">Indian River</option>
+										<option value="jackson">Jackson</option>
+										<option value="jefferson">Jefferson</option>
+										<option value="lafayette">Lafayette</option>
+										<option value="lake">Lake</option>
+										<option value="lee">Lee</option>
+										<option value="leon">Leon</option>
+										<option value="levy">Levy</option>
+										<option value="liberty">Liberty</option>
+										<option value="madison">Madison</option>
+										<option value="manatee">Manatee</option>
+										<option value="marion">Marion</option>
+										<option value="martin">Martin</option>
+										<option value="miami">Miami-Dade</option>
+										<option value="monroe">Monroe</option>
+										<option value="nassau">Nassau</option>
+										<option value="okaloosa">Okaloosa</option>
+										<option value="okee">Okeechobee</option>
+										<option value="orange">Orange</option>
+										<option value="osceola">Osceola</option>
+										<option value="palm">Palm Beach</option>
+										<option value="pasco">Pasco</option>
+										<option value="pinellas">Pinellas</option>
+										<option value="polk">Polk</option>
+										<option value="putnam">Putnam</option>
+										<option value="stjohns">St Johns</option>
+										<option value="stlucie">St Lucie</option>
+										<option value="santa">Santa Rosa</option>
+										<option value="sarasota">Sarasota</option>
+										<option value="seminole">Seminole</option>
+										<option value="sumter">Sumter</option>
+										<option value="suwannee">Suwannee</option>
+										<option value="taylor">Taylor</option>
+										<option value="union">Union</option>
+										<option value="volusia">Volusia</option>
+										<option value="wakulla">Wakulla</option>
+										<option value="walton">Walton</option>
+										<option value="washington">Washington</option>										
 										<option value="telehealthonly">Telehealth Only</option>	
 								</select>
-					</p>
-					<p>
+
+
 							<h5>Areas Served</h5>
 									<select class="mpick" multiple="multiple" name="Areas_Serv" id='Areas_Serv'>
-											<option value="leon">Leon</option>
 											<option value="alachua">Alachua</option>
-											<option value="baker">Baker</option>	
+											<option value="baker">Baker</option>
+											<option value="bay">Bay</option>
+											<option value="bradford">Bradford</option>
+											<option value="brevard">Brevard</option>
+											<option value="broward">Broward</option>
+											<option value="calhoun">Calhoun</option>
+											<option value="charlotte">Charlotte</option>
+											<option value="citrus">Citrus</option>
+											<option value="clay">Clay</option>
+											<option value="collier">Collier</option>
+											<option value="columbia">Columbia</option>
+											<option value="desoto">DeSoto</option>
+											<option value="dixie">Dixie</option>
+											<option value="duval">Duval</option>
+											<option value="escambia">Escambia</option>
+											<option value="flagler">Flagler</option>
+											<option value="franklin">Franklin</option>
+											<option value="gadsden">Gadsden</option>
+											<option value="gilchrist">Gilchrist</option>
+											<option value="glades">Glades</option>
+											<option value="gulf">Gulf</option>
+											<option value="hamilton">Hamilton</option>
+											<option value="hardee">Hardee</option>
+											<option value="hendry">Hendry</option>
+											<option value="hernando">Hernando</option>
+											<option value="highlands">Highlands</option>
+											<option value="hills">Hillsborough</option>
+											<option value="holmes">Holmes</option>
+											<option value="indian">Indian River</option>
+											<option value="jackson">Jackson</option>
+											<option value="jefferson">Jefferson</option>
+											<option value="lafayette">Lafayette</option>
+											<option value="lake">Lake</option>
+											<option value="lee">Lee</option>
+											<option value="leon">Leon</option>
+											<option value="levy">Levy</option>
+											<option value="liberty">Liberty</option>
+											<option value="madison">Madison</option>
+											<option value="manatee">Manatee</option>
+											<option value="marion">Marion</option>
+											<option value="martin">Martin</option>
+											<option value="miami">Miami-Dade</option>
+											<option value="monroe">Monroe</option>
+											<option value="nassau">Nassau</option>
+											<option value="okaloosa">Okaloosa</option>
+											<option value="okee">Okeechobee</option>
+											<option value="orange">Orange</option>
+											<option value="osceola">Osceola</option>
+											<option value="palm">Palm Beach</option>
+											<option value="pasco">Pasco</option>
+											<option value="pinellas">Pinellas</option>
+											<option value="polk">Polk</option>
+											<option value="putnam">Putnam</option>
+											<option value="stjohns">St Johns</option>
+											<option value="stlucie">St Lucie</option>
+											<option value="santa">Santa Rosa</option>
+											<option value="sarasota">Sarasota</option>
+											<option value="seminole">Seminole</option>
+											<option value="sumter">Sumter</option>
+											<option value="suwannee">Suwannee</option>
+											<option value="taylor">Taylor</option>
+											<option value="union">Union</option>
+											<option value="volusia">Volusia</option>
+											<option value="wakulla">Wakulla</option>
+											<option value="walton">Walton</option>
+											<option value="washington">Washington</option>										
+		
 											<option value="telehealthonly">Telehealth Only</option>	
 									</select>
-						</p>
-					<p>
+						
+				
 								<h5 style="margin-bottom:1px;">Primary practice activity</h5>
 									<select class="mpick"  name='Which_cate' id="Which_cate">
 										<option value="not_selected" default selected disabled hidden>not_selected</option>
@@ -156,8 +306,9 @@
 										<option value="psychologist">Psychologist</option>
 										<option value="treatmentcenter">Treatment Center & Support Services</option>
 									</select>	
-					</p>
-					<p>
+	</div>
+	<div class="column2">
+				
 						<h5 style="margin-bottom:1px;">Practice Categories</h5>
 						<select class="mpick" multiple="multiple" name='Specialty' id="Specialty">
 							<!-- <option value="lmft">LMFT</option>
@@ -188,9 +339,9 @@
 							<option value="suicideprevention">Suicide Prevention</option>
 							<option value="trauma">Trauma</option>
 						</select>
-					</p>
-					<p>
-						<h5>Types of Clients Served</h5>
+					
+					
+						<h5>Client Types</h5>
 						<select id="Serves" title="Basic example" class='mpick' multiple="multiple"
 							name="Serves" size="5">
 							<option value="Individual">Individual</option>
@@ -203,18 +354,18 @@
 							<option value="Groups">Groups</option>
 							<option value="Women">Women</option>
 						</select>
-					</p>
+					
 
-					<p>
-						<h5>Telehealth services if applicable</h5>
+					
+						<h5>Telehealth services</h5>
 							<select id="telehealth" title="Basic example" class='mpick' multiple="multiple"
 								name="telehealth" size="5">
 								<option value="phone">Phone</option>
 								<option value="video">Video</option>
 								<option value="other">Other</option>
 							</select>
-					</p>
-					<p>
+					
+					
 					<h5>Accepting New Patients? </h5>
 						<select id="Accepting" class="mpick" name="Accepting">
 							<option value="not_selected" default selected disabled hidden>not_selected</option>
@@ -222,11 +373,15 @@
 							<option value="no">No</option>
 							<option value="waitlist">Waitlist</option>
 						</select>
-						<div class="col-6 d-flex">
-							<button type="button" class="btn btn-light flex-fill" id="filter_by">Filter by My Selections
-							</button>
-						</div>
-					</p>
+
+	</div>
+</div>
+<div class="col-9 d-flex">
+		<button type="button" style="background-color:red;" 
+		class="btn btn-light flex-fill" id="filter_by">Click here after you have made your selections
+		</button>
+	</div>
+					
 				</form>
 
 				<!-- Results div -->
@@ -240,7 +395,7 @@
 						<div id="results-table"></div>
 					</div>
 				</div>
-				<h5>Search Radius</h4>
+				<h5>Search Radius</h5>
 					<select class="form-control" id="radius">
 						<option value="default" selected disabled hidden>Search radius</option>
 						<!-- Value is distance in meters -->

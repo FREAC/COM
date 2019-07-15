@@ -71,6 +71,19 @@ const json_group = new L.FeatureGroup({
 
     }
 });
+    //const json_group = new L.FeatureGroup({
+    //const json_group = new L.markerClusterGroup.withList({
+const json_group_c = new L.markerClusterGroup({
+        maxClusterRadius: 0,
+            iconCreateFunction: function (cluster) {
+            return L.divIcon({
+                html: '<b>' + cluster.getChildCount() + '</b>',
+                className: 'clustered_sites',
+                iconSize: L.point(15, 15)
+            });
+    
+        }
+    });
 // on a click of a cluster
 json_group.on('clusterclick', function (event) {
     console.log(json_group);
@@ -139,47 +152,14 @@ async function setup() {
             const provider = json_data[object];
             const marker = markerLogic(provider);
             marker.addTo(json_group);
-            //json_group.addLayer(marker);
+            marker.addTo(json_group_c);
+            json_group.addLayer(marker);
         });
         map.addLayer(json_group);
+        map.addLayer(json_group_c);
         map.addLayer(selection_group)
         activeLayer = json_group;
     });
-}
-async function setup2(json_group) { await
-    //selection_group.clearLayers();
-    console.log(' is there something in json_data ', json_group)
-    var json_group = undefined
-    console.log(' what about now ', json_group)
-    json_group = new L.FeatureGroup({
-        //const json_group = new L.markerClusterGroup.withList({
-        //const json_group = new L.markerClusterGroup({
-            maxClusterRadius: 0,
-                iconCreateFunction: function (cluster) {
-                return L.divIcon({
-                    html: '<b>' + cluster.getChildCount() + '</b>',
-                    className: 'clustered_sites',
-                    iconSize: L.point(15, 15)
-                });
-        
-            }
-    });
-    console.log('json group has be reinitialized ', json_group)
-    //  $.get("./data/COM.json", function (json_data) {
-    //     $.each(json_data, function (object) {
-    //         // console.log(json_data[object]);
-    //         const provider = json_data[object];
-    //         const marker = markerLogic(provider);
-    //         console.log('adding a new item to json_group ',marker)
-    //         marker.addTo(json_group);
-    //         json_group.addLayer(marker);
-    //     });
-    //     //map.removeLayer(json_group);
-    //     //map.removeLayer(selection_group)
-    //     // activeLayer = json_group;
-    // });
-    console.log('done loading')
-    return json_group
 }
 
 ///////////////////////////////////////////////
@@ -251,6 +231,9 @@ geocoder.on('results', function (result) {
     console.log('Get the filters here')
     //filterLocations(event)
     querySearchArea(result);
+    console.log('finished with the query search area ready to scroll ', document.body.scrollHeight)
+    window.scrollTo(0,document.body.scrollHeight);
+    console.log('SCROLLLLLLED')
 });
 
 // check whether on mobile devices
@@ -313,7 +296,6 @@ $('#clear-search').click(function () {
 $('#filter_by').click(function () {
     selection_group.clearLayers();
     map.removeLayer(selection_group);
-    //setup2();
     filterLocations(event)
     console.log('finished the filterlocations function')
 });
