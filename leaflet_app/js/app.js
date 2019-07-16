@@ -503,8 +503,8 @@ function insertTabulator(data) {
             title: "Provider",
             field: "agency"
         }, {
-            title: "Zip code",
-            field: "PostalCode"
+            title: "Website",
+            field: "website"
         }],
         rowClick: function (event, row) {
             // NOTE: New function parameter to pass all of the row information to the zoomtolocation
@@ -567,6 +567,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
                     city: layer.data.City,
                     state: layer.data.State,
                     postalcode: layer.data.PostalCode,
+                    website: layer.data.Website,
                     dist: distance_from_layer_circle,
                     latitude: layer_lat_long.lat,
                     longitude: layer_lat_long.lng
@@ -588,7 +589,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
         // TODO - fix this so we only have one case
 
         for (let i = 0; i < counter_points_in_circle; i++) {
-            //console.log('what does a typical result look like, ', results[i])
+            console.log('what does a typical result look like, ', results[i])
             tableResults.push({
                 id: i,
                 Agency: results[i]['agency'],
@@ -598,6 +599,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
                 City: results[i]['city'],
                 State: results[i]['state'],
                 PostalCode: results[i]['postalcode'],
+                Website: results[i]['website'],
                 lat: results[i]['latitude'],
                 lng: results[i]['longitude'],
 
@@ -607,7 +609,8 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
                 street: results[i]['street'],
                 city: results[i]['city'],
                 state: results[i]['state'],
-                postalcode: results[i]['postalcode']
+                postalcode: results[i]['postalcode'],
+                website: results[i]['website']
             });
         }
         // add tabulator object to screen
@@ -699,6 +702,7 @@ function markerLogic(data, selection_marker) {
         'City': data['City'],
         'State': data['State'],
         'PostalCode': data['PostalCode'],
+        'Website': '<a href="http://'+data['Website']+'">Click for website</a>',
         'Specialty': data['Specialty'],
         'Accepting': data['Accepting'],
         'Insurance': data['Insurance'],
