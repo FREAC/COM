@@ -1,7 +1,8 @@
 'use strict';
 
 // Colors
-const default_fill_color = "#ED9118";
+// const default_fill_color = "#ED9118";
+const default_fill_color = "#35b6b9";
 const default_outline_color = "#FFFFFF";
 const selected_color = "#2BBED8";
 const selected_fill_opacity = 1;
@@ -216,23 +217,42 @@ L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 
 var arcgisOnline = L.esri.Geocoding.arcgisOnlineProvider();
 var mmp = L.esri.Geocoding.featureLayerProvider({
-  url: 'https://maps.freac.fsu.edu/arcgis/rest/services/FREAC/mmh_test_service/MapServer',
-  searchFields: ['agency'], // Search these fields for text matches
+//   url: 'http://freac.maps.arcgis.com/home/webmap/viewer.html?webmap=a6081db80aa24a459de18eddfc26f871/0',
+  url: 'https://admin205.ispa.fsu.edu/arcgis/rest/services/FREAC/mmh_test_service/FeatureServer/0',
+  searchFields: 'agency', // Search these fields for text matches
   label: 'Mental Health Agencies', // Group suggestions under this header
   formatSuggestion: function(feature){
     return feature.properties.agency; // format suggestions like this.
   }
 });
+var mmp2 = L.esri.Geocoding.featureLayerProvider({
+    //   url: 'http://freac.maps.arcgis.com/home/webmap/viewer.html?webmap=a6081db80aa24a459de18eddfc26f871/0',
+      url: 'https://maps.freac.fsu.edu/arcgis/rest/services/FREAC/mmh_test_service/FeatureServer/0',
+      searchFields: 'agency', // Search these fields for text matches
+      label: 'Mental Health Agencies', // Group suggestions under this header
+      formatSuggestion: function(feature){
+        return feature.properties.agency; // format suggestions like this.
+      }
+    });
+// var gisDay = L.esri.Geocoding.featureLayerProvider({
+//     url: 'https://services.arcgis.com/uCXeTVveQzP4IIcx/arcgis/rest/services/GIS_Day_Final/FeatureServer/0',
+//     searchFields: ['Name', 'Organization'], // Search these fields for text matches
+//     label: 'GIS Day Events', // Group suggestions under this header
+//     formatSuggestion: function(feature){
+//       return feature.properties.Name + ' - ' + feature.properties.Organization; // format suggestions like this.
+//     }
+//   });
 
 var geocoder = L.esri.Geocoding.geosearch({
     providers: [arcgisOnline,mmp], // will geocode via ArcGIS Online and search the GIS Day feature service.
     // providers: [arcgisOnline], // will geocode via ArcGIS Online and search the GIS Day feature service.
-    // providers: [mmp], // will geocode via ArcGIS Online and search the GIS Day feature service.
+    // providers: [mmp2], // will geocode via ArcGIS Online and search the GIS Day feature service.
     zoomToResult: false,
     expanded: true,
     useMapBounds: false,
-    placeholder: 'Search for an address',
-    searchBounds: [bottomLeft, topRight]
+    placeholder: 'Search for an address or a provider name',
+    collapseAfterResult: false,
+    //searchBounds: [bottomLeft, topRight]
 }).addTo(map);
 
 geocoder.on('results', function (result) {
@@ -336,8 +356,8 @@ $radius.change(function () {
 });
 
 function createPopup(data) {
-    const content = `<b>${data['Agency']}</b><br> ${data['Unit']}<br> ${data['Insurance']}<br> 
-                    ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
+    const content = `<b>${data['Agency']}</b><br> 
+                    ${data['HouseNumbe']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}`;
     return L.popup({
         closeButton: false
@@ -503,8 +523,8 @@ function insertTabulator(data) {
             title: "Provider",
             field: "agency"
         }, {
-            title: "Website",
-            field: "website"
+            title: "Phone Number",
+            field: "Phone_Numb"
         }],
         rowClick: function (event, row) {
             // NOTE: New function parameter to pass all of the row information to the zoomtolocation
@@ -568,6 +588,8 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
                     state: layer.data.State,
                     postalcode: layer.data.PostalCode,
                     website: layer.data.Website,
+                    phone_numb: layer.data.Phone_Numb,
+                    phonenumber:layer.data.Phone_Numb,
                     dist: distance_from_layer_circle,
                     latitude: layer_lat_long.lat,
                     longitude: layer_lat_long.lng
@@ -600,6 +622,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
                 State: results[i]['state'],
                 PostalCode: results[i]['postalcode'],
                 Website: results[i]['website'],
+                Phone_Numb: results[i]['phone_numb'],
                 lat: results[i]['latitude'],
                 lng: results[i]['longitude'],
 
@@ -610,6 +633,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
                 city: results[i]['city'],
                 state: results[i]['state'],
                 postalcode: results[i]['postalcode'],
+                phone_numb: results[i]['phone_numb'],
                 website: results[i]['website']
             });
         }
@@ -702,7 +726,8 @@ function markerLogic(data, selection_marker) {
         'City': data['City'],
         'State': data['State'],
         'PostalCode': data['PostalCode'],
-        'Website': '<a href="http://'+data['Website']+'">Click for website</a>',
+        'Website': '<a href="'+data['Website']+'">Click for website</a>',
+        'Phone_Numb': data['Phone_Numb'],
         'Specialty': data['Specialty'],
         'Accepting': data['Accepting'],
         'Insurance': data['Insurance'],
