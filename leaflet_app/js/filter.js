@@ -25,6 +25,16 @@ const assignSelectToFilterObject = (id, value, filterObject) => {
     return filterObject[id];
 }
 
+// maybe set active layer to feed into filterLayersArray
+// function instead of Object.values(activeLayer._layers)
+const setActiveLayer = (map) => {
+    mapContainer = [];
+    map.eachLayer((layer) => {
+        if (layer.data) {}
+    })
+
+}
+
 const filteredLayersArray = (activeLayer, filterArr, id) => Object.values(activeLayer._layers).filter(layer => {
     if (!layer.data) { // if there's no data, false
         return false

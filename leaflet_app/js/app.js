@@ -59,7 +59,7 @@ function markerStyle(fillColor, strokeColor, fillOpacity = 0.75) {
 let selection_marker;
 // We'll append our markers to this global variable
 const json_group = new L.FeatureGroup();
-//const json_group = new L.markerClusterGroup.withList({
+// const json_group = new L.markerClusterGroup.withList({
 // const json_group = new L.markerClusterGroup({
 //     maxClusterRadius: 0,
 //     iconCreateFunction: function (cluster) {
@@ -118,7 +118,6 @@ json_group.on('clusterclick', function (event) {
 //             className: 'clustered_sites',
 //             iconSize: L.point(15, 15)
 //         });
-
 //     }
 // });
 const selection_group = new L.FeatureGroup();
@@ -141,7 +140,6 @@ async function setup() {
             const provider = json_data[object];
             const marker = markerLogic(provider);
             marker.addTo(json_group);
-            // json_group.addLayer(marker);
         });
 
         console.log({
@@ -151,10 +149,12 @@ async function setup() {
         map.addLayer(selection_group)
 
         activeLayer = json_group;
+        getCount();
 
     });
 
 }
+
 
 ///////////////////////////////////////////////
 ///////////////////////////////////////////////
@@ -173,6 +173,18 @@ const map = new L.Map('map', {
     zoom: 7,
     maxBounds: [bottomLeft, topRight]
 });
+
+function getCount() {
+    let counter = 0;
+    map.eachLayer(function (layer) {
+        if (layer.data) {
+            console.log(layer.data.Agency);
+        }
+        counter++;
+
+    });
+    console.log(counter);
+}
 
 map.on({
     contextmenu: function (e) {
