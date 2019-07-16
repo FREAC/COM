@@ -85,9 +85,10 @@ const json_group_c = new L.markerClusterGroup({
         }
     });
 // on a click of a cluster
-json_group.on('clusterclick', function (event) {
-    console.log(json_group);
-    console.log(selection_group);
+json_group_c.on('clusterclick', function (event) {
+
+    // console.log(json_group);
+    // console.log(selection_group);
 
 
     // declare the empty content variable to append to
@@ -96,6 +97,7 @@ json_group.on('clusterclick', function (event) {
     async function getChildMarkerContent() {
         await $.each(event.layer.getAllChildMarkers(), function (index, value) {
             // append content 
+            // console.log('looping as part of the popup build')
             clusterPopupContent += value._popup._content + '<br><br>';
             return clusterPopupContent
         });
@@ -223,9 +225,9 @@ var mmp = L.esri.Geocoding.featureLayerProvider({
 });
 
 var geocoder = L.esri.Geocoding.geosearch({
-    // providers: [arcgisOnline,mmp], // will geocode via ArcGIS Online and search the GIS Day feature service.
+    providers: [arcgisOnline,mmp], // will geocode via ArcGIS Online and search the GIS Day feature service.
     // providers: [arcgisOnline], // will geocode via ArcGIS Online and search the GIS Day feature service.
-    providers: [mmp], // will geocode via ArcGIS Online and search the GIS Day feature service.
+    // providers: [mmp], // will geocode via ArcGIS Online and search the GIS Day feature service.
     zoomToResult: false,
     expanded: true,
     useMapBounds: false,
@@ -334,7 +336,7 @@ $radius.change(function () {
 });
 
 function createPopup(data) {
-    const content = `<b>${data['Agency']}</b><br>
+    const content = `<b>${data['Agency']}</b><br> ${data['Unit']}<br> ${data['Insurance']}<br> 
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}`;
     return L.popup({
@@ -434,7 +436,7 @@ function configurePopup(data) {
             data['Unit'] = ''
         }
 
-        var pop_text = `<b>${data['Agency']}</b><br>
+        var pop_text = `<b>${data['Agency']}</b><br> ${data['Insurance']}<br>
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}`;
         var popup = L.popup({
@@ -476,7 +478,7 @@ function zoomToLocation(lat, lng, z = 11, data) {
             data['Unit'] = ''
         }
 
-        var pop_text = `<b>${data['Agency']}</b><br>
+        var pop_text = `<b>${data['Agency']}</b><br> ${data['Insurance']}<br>
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}`;
         var popup = L.popup({
@@ -559,6 +561,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
                 //console.log(' show me ALLLLLLLLLLL the data ',layer.data)
                 results.push({
                     agency: layer.data.Agency,
+                    insurance: layer.data.Insurance,
                     housenumber: layer.data.HouseNumber,
                     street: layer.data.Street,
                     city: layer.data.City,
@@ -589,6 +592,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
             tableResults.push({
                 id: i,
                 Agency: results[i]['agency'],
+                Insurance: results[i]['insurance'],
                 HouseNumber: results[i]['housenumber'],
                 Street: results[i]['street'],
                 City: results[i]['city'],
@@ -598,6 +602,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
                 lng: results[i]['longitude'],
 
                 agency: results[i]['agency'],
+                insurance: results[i]['insurance'],
                 housenumber: results[i]['housenumber'],
                 street: results[i]['street'],
                 city: results[i]['city'],
