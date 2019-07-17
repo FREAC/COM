@@ -149,7 +149,7 @@ async function setup() {
         map.addLayer(selection_group)
 
         activeLayer = json_group;
-        getCount();
+        // getCount();
 
         getAllLayers(json_group);
 
@@ -179,14 +179,11 @@ const map = new L.Map('map', {
 const getAllLayers = async (group) => {
     const allLayers = [];
     map.eachLayer(function (layer) {
-        // console.log(layer.getAllChildMarkers());
         if (layer.data) {
             allLayers.push(layer)
-            console.log(layer);
         } else if (layer._childCount) {
             const cluster = layer.getAllChildMarkers();
             cluster.map(layer => {
-                console.log(layer);
                 allLayers.push(layer)
             });
         }
