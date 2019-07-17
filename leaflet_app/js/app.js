@@ -58,19 +58,19 @@ function markerStyle(fillColor, strokeColor, fillOpacity = 0.75) {
 // current selection
 let selection_marker;
 // We'll append our markers to this global variable
-const json_group = new L.FeatureGroup();
+// const json_group = new L.FeatureGroup();
 // const json_group = new L.markerClusterGroup.withList({
-// const json_group = new L.markerClusterGroup({
-//     maxClusterRadius: 0,
-//     iconCreateFunction: function (cluster) {
-//         return L.divIcon({
-//             html: '<b>' + cluster.getChildCount() + '</b>',
-//             className: 'clustered_sites',
-//             iconSize: L.point(15, 15)
-//         });
+const json_group = new L.markerClusterGroup({
+    maxClusterRadius: 0,
+    iconCreateFunction: function (cluster) {
+        return L.divIcon({
+            html: '<b>' + cluster.getChildCount() + '</b>',
+            className: 'clustered_sites',
+            iconSize: L.point(15, 15)
+        });
 
-//     }
-// });
+    }
+});
 
 // on a click of a cluster
 json_group.on('clusterclick', function (event) {
@@ -110,17 +110,17 @@ json_group.on('clusterclick', function (event) {
 
 
 // //This is our selection group
-// const selection_group = new L.markerClusterGroup({
-//     maxClusterRadius: 0,
-//     iconCreateFunction: function (cluster) {
-//         return L.divIcon({
-//             html: '<b>' + cluster.getChildCount() + '</b>',
-//             className: 'clustered_sites',
-//             iconSize: L.point(15, 15)
-//         });
-//     }
-// });
-const selection_group = new L.FeatureGroup();
+const selection_group = new L.markerClusterGroup({
+    maxClusterRadius: 0,
+    iconCreateFunction: function (cluster) {
+        return L.divIcon({
+            html: '<b>' + cluster.getChildCount() + '</b>',
+            className: 'clustered_sites',
+            iconSize: L.point(15, 15)
+        });
+    }
+});
+// const selection_group = new L.FeatureGroup();
 // This is the circle on the map that will be determine how many markers are around
 let searchArea;
 // this is the icon in the middle of the circle
@@ -177,8 +177,14 @@ const map = new L.Map('map', {
 function getCount() {
     let counter = 0;
     map.eachLayer(function (layer) {
+        // console.log(layer.getAllChildMarkers());
         if (layer.data) {
-            console.log(layer.data.Agency);
+            console.log(layer);
+        } else if (layer._childCount > 0) {
+            console.log({
+                msg: 'layers',
+                layers: layer.getAllChildMarkers()
+            });
         }
         counter++;
 
