@@ -151,6 +151,8 @@ async function setup() {
         activeLayer = json_group;
         getCount();
 
+        getAllLayers(json_group);
+
     });
 
 }
@@ -173,6 +175,30 @@ const map = new L.Map('map', {
     zoom: 7,
     maxBounds: [bottomLeft, topRight]
 });
+
+const getAllLayers = async (group) => {
+    const allLayers = [];
+    map.eachLayer(function (layer) {
+        // console.log(layer.getAllChildMarkers());
+        if (layer.data) {
+            allLayers.push(layer)
+            console.log(layer);
+        } else if (layer._childCount) {
+            const cluster = layer.getAllChildMarkers();
+            cluster.map(layer => {
+                console.log(layer);
+                allLayers.push(layer)
+            });
+        }
+
+    });
+    console.log(allLayers.length);
+    console.log(allLayers);
+
+
+    return allLayers
+}
+
 
 function getCount() {
     let counter = 0;
