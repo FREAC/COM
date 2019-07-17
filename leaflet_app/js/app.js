@@ -189,8 +189,6 @@ const getAllLayers = (group) => {
         }
 
     });
-    console.log(allLayers.length);
-    console.log(allLayers);
 
 
     return allLayers

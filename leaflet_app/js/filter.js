@@ -99,7 +99,7 @@ const orFilters = (filterObject) => {
 }
 
 $(".mpick").change(async function (event) {
-    console.log(allLayers);
+    // console.log(allLayers);
 
 
     const id = this.id; //id of select box
