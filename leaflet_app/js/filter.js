@@ -117,6 +117,8 @@ $(".mpick").change(async function (event) {
             // add layers to andFilter object
             andFilter[this.id] = filteredLayers; // 
             console.log(filteredLayers);
+            // checking to see if we get clusters back
+            filteredLayers.map(layer => console.log(layer.data.Agency))
             displayFilteredData(filteredLayers);
         } else {
             // if there are no selections, add the whole json_group back
