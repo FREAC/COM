@@ -133,6 +133,14 @@ async function filterLocations(event) {
         //map.removeLayer(selection_group)
         // activeLayer = json_group;
     });
+    if (num_filters === 0){
+        num_filters = -2;
+        for (layer in json_group._layers) {
+            // console.log('adding this layer',layer)
+            selection_group.addLayer(json_group._layers[layer])
+        }
+
+    }
     for (j=0; j <= num_filters+1; j+=2){
         if (j === 2 && num_filters === 1) {continue}
         console.log("filter number ",j , ' is being processed')
