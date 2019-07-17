@@ -144,10 +144,18 @@ let search_marker;
 let table;
 let activeLayer;
 
-
+//Function to grab any command line arguments.
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
 // initial setup function to loop through json that
 // assigns marker and add to map
 async function setup() {
+    console.log(' top of set up and looking for the args ', getUrlVars("idnum"))
     selection_group.clearLayers();
     $.get("./data/COM.json", function (json_data) {
         $.each(json_data, function (object) {
