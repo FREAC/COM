@@ -35,7 +35,7 @@ const setActiveLayer = (map) => {
 
 }
 
-const filteredLayersArray = (activeLayer, filterArr, id) => Object.values(activeLayer._layers).filter(layer => {
+const filteredLayersArray = (allLayers, filterArr, id) => allLayers.filter(layer => {
     if (!layer.data) { // if there's no data, false
         return false
     } else { // if there IS data
@@ -88,7 +88,7 @@ const orFilters = (filterObject) => {
     Object.keys(filterObject).map(async (item) => {
         // perform OR filter
         if (filterObject[item] !== undefined) {
-            const filteredLayers = await filteredLayersArray(json_group, filterObject[item], item);
+            const filteredLayers = await filteredLayersArray(allLayers, filterObject[item], item);
             // add results to andFilter
             return andFilter[item] = filteredLayers;
         } else {
@@ -99,6 +99,8 @@ const orFilters = (filterObject) => {
 }
 
 $(".mpick").change(async function (event) {
+    console.log(allLayers);
+
 
     const id = this.id; //id of select box
     const value = $(this).val(); // the selection value
@@ -111,7 +113,7 @@ $(".mpick").change(async function (event) {
     if (andFilterCheck) { // if true, there are no other filters to compare to; only and filter will be executed
 
         if (value !== null) {
-            const filteredLayers = await filteredLayersArray(json_group, orFilterSelections, id);
+            const filteredLayers = await filteredLayersArray(allLayers, orFilterSelections, id);
             // add layers to andFilter object
             andFilter[this.id] = filteredLayers; // 
             console.log(filteredLayers);
