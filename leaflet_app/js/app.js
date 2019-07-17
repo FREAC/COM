@@ -120,6 +120,7 @@ const selection_group = new L.markerClusterGroup({
         });
     }
 });
+let allLayers;
 // const selection_group = new L.FeatureGroup();
 // This is the circle on the map that will be determine how many markers are around
 let searchArea;
@@ -151,8 +152,7 @@ async function setup() {
         activeLayer = json_group;
         // getCount();
 
-        getAllLayers(json_group);
-
+        allLayers = getAllLayers(json_group);
     });
 
 }
@@ -176,7 +176,7 @@ const map = new L.Map('map', {
     maxBounds: [bottomLeft, topRight]
 });
 
-const getAllLayers = async (group) => {
+const getAllLayers = (group) => {
     const allLayers = [];
     map.eachLayer(function (layer) {
         if (layer.data) {
