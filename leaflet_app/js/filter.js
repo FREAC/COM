@@ -52,12 +52,10 @@ const filteredLayersArray = (allLayers, filterArr, id) => allLayers.filter(layer
 // compare arrays and check for matching attributes
 const checkFilterPresence = (currentLayerArr, filterArr) => {
     const matchingPoints = [];
-    // console.log('whats in filterrr ', filterArr)
     if (currentLayerArr.length > 0 && filterArr) {
         try {
             for (let item of currentLayerArr) {
                 if (filterArr.includes(item.toLowerCase().replace(/\s/g, ''))) {
-                    // console.log('FOUND one to keep ', item)
                     matchingPoints.push(item);
                 }
             }
@@ -99,8 +97,6 @@ const orFilters = (filterObject) => {
 }
 
 $(".mpick").change(async function (event) {
-    // console.log(allLayers);
-
 
     const id = this.id; //id of select box
     const value = $(this).val(); // the selection value
