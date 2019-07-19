@@ -313,7 +313,9 @@ async function filterLocations(event) {
         }
         // we now have filtered all data by the given filter.  We need to set the next filter
         // to only work with the remaining records
-        console.log('how many records did we save ',selection_group.length)
+
+        console.log('how many records did we save ',selection_group._map)
+
         console.log('what does the json look like after the filter ', selection_group)
         // regenerate the json group so we can start the loop over again with the same structure
         //map.addLayer(selection_group);
@@ -331,8 +333,14 @@ async function filterLocations(event) {
     await map.removeLayer(selection_group);
     // Add our selection markers in our JSON file on the map
     console.log('adding the selection group to the map')
-    map.addLayer(selection_group);
+    await map.addLayer(selection_group);
     console.log('was able to add selection group to map')
+    let i = 0;
+    selection_group.eachLayer(function(){ i += 1; });
+    console.log('Map has', i, 'layers.');
+    if (i === 0){
+        alert('No agencies meet your criteria')
+    }
 
     // map.addLayer(json_group)
 
