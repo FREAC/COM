@@ -167,37 +167,28 @@ async function filterLocations(event) {
                         // be careful not to add the point in twice because it accepts, say, Aetna and Cigna
                         // THis is for single points
                         console.log('going to see if ', filter[j+1][m],' is in this record ',targetLayer.data[filter[j]])
-                        if ( (targetLayer.data[filter[j]]).includes(filter[j+1][m])) {
-                            console.log('m is ',m,' and length is ', filter[j+1].length-1)
-                            console.log('--FOUNDfound one but not written yet')
-                            if (! need_it ) {
-                                // if (j > 0 ) {
-                                //     need_it = true;
-                                //     console.log('we need this one but its already saved')
-                                //     continue
-                                // } 
-                                console.log('FOUND ONE THAT WE NEED ',targetLayer.data['Agency'])
-                                //console.log('make the marker now ', targetLayer.data)
-                                targetLayer.data['Latitude'] = targetLayer._latlng.lat;
-                                targetLayer.data['Longitude'] = targetLayer._latlng.lng;
-                                targetLayer.data['Agency'] = targetLayer.data.Agency;
-                                const marker =  markerLogic(targetLayer.data);
-                                marker.addTo(selection_group);
-                                need_it = true;
-                                //marker.addTo(json_group);
-                                //json_group.addLayer(marker);
-                                continue
+                        recordArr = targetLayer.data[filter[j]].split(",")
+                        for (k=0; k<recordArr.length; k++){
+                            console.log('testing ', filter[j+1][m],' is == to ',recordArr[k],k)
+                            if ( recordArr[k] === filter[j+1][m]) {
+                                console.log('m is ',m,' and length is ', filter[j+1].length-1)
+                                console.log('--FOUNDfound one but not written yet')
+                                if (! need_it ) {
+                                    console.log('FOUND ONE THAT WE NEED ',targetLayer.data['Agency'])
+                                    //console.log('make the marker now ', targetLayer.data)
+                                    targetLayer.data['Latitude'] = targetLayer._latlng.lat;
+                                    targetLayer.data['Longitude'] = targetLayer._latlng.lng;
+                                    targetLayer.data['Agency'] = targetLayer.data.Agency;
+                                    const marker =  markerLogic(targetLayer.data);
+                                    marker.addTo(selection_group);
+                                    need_it = true;
+                                    //marker.addTo(json_group);
+                                    //json_group.addLayer(marker);
+                                    continue
+                                }
+                            } else {
+                                // we dont need this record 
                             }
-                        } else {
-                            // we dont need this record but only throw it out if this is the second or higher
-                            // if (j>0){
-                            //     need_it = false
-                            //     console.log(' on the 2nd or higher filter and we dont need this ',selection_group)
-                            //     //json_group._featureGroup.removeLayer(layer)
-                            //     //selection_group.removeLayer(layer)
-                            //     console.log('removed after on the 2nd or hihger')
-                            //     continue
-                            // }
                         }
                     } catch {
                         // Gets in here if the thing we are looking at is a cluster rather than a single point
