@@ -39,8 +39,12 @@ const filteredLayersArray = (allLayers, filterArr, id) => allLayers.filter(layer
     if (!layer.data) { // if there's no data, false
         return false
     } else { // if there IS data
+        console.log(layer);
+
         const currentLayer = layer.data[id]; // current layer in json_group
         // currentLayerArr are target attributes from map (insurance, categories, etc.)
+        console.log(currentLayer);
+
         const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
         const intersectionFilter = checkFilterPresence(currentLayerArr, filterArr)
         if (intersectionFilter) {
