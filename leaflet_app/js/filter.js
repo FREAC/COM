@@ -119,7 +119,6 @@ $(".mpick").change(async function (event) {
             andFilter[this.id] = filteredLayers; // 
             console.log(filteredLayers);
             // checking to see if we get clusters back
-            filteredLayers.map(layer => console.log(layer.data.Agency))
             displayFilteredData(filteredLayers);
             searchByRadiusSize(); // update search results table
         } else {

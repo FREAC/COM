@@ -7,6 +7,18 @@ const selected_color = "#2BBED8";
 const selected_fill_opacity = 1;
 $(function () {
     $('.mpick').fSelect();
+    // clear selection
+    // https://stackoverflow.com/questions/52262677/fselect-clear-selection
+    $('#clear-filters').click(function () {
+        $('option:selected').prop("selected", false);
+
+        $('.mpick').prev(".fs-dropdown").find(".fs-options .fs-option").each(function () {
+            $(this).removeClass('selected', false);
+        });
+
+        console.log($('#fselectMulti').val());
+        $('.fs-label').html('Select some options');
+    })
 });
 $('input[name="insurance"]').amsifySuggestags({
     suggestions: ['Aetna', 'Beacon', 'Beech Street', 'Cigna', 'Coventry', 'First Health', 'Healthy Kids',
@@ -315,8 +327,8 @@ function clearSelection({
     map.closePopup();
 }
 
-// Clear button functionality
-$('#clear-search').click(function () {
+// Clear search button functionality
+$('#clear-search').click(() => {
     clearSelection({
         radius: true
     });
