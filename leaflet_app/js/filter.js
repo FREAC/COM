@@ -50,6 +50,7 @@ const filteredLayersArray = (allLayers, filterArr, id) => allLayers.filter(layer
         if (intersectionFilter) {
             return intersectionFilter.length > 0 // return if there are more than 0 results
         }
+        activeLayer = selection_group;
     }
 });
 

@@ -329,7 +329,9 @@ $radius.change(function () {
         const r_size = parseInt($radius.val());
         searchArea.setRadius(r_size);
         map.flyToBounds(searchArea.getBounds());
-        pointsInCircle(searchArea, r_size, activeLayer);
+        console.log(activeLayer);
+
+        pointsInCircle(searchArea, r_size, map);
         // $('#map').css('z-index', '2')
     }
 });
@@ -478,7 +480,7 @@ function insertTabulator(data) {
 }
 
 // This figures out how many points are within our circle
-function pointsInCircle(circle, meters_user_set, groupLayer) {
+function pointsInCircle(circle, meters_user_set, map) {
 
     if (circle !== undefined) {
         // Only run if we have an address entered
@@ -496,36 +498,83 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
         // hold the initial results for points inside circle radius
         const results = [];
 
-        // Loop through each point in JSON file
-        groupLayer.eachLayer(function (layer) {
-            //console.log('I think this is a provider ', layer)
-            // Lat, long of current point
-            const layer_lat_long = layer.getLatLng();
-
-            // Distance from our circle marker
-            // To current point in meters
-            const distance_from_layer_circle = layer_lat_long.distanceTo(circle_lat_long);
-
-            // See if meters is within raduis
-            // The user has selected
-            if (distance_from_layer_circle <= meters_user_set) {
-                counter_points_in_circle += 1;
-                //console.log('layer data looks like this? ', layer.data)
-                // We need all of the fields below for the popup from the Results table to work with all 
-                // the fields
-                results.push({
-                    agency: layer.data.Agency,
-                    housenumber: layer.data.HouseNumber,
-                    street: layer.data.Street,
-                    city: layer.data.City,
-                    state: layer.data.State,
-                    postalcode: layer.data.PostalCode,
-                    dist: distance_from_layer_circle,
-                    latitude: layer_lat_long.lat,
-                    longitude: layer_lat_long.lng
+        map.eachLayer((layer) => {
+            if (layer.data) {
+                const layer_lat_long = layer.getLatLng();
+                const distance_from_layer_circle = layer_lat_long.distanceTo(circle_lat_long);
+                // See if meters is within raduis
+                // The user has selected
+                if (distance_from_layer_circle <= meters_user_set) {
+                    counter_points_in_circle += 1;
+                    //console.log('layer data looks like this? ', layer.data)
+                    // We need all of the fields below for the popup from the Results table to work with all 
+                    // the fields
+                    results.push({
+                        agency: layer.data.Agency,
+                        housenumber: layer.data.HouseNumber,
+                        street: layer.data.Street,
+                        city: layer.data.City,
+                        state: layer.data.State,
+                        postalcode: layer.data.PostalCode,
+                        dist: distance_from_layer_circle,
+                        latitude: layer_lat_long.lat,
+                        longitude: layer_lat_long.lng
+                    });
+                }
+            } else if (layer._childCount) {
+                const cluster = layer.getAllChildMarkers();
+                cluster.map(layer => {
+                    const layer_lat_long = layer.getLatLng();
+                    const distance_from_layer_circle = layer_lat_long.distanceTo(circle_lat_long);
+                    // See if meters is within raduis
+                    // The user has selected
+                    if (distance_from_layer_circle <= meters_user_set) {
+                        counter_points_in_circle += 1;
+                        //console.log('layer data looks like this? ', layer.data)
+                        // We need all of the fields below for the popup from the Results table to work with all 
+                        // the fields
+                        results.push({
+                            agency: layer.data.Agency,
+                            housenumber: layer.data.HouseNumber,
+                            street: layer.data.Street,
+                            city: layer.data.City,
+                            state: layer.data.State,
+                            postalcode: layer.data.PostalCode,
+                            dist: distance_from_layer_circle,
+                            latitude: layer_lat_long.lat,
+                            longitude: layer_lat_long.lng
+                        });
+                    }
                 });
             }
-        });
+        })
+        // Loop through each point in JSON file
+        // groupLayer.eachLayer(function (layer) {
+        //     // Lat, long of current point
+        //     const layer_lat_long = layer.getLatLng();
+        //     // Distance from our circle marker to current point in meters
+        //     const distance_from_layer_circle = layer_lat_long.distanceTo(circle_lat_long);
+
+        //     // See if meters is within raduis
+        //     // The user has selected
+        //     if (distance_from_layer_circle <= meters_user_set) {
+        //         counter_points_in_circle += 1;
+        //         //console.log('layer data looks like this? ', layer.data)
+        //         // We need all of the fields below for the popup from the Results table to work with all 
+        //         // the fields
+        //         results.push({
+        //             agency: layer.data.Agency,
+        //             housenumber: layer.data.HouseNumber,
+        //             street: layer.data.Street,
+        //             city: layer.data.City,
+        //             state: layer.data.State,
+        //             postalcode: layer.data.PostalCode,
+        //             dist: distance_from_layer_circle,
+        //             latitude: layer_lat_long.lat,
+        //             longitude: layer_lat_long.lng
+        //         });
+        //     }
+        // });
 
         //Sort the list by increasing distance from point
         results.sort(function (a, b) {
@@ -600,7 +649,9 @@ function querySearchArea(location) {
 
     map.flyToBounds(searchArea.getBounds());
     // filterLocations(event)
-    pointsInCircle(searchArea, r_size, activeLayer);
+    console.log(map);
+
+    pointsInCircle(searchArea, r_size, map);
 }
 
 
