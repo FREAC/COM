@@ -121,11 +121,11 @@ $(".mpick").change(async function (event) {
             // checking to see if we get clusters back
             filteredLayers.map(layer => console.log(layer.data.Agency))
             displayFilteredData(filteredLayers);
-            searchByRadiusSize();
+            searchByRadiusSize(); // update search results table
         } else {
             // if there are no selections, add the whole json_group back
             map.addLayer(json_group);
-            searchByRadiusSize();
+            searchByRadiusSize(); // update search results table
         }
 
 
@@ -148,7 +148,7 @@ $(".mpick").change(async function (event) {
         const andResults = intersectionArray(orResults);
         console.log(andResults);
         displayFilteredData(andResults);
-        searchByRadiusSize();
+        searchByRadiusSize(); // update search results table
     }
 });
 
