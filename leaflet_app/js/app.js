@@ -17,8 +17,9 @@ $(function () {
         });
 
         $('.fs-label').html('Select some options');
-        selection_group.clearLayers();
-        map.addLayer(json_group);
+        selection_group.clearLayers(); // remove selections
+        map.addLayer(json_group); // add json_group back to the map
+        searchByRadiusSize(); // requery the circle
     })
 });
 $('input[name="insurance"]').amsifySuggestags({
