@@ -595,8 +595,8 @@ function querySearchArea(location) {
     if ($radius.val()) {
         r_size = parseInt($radius.val());
     } else {
-        r_size = 5347;
-        $radius.val(5347);
+        r_size = 8047;
+        $radius.val(8047);
     }
     searchArea = L.circle(location.latlng, r_size, {
         color: selected_color,
