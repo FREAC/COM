@@ -16,8 +16,9 @@ $(function () {
             $(this).removeClass('selected', false);
         });
 
-        console.log($('#fselectMulti').val());
         $('.fs-label').html('Select some options');
+        selection_group.clearLayers();
+        map.addLayer(json_group);
     })
 });
 $('input[name="insurance"]').amsifySuggestags({
