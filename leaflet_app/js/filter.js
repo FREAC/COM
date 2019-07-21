@@ -37,13 +37,13 @@ const setActiveLayer = (map) => {
 
 const filteredLayersArray = (allLayers, filterArr, id) => allLayers.filter(layer => {
     if (!layer.data) { // if there's no data, false
+        alert("no data found");
         return false
     } else { // if there IS data
-        console.log(layer);
+        // console.log(layer);
 
         const currentLayer = layer.data[id]; // current layer in json_group
         // currentLayerArr are target attributes from map (insurance, categories, etc.)
-        console.log(currentLayer);
 
         const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
         const intersectionFilter = checkFilterPresence(currentLayerArr, filterArr)
@@ -116,11 +116,16 @@ $(".mpick").change(async function (event) {
         if (value !== null) {
             const filteredLayers = await filteredLayersArray(allLayers, orFilterSelections, id);
             // add layers to andFilter object
-            andFilter[this.id] = filteredLayers; // 
-            console.log(filteredLayers);
-            // checking to see if we get clusters back
-            displayFilteredData(filteredLayers);
-            searchByRadiusSize(); // update search results table
+            if (filteredLayers.length > 0) {
+                andFilter[this.id] = filteredLayers; // 
+                console.log(filteredLayers);
+                // checking to see if we get clusters back
+                displayFilteredData(filteredLayers);
+                searchByRadiusSize(); // update search results table
+            } else {
+                alert("no data found"); // no data found in the selection
+            }
+
         } else {
             // if there are no selections, add the whole json_group back
             map.addLayer(json_group);
