@@ -116,15 +116,11 @@ $(".mpick").change(async function (event) {
         if (value !== null) {
             const filteredLayers = await filteredLayersArray(allLayers, orFilterSelections, id);
             // add layers to andFilter object
-            if (filteredLayers.length > 0) {
-                andFilter[this.id] = filteredLayers; // 
-                console.log(filteredLayers);
-                // checking to see if we get clusters back
-                displayFilteredData(filteredLayers);
-                searchByRadiusSize(); // update search results table
-            } else {
-                alert("no data found"); // no data found in the selection
-            }
+            andFilter[this.id] = filteredLayers; // 
+            console.log(filteredLayers);
+            // checking to see if we get clusters back
+            displayFilteredData(filteredLayers);
+            searchByRadiusSize(); // update search results table
 
         } else {
             // if there are no selections, add the whole json_group back
