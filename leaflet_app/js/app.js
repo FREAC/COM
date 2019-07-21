@@ -478,8 +478,8 @@ function insertTabulator(data) {
             title: "Provider",
             field: "agency"
         }, {
-            title: "Zip code",
-            field: "PostalCode"
+            title: "Phone Number",
+            field: "phonenumber"
         }],
         rowClick: function (event, row) {
             // NOTE: New function parameter to pass all of the row information to the zoomtolocation
@@ -517,6 +517,8 @@ function pointsInCircle(circle, meters_user_set, map) {
         const results = [];
         // check to see if marker is within the bounds of the circle radius
         const checkDistanceAndPushToResults = (layer) => {
+            console.log(layer);
+
             const layer_lat_long = layer.getLatLng();
             const distance_from_layer_circle = layer_lat_long.distanceTo(circle_lat_long);
             // See if meters is within raduis
@@ -535,7 +537,8 @@ function pointsInCircle(circle, meters_user_set, map) {
                     postalcode: layer.data.PostalCode,
                     dist: distance_from_layer_circle,
                     latitude: layer_lat_long.lat,
-                    longitude: layer_lat_long.lng
+                    longitude: layer_lat_long.lng,
+                    phonenumber: layer.data.PhoneNumber
                 });
             }
         }
@@ -554,6 +557,9 @@ function pointsInCircle(circle, meters_user_set, map) {
             return a.dist - b.dist;
         });
 
+        console.log(results);
+
+
         // A container to hold the query results
         const tableResults = [];
 
@@ -563,7 +569,7 @@ function pointsInCircle(circle, meters_user_set, map) {
         // TODO - fix this so we only have one case
 
         for (let i = 0; i < counter_points_in_circle; i++) {
-            //console.log('what does a typical result look like, ', results[i])
+            console.log('what does a typical result look like, ', results[i].phonenumber)
             tableResults.push({
                 id: i,
                 Agency: results[i]['agency'],
@@ -574,6 +580,7 @@ function pointsInCircle(circle, meters_user_set, map) {
                 PostalCode: results[i]['postalcode'],
                 lat: results[i]['latitude'],
                 lng: results[i]['longitude'],
+                phonenumber: results[i]['phonenumber'],
 
                 agency: results[i]['agency'],
                 housenumber: results[i]['housenumber'],
@@ -583,6 +590,8 @@ function pointsInCircle(circle, meters_user_set, map) {
                 postalcode: results[i]['postalcode']
             });
         }
+        console.log(tableResults);
+
         // add tabulator object to screen
         insertTabulator(tableResults);
 
@@ -675,6 +684,7 @@ function markerLogic(data, selection_marker) {
         'City': data['City'],
         'State': data['State'],
         'PostalCode': data['PostalCode'],
+        'PhoneNumber': data['Phone_Numb'],
         'Specialty': data['Specialty'],
         'New Client': data['New_Client'],
         'Insurance': data['Insurance'],
