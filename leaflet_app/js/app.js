@@ -94,9 +94,11 @@ json_group_c.on('clusterclick', function (event) {
 
     // declare the empty content variable to append to
     let clusterPopupContent = "";
-
+    console.log('starting the cluster click')
     async function getChildMarkerContent() {
+        console.log('ready')
         await $.each(event.layer.getAllChildMarkers(), function (index, value) {
+            console.log('looking at each one')
             // append content 
             // console.log('looping as part of the popup build')
             clusterPopupContent += value._popup._content + '<br><br>';
@@ -122,6 +124,7 @@ json_group_c.on('clusterclick', function (event) {
                 .openOn(map);
         });
 });
+
 //This is our selection group
 const selection_group = new L.markerClusterGroup({
     maxClusterRadius: 0,
@@ -475,7 +478,7 @@ function configurePopup(data) {
         }
 
         var pop_text = `<b>${data['Agency']}</b><br> ${data['Insurance']}<br>
-                    ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
+                    ${data['HouseNumbe']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}`;
         var popup = L.popup({
                 maxWidth: 200

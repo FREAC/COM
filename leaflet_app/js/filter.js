@@ -339,4 +339,43 @@ async function filterLocations(event) {
 
     // set active layer
     activeLayer = selection_group;
+    //activeLayer = json_group_c;
+    selection_group.on('clusterclick', function (event) {
+
+        // console.log(json_group);
+        // console.log(selection_group);
+    
+    
+        // declare the empty content variable to append to
+        let clusterPopupContent = "";
+        console.log('starting the cluster click')
+        async function getChildMarkerContent() {
+            console.log('ready')
+            await $.each(event.layer.getAllChildMarkers(), function (index, value) {
+                console.log('looking at each one')
+                // append content 
+                // console.log('looping as part of the popup build')
+                clusterPopupContent += value._popup._content + '<br><br>';
+                return clusterPopupContent
+            });
+        }
+    
+        // get the content of each marker
+        getChildMarkerContent().then(
+            // assign content to new leaflet popup
+            function () {
+                // make sure last popup instance is removed
+                $('#clusterPopupContent').remove();
+    
+                // set content and add to map
+                const clusterPopup = L.popup({
+                        closeButton: true,
+                        maxHeight: 150,
+                        maxWidth: 200,
+                    })
+                    .setLatLng(event.layer.getLatLng())
+                    .setContent(clusterPopupContent)
+                    .openOn(map);
+            });
+    });
 }
