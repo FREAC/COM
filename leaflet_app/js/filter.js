@@ -37,27 +37,30 @@ const setActiveLayer = (map) => {
 
 const filteredLayersArray = (allLayers, filterArr, id) => allLayers.filter(layer => {
     if (!layer.data) { // if there's no data, false
+        alert("no data found");
         return false
     } else { // if there IS data
+        // console.log(layer);
+
         const currentLayer = layer.data[id]; // current layer in json_group
         // currentLayerArr are target attributes from map (insurance, categories, etc.)
+
         const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
         const intersectionFilter = checkFilterPresence(currentLayerArr, filterArr)
         if (intersectionFilter) {
             return intersectionFilter.length > 0 // return if there are more than 0 results
         }
+        activeLayer = selection_group;
     }
 });
 
 // compare arrays and check for matching attributes
 const checkFilterPresence = (currentLayerArr, filterArr) => {
     const matchingPoints = [];
-    // console.log('whats in filterrr ', filterArr)
     if (currentLayerArr.length > 0 && filterArr) {
         try {
             for (let item of currentLayerArr) {
                 if (filterArr.includes(item.toLowerCase().replace(/\s/g, ''))) {
-                    // console.log('FOUND one to keep ', item)
                     matchingPoints.push(item);
                 }
             }
@@ -99,8 +102,6 @@ const orFilters = (filterObject) => {
 }
 
 $(".mpick").change(async function (event) {
-    // console.log(allLayers);
-
 
     const id = this.id; //id of select box
     const value = $(this).val(); // the selection value
@@ -118,11 +119,13 @@ $(".mpick").change(async function (event) {
             andFilter[this.id] = filteredLayers; // 
             console.log(filteredLayers);
             // checking to see if we get clusters back
-            filteredLayers.map(layer => console.log(layer.data.Agency))
             displayFilteredData(filteredLayers);
+            searchByRadiusSize(); // update search results table
+
         } else {
             // if there are no selections, add the whole json_group back
             map.addLayer(json_group);
+            searchByRadiusSize(); // update search results table
         }
 
 
@@ -145,6 +148,7 @@ $(".mpick").change(async function (event) {
         const andResults = intersectionArray(orResults);
         console.log(andResults);
         displayFilteredData(andResults);
+        searchByRadiusSize(); // update search results table
     }
 });
 

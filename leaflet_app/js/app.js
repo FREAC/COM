@@ -7,6 +7,20 @@ const selected_color = "#2BBED8";
 const selected_fill_opacity = 1;
 $(function () {
     $('.mpick').fSelect();
+    // clear selection
+    // https://stackoverflow.com/questions/52262677/fselect-clear-selection
+    $('#clear-filters').click(function () {
+        $('option:selected').prop("selected", false);
+
+        $('.mpick').prev(".fs-dropdown").find(".fs-options .fs-option").each(function () {
+            $(this).removeClass('selected', false);
+        });
+
+        $('.fs-label').html('Select some options');
+        selection_group.clearLayers(); // remove selections
+        map.addLayer(json_group); // add json_group back to the map
+        searchByRadiusSize(); // requery the circle
+    })
 });
 $('input[name="insurance"]').amsifySuggestags({
     suggestions: ['Aetna', 'Beacon', 'Beech Street', 'Cigna', 'Coventry', 'First Health', 'Healthy Kids',
@@ -315,23 +329,29 @@ function clearSelection({
     map.closePopup();
 }
 
-// Clear button functionality
-$('#clear-search').click(function () {
+// Clear search button functionality
+$('#clear-search').click(() => {
     clearSelection({
         radius: true
     });
 });
 
-// Radius dropdown functionality
-const $radius = $('#radius');
-$radius.change(function () {
+const searchByRadiusSize = () => {
     if (searchArea) {
         const r_size = parseInt($radius.val());
         searchArea.setRadius(r_size);
         map.flyToBounds(searchArea.getBounds());
-        pointsInCircle(searchArea, r_size, activeLayer);
-        // $('#map').css('z-index', '2')
+        console.log(activeLayer);
+
+        return pointsInCircle(searchArea, r_size, map);
     }
+}
+
+// Radius dropdown functionality
+const $radius = $('#radius');
+$radius.change(function () {
+    // research the area according to the radius size in the dropdown
+    searchByRadiusSize();
 });
 
 function createPopup(data) {
@@ -458,8 +478,8 @@ function insertTabulator(data) {
             title: "Provider",
             field: "agency"
         }, {
-            title: "Zip code",
-            field: "PostalCode"
+            title: "Phone Number",
+            field: "phonenumber"
         }],
         rowClick: function (event, row) {
             // NOTE: New function parameter to pass all of the row information to the zoomtolocation
@@ -478,7 +498,7 @@ function insertTabulator(data) {
 }
 
 // This figures out how many points are within our circle
-function pointsInCircle(circle, meters_user_set, groupLayer) {
+function pointsInCircle(circle, meters_user_set, map) {
 
     if (circle !== undefined) {
         // Only run if we have an address entered
@@ -495,17 +515,12 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
 
         // hold the initial results for points inside circle radius
         const results = [];
+        // check to see if marker is within the bounds of the circle radius
+        const checkDistanceAndPushToResults = (layer) => {
+            console.log(layer);
 
-        // Loop through each point in JSON file
-        groupLayer.eachLayer(function (layer) {
-            //console.log('I think this is a provider ', layer)
-            // Lat, long of current point
             const layer_lat_long = layer.getLatLng();
-
-            // Distance from our circle marker
-            // To current point in meters
             const distance_from_layer_circle = layer_lat_long.distanceTo(circle_lat_long);
-
             // See if meters is within raduis
             // The user has selected
             if (distance_from_layer_circle <= meters_user_set) {
@@ -513,7 +528,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
                 //console.log('layer data looks like this? ', layer.data)
                 // We need all of the fields below for the popup from the Results table to work with all 
                 // the fields
-                results.push({
+                return results.push({
                     agency: layer.data.Agency,
                     housenumber: layer.data.HouseNumber,
                     street: layer.data.Street,
@@ -522,15 +537,28 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
                     postalcode: layer.data.PostalCode,
                     dist: distance_from_layer_circle,
                     latitude: layer_lat_long.lat,
-                    longitude: layer_lat_long.lng
+                    longitude: layer_lat_long.lng,
+                    phonenumber: layer.data.PhoneNumber
+                });
+            }
+        }
+        map.eachLayer((layer) => {
+            if (layer.data) {
+                checkDistanceAndPushToResults(layer);
+            } else if (layer._childCount) {
+                const cluster = layer.getAllChildMarkers();
+                cluster.map(layer => {
+                    checkDistanceAndPushToResults(layer);
                 });
             }
         });
-
         //Sort the list by increasing distance from point
         results.sort(function (a, b) {
             return a.dist - b.dist;
         });
+
+        console.log(results);
+
 
         // A container to hold the query results
         const tableResults = [];
@@ -541,7 +569,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
         // TODO - fix this so we only have one case
 
         for (let i = 0; i < counter_points_in_circle; i++) {
-            //console.log('what does a typical result look like, ', results[i])
+            console.log('what does a typical result look like, ', results[i].phonenumber)
             tableResults.push({
                 id: i,
                 Agency: results[i]['agency'],
@@ -552,6 +580,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
                 PostalCode: results[i]['postalcode'],
                 lat: results[i]['latitude'],
                 lng: results[i]['longitude'],
+                phonenumber: results[i]['phonenumber'],
 
                 agency: results[i]['agency'],
                 housenumber: results[i]['housenumber'],
@@ -561,6 +590,8 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
                 postalcode: results[i]['postalcode']
             });
         }
+        console.log(tableResults);
+
         // add tabulator object to screen
         insertTabulator(tableResults);
 
@@ -587,8 +618,8 @@ function querySearchArea(location) {
     if ($radius.val()) {
         r_size = parseInt($radius.val());
     } else {
-        r_size = 5347;
-        $radius.val(5347);
+        r_size = 8047;
+        $radius.val(8047);
     }
     searchArea = L.circle(location.latlng, r_size, {
         color: selected_color,
@@ -600,7 +631,9 @@ function querySearchArea(location) {
 
     map.flyToBounds(searchArea.getBounds());
     // filterLocations(event)
-    pointsInCircle(searchArea, r_size, activeLayer);
+    console.log(map);
+
+    pointsInCircle(searchArea, r_size, map);
 }
 
 
@@ -651,6 +684,7 @@ function markerLogic(data, selection_marker) {
         'City': data['City'],
         'State': data['State'],
         'PostalCode': data['PostalCode'],
+        'PhoneNumber': data['Phone_Numb'],
         'Specialty': data['Specialty'],
         'New Client': data['New_Client'],
         'Insurance': data['Insurance'],
