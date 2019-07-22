@@ -479,7 +479,7 @@ function insertTabulator(data) {
             field: "agency"
         }, {
             title: "Phone Number",
-            field: "phonenumber"
+            field: "Phone_Numb"
         }],
         rowClick: function (event, row) {
             // NOTE: New function parameter to pass all of the row information to the zoomtolocation
@@ -538,7 +538,7 @@ function pointsInCircle(circle, meters_user_set, map) {
                     dist: distance_from_layer_circle,
                     latitude: layer_lat_long.lat,
                     longitude: layer_lat_long.lng,
-                    phonenumber: layer.data.PhoneNumber
+                    phone_numb: layer.data.Phone_Numb,
                 });
             }
         }
@@ -580,7 +580,7 @@ function pointsInCircle(circle, meters_user_set, map) {
                 PostalCode: results[i]['postalcode'],
                 lat: results[i]['latitude'],
                 lng: results[i]['longitude'],
-                phonenumber: results[i]['phonenumber'],
+                Phone_Numb: results[i]['phone_numb'],
 
                 agency: results[i]['agency'],
                 housenumber: results[i]['housenumber'],
@@ -684,7 +684,7 @@ function markerLogic(data, selection_marker) {
         'City': data['City'],
         'State': data['State'],
         'PostalCode': data['PostalCode'],
-        'PhoneNumber': data['Phone_Numb'],
+        'Phone_Numb': data['Phone_Numb'],
         'Specialty': data['Specialty'],
         'New Client': data['New_Client'],
         'Insurance': data['Insurance'],
