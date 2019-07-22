@@ -337,12 +337,22 @@ $('#clear-search').click(function () {
     });
 });
 
+function doAdelay(){
+    console.log('starting the ddddddelay')
+    setTimeout(function(){return true;},300000);
+    console.log('FFFFFFFFFinhsed with the delayyyyy')
+};
 // Filter by my selections
 $('#filter_by').click(function () {
     selection_group.clearLayers();
     map.removeLayer(selection_group);
     filterLocations(event)
-    console.log('finished the filterlocations function')
+    // doAdelay();
+    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@finished the filterlocations function')
+    const r_size = parseInt($radius.val());
+    setTimeout (function () {
+        pointsInCircle(searchArea, r_size, activeLayer);
+    },500)
 });
 
 // reload the page so all filters are reset
@@ -552,6 +562,7 @@ function insertTabulator(data) {
 
 // This figures out how many points are within our circle
 function pointsInCircle(circle, meters_user_set, groupLayer) {
+    console.log('ssssssssssssssssstarting points is a circle ', circle, meters_user_set)
 
     if (circle !== undefined) {
         // Only run if we have an address entered
@@ -617,7 +628,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
         // the table needs lower case fields (currently we only show agency but may want to
         // show others in the future so I put them all in) but the popup relies on capitalized fields
         // TODO - fix this so we only have one case
-
+        console.log('hhhhhhhhhhhow many meet our criteria ',counter_points_in_circle)
         for (let i = 0; i < counter_points_in_circle; i++) {
             console.log('what does a typical result look like, ', results[i])
             tableResults.push({
@@ -646,6 +657,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
             });
         }
         // add tabulator object to screen
+        console.log('about to reinsert the tabulator')
         insertTabulator(tableResults);
 
 
@@ -665,15 +677,16 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
 
 // This both places a circle on the map AND counts the # of points in that circle
 function querySearchArea(location) {
-    //console.log('STARTING querysearcharea NOWWWWWW')
+    console.log('STARTING querysearcharea NOWWWWWW')
     clearSelection();
     let r_size;
     if ($radius.val()) {
         r_size = parseInt($radius.val());
     } else {
-        r_size = 5347;
-        $radius.val(5347);
+        r_size = 8047;
+        $radius.val(8047);
     }
+    console.log('what did rsize end up being ', r_size)
     searchArea = L.circle(location.latlng, r_size, {
         color: selected_color,
         fillColor: selected_color,
@@ -685,6 +698,7 @@ function querySearchArea(location) {
     map.flyToBounds(searchArea.getBounds());
     //filterLocations(event)
     pointsInCircle(searchArea, r_size, activeLayer);
+    console.log('********** completed querySearchArea')
 }
 
 
