@@ -86,7 +86,7 @@
 							data-toggle="buttons">
 						</div>
 					</div>
-					<div id="filters">
+					<div id="filters" class="container">
 						<p>
 							<h5>Pick insurance options</h5>
 							<select class="mpick insurance" multiple="multiple" name="Insurance" id="Insurance">
@@ -130,8 +130,8 @@
 								<option value="other">Other</option>
 							</select>
 						</p>
-						<h5 style="margin-bottom:1px;">Practice Categories</h5>
 						<p>
+							<h5 style="margin-bottom:1px;">Practice Categories</h5>
 							<select class="mpick pcat" multiple="multiple" name="Specialty" id="Specialty">
 								<option value="lmft">LMFT</option>
 								<option value="lmhc">LMHC</option>
@@ -177,7 +177,6 @@
 								<option value="women">Women</option>
 							</select>
 						</p>
-
 						<p>
 							<h5>Telehealth services if applicable</h5>
 							<select id="telehealth" title="Basic example" class='mpick telehealth' multiple="multiple"
@@ -187,20 +186,20 @@
 								<option value="other">Other</option>
 							</select>
 						</p>
-						<h5>Accepting New Patients? </h5>
-						<select id="new-client" class="form-control newpatients">
-							<option value="default" selected disabled hidden>New patient status</option>
-							<!-- Value is distance in meters -->
-							<option value="yes">Yes</option>
-							<option value="no">No</option>
-							<option value="waitlist">Waitlist</option>
-						</select>
-
 						<p>
-							<div class="col d-flex">
-								<button type="button" class="btn btn-light flex-fill" id="clear-filters">Clear filters
-									Results</button>
-							</div>
+							<h5>Accepting New Patients? </h5>
+							<select id="new-client" class="form-control newpatients">
+								<option value="default" selected disabled hidden>New patient status</option>
+								<!-- Value is distance in meters -->
+								<option value="yes">Yes</option>
+								<option value="no">No</option>
+								<option value="waitlist">Waitlist</option>
+							</select>
+						</p>
+						<div class="col d-flex">
+							<button type="button" class="btn btn-light flex-fill" id="clear-filters">Clear filters
+								Results</button>
+						</div>
 						</p>
 					</div>
 
