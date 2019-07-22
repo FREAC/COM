@@ -86,7 +86,7 @@
 							data-toggle="buttons">
 						</div>
 					</div>
-					<div id="filters" class="container">
+					<div id="filters" class="container pb-4">
 						<div class="row">
 							<div class="col-sm-6">
 								<p>
@@ -213,17 +213,184 @@
 								</p>
 							</div>
 							<div class="col-sm-6">
-								<h6>a dropdown will go here</h6>
+								<p>
+									<h6>Practice Location</h6>
+									<select class="mpick" name="Practice_a" id='Practice_a'>
+										<option value="not_selected" default selected hidden>not_selected</option>
+										<option value="alachua">Alachua</option>
+										<option value="baker">Baker</option>
+										<option value="bay">Bay</option>
+										<option value="bradford">Bradford</option>
+										<option value="brevard">Brevard</option>
+										<option value="broward">Broward</option>
+										<option value="calhoun">Calhoun</option>
+										<option value="charlotte">Charlotte</option>
+										<option value="citrus">Citrus</option>
+										<option value="clay">Clay</option>
+										<option value="collier">Collier</option>
+										<option value="columbia">Columbia</option>
+										<option value="desoto">DeSoto</option>
+										<option value="dixie">Dixie</option>
+										<option value="duval">Duval</option>
+										<option value="escambia">Escambia</option>
+										<option value="flagler">Flagler</option>
+										<option value="franklin">Franklin</option>
+										<option value="gadsden">Gadsden</option>
+										<option value="gilchrist">Gilchrist</option>
+										<option value="glades">Glades</option>
+										<option value="gulf">Gulf</option>
+										<option value="hamilton">Hamilton</option>
+										<option value="hardee">Hardee</option>
+										<option value="hendry">Hendry</option>
+										<option value="hernando">Hernando</option>
+										<option value="highlands">Highlands</option>
+										<option value="hills">Hillsborough</option>
+										<option value="holmes">Holmes</option>
+										<option value="indian">Indian River</option>
+										<option value="jackson">Jackson</option>
+										<option value="jefferson">Jefferson</option>
+										<option value="lafayette">Lafayette</option>
+										<option value="lake">Lake</option>
+										<option value="lee">Lee</option>
+										<option value="leon">Leon</option>
+										<option value="levy">Levy</option>
+										<option value="liberty">Liberty</option>
+										<option value="madison">Madison</option>
+										<option value="manatee">Manatee</option>
+										<option value="marion">Marion</option>
+										<option value="martin">Martin</option>
+										<option value="miami">Miami-Dade</option>
+										<option value="monroe">Monroe</option>
+										<option value="nassau">Nassau</option>
+										<option value="okaloosa">Okaloosa</option>
+										<option value="okee">Okeechobee</option>
+										<option value="orange">Orange</option>
+										<option value="osceola">Osceola</option>
+										<option value="palm">Palm Beach</option>
+										<option value="pasco">Pasco</option>
+										<option value="pinellas">Pinellas</option>
+										<option value="polk">Polk</option>
+										<option value="putnam">Putnam</option>
+										<option value="stjohns">St Johns</option>
+										<option value="stlucie">St Lucie</option>
+										<option value="santa">Santa Rosa</option>
+										<option value="sarasota">Sarasota</option>
+										<option value="seminole">Seminole</option>
+										<option value="sumter">Sumter</option>
+										<option value="suwannee">Suwannee</option>
+										<option value="taylor">Taylor</option>
+										<option value="union">Union</option>
+										<option value="volusia">Volusia</option>
+										<option value="wakulla">Wakulla</option>
+										<option value="walton">Walton</option>
+										<option value="washington">Washington</option>
+										<option value="telehealthonly">Telehealth Only</option>
+									</select>
+								</p>
 							</div>
 						</div>
-
-						<div class="col d-flex">
-							<button type="button" class="btn btn-light flex-fill" id="clear-filters">Clear filters
-								Results</button>
+						<div class="row">
+							<div class="col-sm-6">
+								<h6>Areas Served</h6>
+								<select class="mpick" multiple="multiple" name="Areas_Serv" id='Areas_Serv'>
+									<option value="alachua">Alachua</option>
+									<option value="baker">Baker</option>
+									<option value="bay">Bay</option>
+									<option value="bradford">Bradford</option>
+									<option value="brevard">Brevard</option>
+									<option value="broward">Broward</option>
+									<option value="calhoun">Calhoun</option>
+									<option value="charlotte">Charlotte</option>
+									<option value="citrus">Citrus</option>
+									<option value="clay">Clay</option>
+									<option value="collier">Collier</option>
+									<option value="columbia">Columbia</option>
+									<option value="desoto">DeSoto</option>
+									<option value="dixie">Dixie</option>
+									<option value="duval">Duval</option>
+									<option value="escambia">Escambia</option>
+									<option value="flagler">Flagler</option>
+									<option value="franklin">Franklin</option>
+									<option value="gadsden">Gadsden</option>
+									<option value="gilchrist">Gilchrist</option>
+									<option value="glades">Glades</option>
+									<option value="gulf">Gulf</option>
+									<option value="hamilton">Hamilton</option>
+									<option value="hardee">Hardee</option>
+									<option value="hendry">Hendry</option>
+									<option value="hernando">Hernando</option>
+									<option value="highlands">Highlands</option>
+									<option value="hills">Hillsborough</option>
+									<option value="holmes">Holmes</option>
+									<option value="indian">Indian River</option>
+									<option value="jackson">Jackson</option>
+									<option value="jefferson">Jefferson</option>
+									<option value="lafayette">Lafayette</option>
+									<option value="lake">Lake</option>
+									<option value="lee">Lee</option>
+									<option value="leon">Leon</option>
+									<option value="levy">Levy</option>
+									<option value="liberty">Liberty</option>
+									<option value="madison">Madison</option>
+									<option value="manatee">Manatee</option>
+									<option value="marion">Marion</option>
+									<option value="martin">Martin</option>
+									<option value="miami">Miami-Dade</option>
+									<option value="monroe">Monroe</option>
+									<option value="nassau">Nassau</option>
+									<option value="okaloosa">Okaloosa</option>
+									<option value="okee">Okeechobee</option>
+									<option value="orange">Orange</option>
+									<option value="osceola">Osceola</option>
+									<option value="palm">Palm Beach</option>
+									<option value="pasco">Pasco</option>
+									<option value="pinellas">Pinellas</option>
+									<option value="polk">Polk</option>
+									<option value="putnam">Putnam</option>
+									<option value="stjohns">St Johns</option>
+									<option value="stlucie">St Lucie</option>
+									<option value="santa">Santa Rosa</option>
+									<option value="sarasota">Sarasota</option>
+									<option value="seminole">Seminole</option>
+									<option value="sumter">Sumter</option>
+									<option value="suwannee">Suwannee</option>
+									<option value="taylor">Taylor</option>
+									<option value="union">Union</option>
+									<option value="volusia">Volusia</option>
+									<option value="wakulla">Wakulla</option>
+									<option value="walton">Walton</option>
+									<option value="washington">Washington</option>
+									<option value="telehealthonly">Telehealth Only</option>
+								</select>
+							</div>
+							<div class="col-sm-6">
+								<h6> Primary practice activity</h6>
+								<select class="mpick" name='Which_cate' id="Which_cate">
+									<option value="not_selected" default selected disabled hidden>not_selected</option>
+									<option value="certifiedlactationconsultant">Certified Lactation Consutant</option>
+									<option value="lmft">Licensed Mental ft</option>
+									<option value="lmhc">LMHC</option>
+									<option value="psychiatrist">Psychiatrist</option>
+									<option value="psychologist">Psychologist</option>
+									<option value="treatmentcenter">Treatment Center & Support Services</option>
+								</select>
+							</div>
 						</div>
-						</p>
 					</div>
 
+					<div class="col d-flex">
+						<button type="button" class="btn btn-light flex-fill" id="clear-filters">Clear filters
+							Results</button>
+					</div>
+
+					<!-- 
+						
+
+							
+						
+				
+								
+					 -->
 
 				</form>
 
