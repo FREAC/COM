@@ -520,7 +520,7 @@ function zoomToLocation(lat, lng, z = 11, data) {
         }
 
         var pop_text = `<b>${data['Agency']}</b><br> ${data['Insurance']}<br>
-                    ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
+                    ${data['HouseNumbe']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}`;
         var popup = L.popup({
                 maxWidth: 200
@@ -638,7 +638,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
                 id: i,
                 Agency: results[i]['agency'],
                 Insurance: results[i]['insurance'],
-                HouseNumber: results[i]['housenumber'],
+                HouseNumbe: results[i]['housenumber'],
                 Street: results[i]['street'],
                 City: results[i]['city'],
                 State: results[i]['state'],
@@ -745,7 +745,7 @@ function markerLogic(data, selection_marker) {
     // TODO -- SWH - not sure we need all of these fields - maybe just Agency (5/17/19)
     circle_marker.data = {
         'Agency': data['Agency'],
-        'HouseNumber': data['HouseNumber'],
+        'HouseNumbe': data['HouseNumbe'],
         'Street': data['Street'],
         'Unit': data['Unit'],
         'City': data['City'],
