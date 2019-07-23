@@ -150,7 +150,7 @@ let activeLayer;
 // assigns marker and add to map
 async function setup() {
     // selection_group.clearLayers();
-    $.get("./data/COM.json", function (json_data) {
+    $.get("./data/COM_extradata.json", function (json_data) {
         $.each(json_data, function (object) {
             const provider = json_data[object];
             const marker = markerLogic(provider);
@@ -517,8 +517,6 @@ function pointsInCircle(circle, meters_user_set, map) {
         const results = [];
         // check to see if marker is within the bounds of the circle radius
         const checkDistanceAndPushToResults = (layer) => {
-            console.log(layer);
-
             const layer_lat_long = layer.getLatLng();
             const distance_from_layer_circle = layer_lat_long.distanceTo(circle_lat_long);
             // See if meters is within raduis
