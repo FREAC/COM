@@ -141,3 +141,14 @@ body {
   background-color: #FDD200;
   border-color: darkslategrey;
 }
+
+.btn:hover {
+  color: black;
+  border-color: darkgray;
+}
+
+.btn:active {
+  color: black;
+  background-color: #dfba01;
+  border-color: darkgray;
+}
