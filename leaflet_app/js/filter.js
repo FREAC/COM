@@ -4,8 +4,10 @@ let filterObject = {
     "Specialty": undefined,
     "Serves": undefined,
     "telehealth": undefined,
-    "new-client": undefined
-
+    "new-client": undefined,
+    "Which_cate": undefined,
+    "Areas_Serv": undefined,
+    "Practice_a": undefined
 };
 // hold all returned data from orFilters selections
 const andFilter = {
@@ -13,7 +15,10 @@ const andFilter = {
     "Specialty": undefined,
     "Serves": undefined,
     "telehealth": undefined,
-    "new-client": undefined
+    "new-client": undefined,
+    "Which_cate": undefined,
+    "Areas_Serv": undefined,
+    "Practice_a": undefined
 }
 
 const assignSelectToFilterObject = (id, value, filterObject) => {
@@ -44,7 +49,8 @@ const filteredLayersArray = (allLayers, filterArr, id) => allLayers.filter(layer
 
         const currentLayer = layer.data[id]; // current layer in json_group
         // currentLayerArr are target attributes from map (insurance, categories, etc.)
-
+        console.log(layer);
+        
         const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
         const intersectionFilter = checkFilterPresence(currentLayerArr, filterArr)
         if (intersectionFilter) {
