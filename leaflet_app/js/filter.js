@@ -122,6 +122,9 @@ $(".mpick").change(async function (event) {
         if (value !== null) {
             const filteredLayers = await filteredLayersArray(allLayers, orFilterSelections, id);
             // add layers to andFilter object
+            if (filteredLayers.length === 0) {
+                box.show('No data found');
+            }
             andFilter[this.id] = filteredLayers; // 
             console.log(filteredLayers);
             // checking to see if we get clusters back

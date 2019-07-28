@@ -145,7 +145,6 @@ let search_marker;
 let table;
 let activeLayer;
 
-
 // initial setup function to loop through json that
 // assigns marker and add to map
 async function setup() {
@@ -302,6 +301,12 @@ const locate = L.control.locate({
     drawCircle: false,
     showPopup: false
 }).addTo(map);
+
+const msgOptions = { 
+    position: 'topright',
+    timeout: 5000 
+}
+const box = L.control.messagebox(msgOptions).addTo(map);
 
 function clearSelection({
     provider = true,
