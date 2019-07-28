@@ -686,8 +686,10 @@ function markerLogic(data, selection_marker) {
         'Specialty': data['Specialty'],
         'New Client': data['New_Client'],
         'Insurance': data['Insurance'],
-        'Serves': data['Serves']
-
+        'Serves': data['Serves'],
+        'Which_cate': data['Which_cate'],
+        'Areas_Serv': data['Areas_Serv'],
+        'Practice_a': data['Practice_a']
     };
 
     return circle_marker;
