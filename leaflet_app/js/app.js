@@ -304,7 +304,7 @@ const locate = L.control.locate({
 
 const msgOptions = { 
     position: 'topright',
-    timeout: 5000 
+    timeout: 3000 
 }
 const box = L.control.messagebox(msgOptions).addTo(map);
 
