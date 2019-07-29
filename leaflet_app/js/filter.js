@@ -39,7 +39,7 @@ async function filterLocations(event) {
             //console.log('looking at each option, ',jj, vals[jj])
             if (vals[jj].selected) {
                 //console.log('for ', sv, ' the selections are ',vals[jj].innerHTML)
-                if (vals[jj].innerHTML === 'not_selected'){
+                if (vals[jj].value === 'not_selected'){
                     // we dont wont this 
                     //console.log('skipping this dummy value ', vals[jj])
                     //restrict2.splice(j,2)
