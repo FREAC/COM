@@ -743,7 +743,7 @@ function markerLogic(data, selection_marker) {
     // TODO -- SWH - not sure we need all of these fields - maybe just Agency (5/17/19)
     circle_marker.data = {
         'Agency': data['Agency'],
-        'HouseNumber': data['HouseNumber'],
+        'HouseNumber': data['HouseNumbe'],
         'Street': data['Street'],
         'Unit': data['Unit'],
         'City': data['City'],
