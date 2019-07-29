@@ -18,6 +18,7 @@ function filterOptions(filterObject) {
 // first get an array ready to hold the filters
 
 async function filterLocations(event) {
+
     var filter = []
     // var restrict2 = undefined
     //console.log('lets see filter now ',filter)
@@ -275,8 +276,8 @@ async function filterLocations(event) {
                     // if (j===0) {
                         //console.log(' just removed ', json_group._featureGroup._layers[layer].data)
                         // json_group._featureGroup._layers[layer].removeLayer
-                        json_group.removeLayer(layer)
-                        console.log(' we able to remove this layer ')
+                            json_group.removeLayer(layer)
+                            console.log(' we able to remove this layer ')
                     // }
                 } else {console.log('need it is ',need_it)}
             }   

@@ -82,9 +82,6 @@
 		}
 		</style>
 <body>
-		<div class="popup" onclick="myFunction()">Click me to toggle the popup!
-				<span class="popuptext" id="myPopup">A Simple Popup!</span>
-		</div>
 			  
 	<div class="container-fluid d-flex h-100">
 		<div class="row flex-fill d-flex">
@@ -100,11 +97,11 @@
 					<a href="new-record.html"><img src="images/BHImpact.jpg" alt="" class="img-responsive"> </a>
 				</div>
 				<form>
-					<!-- <div class="form-row">
+					<div class="form-row">
 						<div class="col-sm-12 mb-2">
-							<input type="text" class="form-control" id="easy-auto">
+							<input type="text" class="form-control agency_pic" id="easy-auto">
 						</div>
-					</div> -->
+					</div>
 
 					<div class="form-row">
 						<div class="row col-sm-12 mb-2 mt-2 mt-sm-0 btn-group btn-group-toggle blocks"
@@ -363,10 +360,11 @@
 					
 						<h6>Telehealth?</h6>
 							<select id="telehealth" title="Basic example" class='mpick' multiple="multiple"
-								name="telehealth" size="5">
-								<option value="phone">Phone</option>
-								<option value="video">Video</option>
-								<option value="other">Other</option>
+								name="telehealth" >
+								<option value="not_selected" default selected disabled hidden>not_selected</option>
+								<option value="Yes (via video)">Yes (via video)</option>
+								<option value="Yes (via phone)">Yes (via phone)</option>
+								<option value="Yes (other)">Yes (other)</option>
 							</select>
 					
 					
@@ -416,6 +414,7 @@
 						<option value="40234">25 miles</option>
 						<option value="80467">50 miles</option>
 						<option value="804670">500 miles</option>
+						<option value="8046700">5000 miles</option>
 					</select>
 					<br />
 					<div class="col-10 d-flex">
@@ -454,6 +453,9 @@
 		var popup = document.getElementById("myPopup");
 		popup.classList.toggle("show");
 		}
+		$('auto-easy').change(function(){
+    		console.log('CHANGED the easy-aut0',$('option:selected',this).index()); 
+		});
 	</script>
 </body>
 

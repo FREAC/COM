@@ -155,14 +155,20 @@ function getUrlVars() {
     });
     return vars;
 }
+function getUrlParam(parameter, defaultvalue){
+    var urlparameter = defaultvalue;
+    if(window.location.href.indexOf(parameter) > -1){
+        urlparameter = getUrlVars()[parameter];
+        }
+    return urlparameter;
+}
 // initial setup function to loop through json that
 // assigns marker and add to map
 async function setup() {
-    console.log(' top of set up and looking for the args ', getUrlVars("idnum"))
     selection_group.clearLayers();
     $.get("./data/COM.json", function (json_data) {
         $.each(json_data, function (object) {
-            // console.log(json_data[object]);
+            //console.log('this is each object ',json_data[object]);
             const provider = json_data[object];
             const marker = markerLogic(provider);
             marker.addTo(json_group);
@@ -245,17 +251,9 @@ var mmp2 = L.esri.Geocoding.featureLayerProvider({
         return feature.properties.agency; // format suggestions like this.
       }
     });
-// var gisDay = L.esri.Geocoding.featureLayerProvider({
-//     url: 'https://services.arcgis.com/uCXeTVveQzP4IIcx/arcgis/rest/services/GIS_Day_Final/FeatureServer/0',
-//     searchFields: ['Name', 'Organization'], // Search these fields for text matches
-//     label: 'GIS Day Events', // Group suggestions under this header
-//     formatSuggestion: function(feature){
-//       return feature.properties.Name + ' - ' + feature.properties.Organization; // format suggestions like this.
-//     }
-//   });
 
 var geocoder = L.esri.Geocoding.geosearch({
-    providers: [arcgisOnline,mmp], // will geocode via ArcGIS Online and search the GIS Day feature service.
+    providers: [arcgisOnline,mmp], // will geocode via ArcGIS Online and providers.
     // providers: [arcgisOnline], // will geocode via ArcGIS Online and search the GIS Day feature service.
     // providers: [mmp2], // will geocode via ArcGIS Online and search the GIS Day feature service.
     zoomToResult: false,
@@ -378,7 +376,7 @@ $radius.change(function () {
 
 function createPopup(data) {
     const content = `<b>${data['Agency']}</b><br> 
-                    ${data['HouseNumbe']} ${data['Street']} ${data['Unit']}<br>
+                    ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}`;
     return L.popup({
         closeButton: false
@@ -477,8 +475,8 @@ function configurePopup(data) {
             data['Unit'] = ''
         }
 
-        var pop_text = `<b>${data['Agency']}</b><br> ${data['Insurance']}<br>
-                    ${data['HouseNumbe']} ${data['Street']} ${data['Unit']}<br>
+        var pop_text = `<b>${data['Agency']}</b><br> 
+                    ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}`;
         var popup = L.popup({
                 maxWidth: 200
@@ -519,8 +517,8 @@ function zoomToLocation(lat, lng, z = 11, data) {
             data['Unit'] = ''
         }
 
-        var pop_text = `<b>${data['Agency']}</b><br> ${data['Insurance']}<br>
-                    ${data['HouseNumbe']} ${data['Street']} ${data['Unit']}<br>
+        var pop_text = `<b>${data['Agency']}</b><br>
+                    ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}`;
         var popup = L.popup({
                 maxWidth: 200
@@ -745,7 +743,7 @@ function markerLogic(data, selection_marker) {
     // TODO -- SWH - not sure we need all of these fields - maybe just Agency (5/17/19)
     circle_marker.data = {
         'Agency': data['Agency'],
-        'HouseNumbe': data['HouseNumbe'],
+        'HouseNumber': data['HouseNumber'],
         'Street': data['Street'],
         'Unit': data['Unit'],
         'City': data['City'],
@@ -759,7 +757,9 @@ function markerLogic(data, selection_marker) {
         'Serves': data['Serves'],
         'Which_cate': data['Which_cate'],
         'Practice_a': data['Practice_A'],
-        'Areas_Serv': data['Areas_Serv']
+        'Areas_Serv': data['Areas_Serv'],
+        'telehealth': data['telehealth'],
+        'mhnum': data['mhnum']
 
     };
 
