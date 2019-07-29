@@ -97,11 +97,11 @@
 					<a href="new-record.html"><img src="images/BHImpact.jpg" alt="" class="img-responsive"> </a>
 				</div>
 				<form>
-					<div class="form-row">
+					<!-- <div class="form-row">
 						<div class="col-sm-12 mb-2">
-							<input type="text" class="form-control agency_pic" id="easy-auto">
+							<input type="text" class="form-control" id="easy-auto">
 						</div>
-					</div>
+					</div> -->
 
 					<div class="form-row">
 						<div class="row col-sm-12 mb-2 mt-2 mt-sm-0 btn-group btn-group-toggle blocks"
@@ -414,7 +414,6 @@
 						<option value="40234">25 miles</option>
 						<option value="80467">50 miles</option>
 						<option value="804670">500 miles</option>
-						<option value="8046700">5000 miles</option>
 					</select>
 					<br />
 					<div class="col-10 d-flex">
@@ -453,9 +452,6 @@
 		var popup = document.getElementById("myPopup");
 		popup.classList.toggle("show");
 		}
-		$('auto-easy').change(function(){
-    		console.log('CHANGED the easy-aut0',$('option:selected',this).index()); 
-		});
 	</script>
 </body>
 
