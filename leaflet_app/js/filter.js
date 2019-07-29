@@ -44,7 +44,8 @@ async function filterLocations(event) {
                     //console.log('skipping this dummy value ', vals[jj])
                     //restrict2.splice(j,2)
                 } else {
-                    filter_vals.push(vals[jj].innerHTML)
+                    //filter_vals.push(vals[jj].innerHTML)
+                    filter_vals.push(vals[jj].value)
 
                 }
             }
@@ -171,7 +172,7 @@ async function filterLocations(event) {
                         recordArr = targetLayer.data[filter[j]].split(",")
                         for (k=0; k<recordArr.length; k++){
                             console.log('testing ', filter[j+1][m],' is == to ',recordArr[k],k)
-                            if ( recordArr[k] === filter[j+1][m]) {
+                            if ( recordArr[k].toLowerCase().replace(/\s/g,'') === filter[j+1][m]) {
                                 console.log('m is ',m,' and length is ', filter[j+1].length-1)
                                 console.log('--FOUNDfound one but not written yet')
                                 if (! need_it ) {
