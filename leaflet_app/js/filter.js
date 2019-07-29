@@ -49,7 +49,7 @@ const filteredLayersArray = (allLayers, filterArr, id) => allLayers.filter(layer
 
         const currentLayer = layer.data[id]; // current layer in json_group
         // currentLayerArr are target attributes from map (insurance, categories, etc.)
-        console.log(layer);
+        // console.log(layer);
         
         const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
         const intersectionFilter = checkFilterPresence(currentLayerArr, filterArr)
@@ -114,6 +114,7 @@ $(".mpick").change(async function (event) {
 
     // check to see if we need to perform AND logic
     const andFilterCheck = await checkIfAndFilterEmpty(andFilter, this.id);
+    console.log({isandfilterempty : andFilterCheck});
     // currently selected filters
     const orFilterSelections = await assignSelectToFilterObject(id, value, filterObject);
 
@@ -140,6 +141,7 @@ $(".mpick").change(async function (event) {
     } else { // perform and operation
         // assign or filters to andFilter object
         const orResults = await orFilters(filterObject);
+        console.log(orResults);
         const andFilter = (arr1, arr2) => arr1.filter(value => arr2.includes(value));
         const intersectionArray = (andAccumulator) => {
             let accum = undefined;
