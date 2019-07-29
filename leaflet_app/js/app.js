@@ -63,6 +63,7 @@ const json_group = new L.FeatureGroup({
 //const json_group = new L.markerClusterGroup.withList({
 //const json_group = new L.markerClusterGroup({
     maxClusterRadius: 0,
+
         iconCreateFunction: function (cluster) {
         return L.divIcon({
             html: '<b>' + cluster.getChildCount() + '</b>',
@@ -76,6 +77,8 @@ const json_group = new L.FeatureGroup({
     //const json_group = new L.markerClusterGroup.withList({
 const json_group_c = new L.markerClusterGroup({
         maxClusterRadius: 0,
+        spiderLegPolylineOptions: {opacity: 0.0},
+        spiderfyDistanceMultiplier: 100000.0,
             iconCreateFunction: function (cluster) {
             return L.divIcon({
                 html: '<b>' + cluster.getChildCount() + '</b>',
@@ -86,6 +89,9 @@ const json_group_c = new L.markerClusterGroup({
         }
     });
 // on a click of a cluster
+json_group_c.on('click',function() {
+    console.log('clicked on the map')
+})
 json_group_c.on('clusterclick', function (event) {
 
     // console.log(json_group);
@@ -107,6 +113,7 @@ json_group_c.on('clusterclick', function (event) {
     }
 
     // get the content of each marker
+    
     getChildMarkerContent().then(
         // assign content to new leaflet popup
         function () {
