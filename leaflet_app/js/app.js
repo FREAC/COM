@@ -260,6 +260,8 @@ L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 var geocoder = L.esri.Geocoding.geosearch({
     zoomToResult: false,
     useMapBounds: false,
+    // expanded: true,
+    collapseAfterResult: false,
     placeholder: 'Search for an address',
     searchBounds: [bottomLeft, topRight]
 }).addTo(map);
