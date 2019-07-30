@@ -50,7 +50,7 @@ async function filterLocations(event) {
         //      console.log('the cluster has ',layer.getAllChildMarkers())
         //      }
         //    });
-    console.log(' what does the empty sel group look like ', selection_group)
+    //console.log(' what does the empty sel group look like ', selection_group)
     //console.log('JSON group is ',json_group._featureGroup)
     num_filters = ((filter.length / 2)) ;
     console.log('how many types of filters will there be ',num_filters)
@@ -188,8 +188,6 @@ async function filterLocations(event) {
                         }
             } else {
                 // processing a regular layer
-                //console.log('MMMMMMMMMMMMMMMM SINGLE---',json_group._featureGroup._layers(layer));
-
                 if (!need_it){
                     console.log('must not need this',j)
                     json_group.removeLayer(layer)
@@ -220,9 +218,6 @@ async function filterLocations(event) {
         }
         // we now have filtered all data by the given filter.  We need to set the next filter
         // to only work with the remaining records
-
-        console.log('how many records did we save ',selection_group._map)
-
         console.log('what does the json look like after the filter ', selection_group)
     }
     console.log('end of the filtering')
@@ -237,7 +232,6 @@ async function filterLocations(event) {
     let i = 0;
     selection_group.eachLayer(function(){ 
         i += 1; 
-        console.log('here is each layer', layer.data)
     });
     console.log('Map has', i, 'layers.');
     if (i === 0){
@@ -276,7 +270,5 @@ async function filterLocations(event) {
                     .openOn(map);
             });
         // this is here because 2nd - n identifies dont work without it....
-        console.log('try to zoom in justq a hair')
-        map.zoomIn(.00001)
     });
 }

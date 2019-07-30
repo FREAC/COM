@@ -9,16 +9,7 @@ const selected_fill_opacity = 1;
 $(function () {
     $('.mpick').fSelect();
 });
-$('input[name="insurance"]').amsifySuggestags({
-    suggestions: ['Aetna', 'Beacon', 'Beech Street', 'Cigna', 'Coventry', 'First Health', 'Healthy Kids',
-        'Magellan', 'Medicare'
-    ],
-    whiteList: true
-});
-// $(function(){
-// 	$(".mselect").multiselect();
-// });
-// TODO: Can this be dealt with using Bootstrap components?
+
 $(document).ready(function () {
     $('.geocoder-control').click(function () {
         $("#map").css("width", "100%");
@@ -59,11 +50,11 @@ function markerStyle(fillColor, strokeColor, fillOpacity = 0.75) {
 // current selection
 let selection_marker;
 // We'll append our markers to this global variable
+// we will use this one in the filter because it is NOT clustered -- harder to loop through
 const json_group = new L.FeatureGroup({
 //const json_group = new L.markerClusterGroup.withList({
 //const json_group = new L.markerClusterGroup({
     maxClusterRadius: 0,
-
         iconCreateFunction: function (cluster) {
         return L.divIcon({
             html: '<b>' + cluster.getChildCount() + '</b>',
@@ -73,7 +64,7 @@ const json_group = new L.FeatureGroup({
 
     }
 });
-
+// this one is used just on the initial load
 const json_group_c = new L.markerClusterGroup({
         maxClusterRadius: 0,
         spiderLegPolylineOptions: {opacity: 0.0},
@@ -88,33 +79,25 @@ const json_group_c = new L.markerClusterGroup({
         }
     });
 // on a click of a cluster
-json_group_c.on('click',function() {
-    console.log('clicked on the map')
-})
 json_group_c.on('clusterclick', function (event) {
     // declare the empty content variable to append to
     let clusterPopupContent = "";
     console.log('starting the cluster click')
     async function getChildMarkerContent() {
-        console.log('ready')
         await $.each(event.layer.getAllChildMarkers(), function (index, value) {
             console.log('looking at each one')
             // append content 
-            // console.log('looping as part of the popup build')
             clusterPopupContent += value._popup._content + '<br><br>';
             return clusterPopupContent
         });
     }
 
     // get the content of each marker
-    
     getChildMarkerContent().then(
         // assign content to new leaflet popup
         function () {
             // make sure last popup instance is removed
-            console.log('try and remove the last popup')
             $('#clusterPopupContent').remove();
-
             // set content and add to map
             const clusterPopup = L.popup({
                     closeButton: true,
@@ -127,7 +110,7 @@ json_group_c.on('clusterclick', function (event) {
         });
 });
 
-//This is our selection group
+//This is our selection group.  We will filter through the json_group and add to this
 const selection_group = new L.markerClusterGroup({
     maxClusterRadius: 0,
     spiderLegPolylineOptions: {opacity: 0.0},
@@ -207,23 +190,17 @@ const map = new L.Map('map', {
 
 map.on({
     contextmenu: function (e) {
-        console.log('in the contextmenu part---------------')
         querySearchArea(e);
     },
     // Turn off mobile locate control after zoom
 
     locationfound: function (e) {
         // query search area on location found
-        // console.log('get the filters here too')
         // filterLocations(e)
-        // console.log('back from the filter function')
         querySearchArea(e);
-        // console.log('done with querysearch')
         // disable locate when flyTo(); method ends
         map.on('moveend', function () {
-            // console.log('in the moveend thing')
             locate.stop();
-            // console.log('map stopped')
         });
         
     }
@@ -247,20 +224,9 @@ var mmp = L.esri.Geocoding.featureLayerProvider({
     return feature.properties.agency; // format suggestions like this.
   }
 });
-var mmp2 = L.esri.Geocoding.featureLayerProvider({
-    //   url: 'http://freac.maps.arcgis.com/home/webmap/viewer.html?webmap=a6081db80aa24a459de18eddfc26f871/0',
-      url: 'https://maps.freac.fsu.edu/arcgis/rest/services/FREAC/mmh_test_service/FeatureServer/0',
-      searchFields: 'agency', // Search these fields for text matches
-      label: 'Mental Health Agencies', // Group suggestions under this header
-      formatSuggestion: function(feature){
-        return feature.properties.agency; // format suggestions like this.
-      }
-    });
 
 var geocoder = L.esri.Geocoding.geosearch({
     providers: [arcgisOnline,mmp], // will geocode via ArcGIS Online and providers.
-    // providers: [arcgisOnline], // will geocode via ArcGIS Online and search the GIS Day feature service.
-    // providers: [mmp2], // will geocode via ArcGIS Online and search the GIS Day feature service.
     zoomToResult: false,
     expanded: true,
     useMapBounds: false,
@@ -279,8 +245,6 @@ geocoder.on('results', function (result) {
     }
 
     clearSelection();
-    console.log('Get the filters here')
-    //filterLocations(event)
     querySearchArea(result);
     console.log('finished with the query search area ready to scroll ', document.body.scrollHeight)
     window.scrollTo(0,document.body.scrollHeight);
@@ -314,7 +278,7 @@ function clearSelection({
     provider = true,
     radius = false
 } = {}) {
-    // $('#map').css('z-index', '22')
+
     if (search_marker) {
         map.removeLayer(search_marker);
     }
@@ -326,9 +290,9 @@ function clearSelection({
     }
     $('#json_one_results').html('0');
     insertTabulator([]);
-    if (provider) {
-        $easyAuto.val("");
-    }
+    // if (provider) {
+    //     $easyAuto.val("");
+    // }
     if (radius) {
         $radius.val('default');
     }
@@ -389,43 +353,34 @@ function createPopup(data) {
 }
 
 // JQuery Easy Autocomplete: http://easyautocomplete.com
-const $easyAuto = $('#easy-auto');
-$easyAuto.easyAutocomplete({
-    url: "data/COM.json",
-    getValue: "Agency",
-    list: {
-        maxNumberOfElements: 3,
-        match: {
-            enabled: true
-        },
-        onChooseEvent: function () {
-            clearSelection({
-                provider: false,
-                radius: true
-            });
-            const data = $easyAuto.getSelectedItemData();
-            var zzoom = undefined;
-            // $('#map').css('z-index', '11');
-            zoomToLocation(data.Latitude, data.Longitude, zzoom, data);
-        }
-    },
-    requestDelay: 250,
-    placeholder: 'Know the provider?  Type the name here'
-});
-
-///////////////////////////////////////
-///////////////////////////////////////
-///////////////////////////////////////
-///////////////////////////////////////
-
-
-/// Alert for checkbox change
-
-// $("input[type='checkbox']").change(async function (event) {
-
-//     // perform a filter based on which checkboxes are checked
-//     filterLocations(event);
+// const $easyAuto = $('#easy-auto');
+// $easyAuto.easyAutocomplete({
+//     url: "data/COM.json",
+//     getValue: "Agency",
+//     list: {
+//         maxNumberOfElements: 3,
+//         match: {
+//             enabled: true
+//         },
+//         onChooseEvent: function () {
+//             clearSelection({
+//                 provider: false,
+//                 radius: true
+//             });
+//             const data = $easyAuto.getSelectedItemData();
+//             var zzoom = undefined;
+//             // $('#map').css('z-index', '11');
+//             zoomToLocation(data.Latitude, data.Longitude, zzoom, data);
+//         }
+//     },
+//     requestDelay: 250,
+//     placeholder: 'Know the provider?  Type the name here'
 // });
+
+///////////////////////////////////////
+///////////////////////////////////////
+///////////////////////////////////////
+///////////////////////////////////////
 
 // create filter object to hold all selected elements based on type
 const filterObject = {
@@ -665,6 +620,9 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
         // add tabulator object to screen
         console.log('about to reinsert the tabulator')
         insertTabulator(tableResults);
+        var legend_div = document.getElementById('legend')
+        legend_div.scrollTop = legend_div.scrollHeight;
+
 
 
         // If we have just one result, we'll change the wording
