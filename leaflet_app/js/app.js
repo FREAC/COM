@@ -620,9 +620,9 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
         // add tabulator object to screen
         console.log('about to reinsert the tabulator')
         insertTabulator(tableResults);
-        var legend_div = document.getElementById('legend')
-        legend_div.scrollTop = legend_div.scrollHeight;
-
+        // now scroll the table into view
+        var elmnt = document.getElementById("results");
+        elmnt.scrollIntoView();
 
 
         // If we have just one result, we'll change the wording
