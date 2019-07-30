@@ -275,7 +275,7 @@ const geocoder = L.esri.Geocoding.geosearch({
     // expanded: true,
     collapseAfterResult: false,
     placeholder: 'Search for an address',
-    searchBounds: [bottomLeft, topRight]
+    // searchBounds: [bottomLeft, topRight]
 }).addTo(map);
 
 geocoder.on('results', function (result) {
