@@ -256,8 +256,20 @@ setup();
 // Base map
 L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 
+
+const arcgisOnline = L.esri.Geocoding.arcgisOnlineProvider();
+const mmp = L.esri.Geocoding.featureLayerProvider({
+  url: 'https://admin205.ispa.fsu.edu/arcgis/rest/services/FREAC/mmh_test_service/FeatureServer/0',
+  searchFields: ['agency'], // Search these fields for text matches
+  label: 'Mental Health Agencies', // Group suggestions under this header
+  formatSuggestion: function(feature){
+    return feature.properties.agency; // format suggestions like this.
+  }
+});
+
 // ESRI Geocoder 
-var geocoder = L.esri.Geocoding.geosearch({
+const geocoder = L.esri.Geocoding.geosearch({
+    providers: [arcgisOnline, mmp],
     zoomToResult: false,
     useMapBounds: false,
     // expanded: true,
