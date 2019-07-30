@@ -73,8 +73,7 @@ const json_group = new L.FeatureGroup({
 
     }
 });
-    //const json_group = new L.FeatureGroup({
-    //const json_group = new L.markerClusterGroup.withList({
+
 const json_group_c = new L.markerClusterGroup({
         maxClusterRadius: 0,
         spiderLegPolylineOptions: {opacity: 0.0},
@@ -93,11 +92,6 @@ json_group_c.on('click',function() {
     console.log('clicked on the map')
 })
 json_group_c.on('clusterclick', function (event) {
-
-    // console.log(json_group);
-    // console.log(selection_group);
-
-
     // declare the empty content variable to append to
     let clusterPopupContent = "";
     console.log('starting the cluster click')
@@ -118,6 +112,7 @@ json_group_c.on('clusterclick', function (event) {
         // assign content to new leaflet popup
         function () {
             // make sure last popup instance is removed
+            console.log('try and remove the last popup')
             $('#clusterPopupContent').remove();
 
             // set content and add to map
@@ -135,6 +130,8 @@ json_group_c.on('clusterclick', function (event) {
 //This is our selection group
 const selection_group = new L.markerClusterGroup({
     maxClusterRadius: 0,
+    spiderLegPolylineOptions: {opacity: 0.0},
+    spiderfyDistanceMultiplier: 100000.0,
     iconCreateFunction: function (cluster) {
         return L.divIcon({
             html: '<b>' + cluster.getChildCount() + '</b>',
@@ -181,8 +178,9 @@ async function setup() {
             marker.addTo(json_group);
             marker.addTo(json_group_c);
             json_group.addLayer(marker);
+            json_group_c.addLayer(marker);
         });
-        map.addLayer(json_group);
+        //map.addLayer(json_group);
         map.addLayer(json_group_c);
         map.addLayer(selection_group)
         activeLayer = json_group;

@@ -161,7 +161,9 @@ L.MarkerCluster.include({
   },
   unspiderfy: function unspiderfy() {
     var group = this._group;
-    group.unassignSelectedClass();
+    try {
+      group.unassignSelectedClass();
+    } catch {}
 
     if (group.options.list) {
       var childMarkers = this.getAllChildMarkers();

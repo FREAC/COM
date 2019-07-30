@@ -2,26 +2,16 @@
 // set up event handler to watch when any checkboxes are checked
 function filterOptions(filterObject) {
     selection_group.clearLayers()
-
-
-    console.log('TOP of FILTER.JS and the json group looks like this ', json_group);
-
-
-    for (layer in json_group._map._layers) {
+    //console.log('TOP of FILTER.JS and the json group looks like this ', json_group);
+    //for (layer in json_group._map._layers) {
         //console.log('all the data looks like this ',json_group._map._layers[layer].data);
-    }
-
+    //}
 }
-
-
-
 // first get an array ready to hold the filters
 
 async function filterLocations(event) {
 
     var filter = []
-    // var restrict2 = undefined
-    //console.log('lets see filter now ',filter)
     const restrict2 = $('.mpick')
     num_filters_to_look_at = restrict2.length
     console.log('which have values ', restrict2)
@@ -38,15 +28,13 @@ async function filterLocations(event) {
         for (jj=0; jj<vals.length; jj++){
             //console.log('looking at each option, ',jj, vals[jj])
             if (vals[jj].selected) {
-                //console.log('for ', sv, ' the selections are ',vals[jj].innerHTML)
+                //console.log('for ', sv, ' the selections are ',vals[jj].value)
                 if (vals[jj].value === 'not_selected'){
                     // we dont wont this 
-                    //console.log('skipping this dummy value ', vals[jj])
                     //restrict2.splice(j,2)
                 } else {
                     //filter_vals.push(vals[jj].innerHTML)
                     filter_vals.push(vals[jj].value)
-
                 }
             }
         }
@@ -55,35 +43,6 @@ async function filterLocations(event) {
         }
     }
     console.log('what does the filter look like ',filter)
-    // now we need to look through the filter options and reset the json
-    // num_filters = (filter.length / 2) ;
-    // console.log('number of filters to process ', num_filters)
-    // for (j=0; j <= num_filters; j+=2){
-    //     console.log('filter ',j,' - ',filter[j],' has these options ', filter[j+1])
-    // }
-
-    // console.log('starting to filter locations')
-    // // first we need to get all the filters
-    // var insurance = $('.insurance').val()
-    // console.log('what did we get for insurance ',insurance)
-    // var pcat = $('.pcat').val()
-    // console.log('what did we get for pcat ', pcat)
-    // var clients = $('.clients').val()
-    // console.log('what did we get for clients ',clients)
-    // var telehealth = $('.telehealth').val()
-    // console.log('what did we get for telehealth ',telehealth)
-    // var newpatients = $('.newpatients').val()
-    // console.log('what did we get for new patients ',newpatients)
-    // // assign button ids to variables
-    // const acceptMedicare = $('#medicare');
-    // const acceptInsurance = $('#insurance');
-
-    // set up cases for checkbox combinations
-    // if ((acceptMedicare[0].checked === true) && (acceptInsurance[0].checked === true)) {
-        //  await map.removeLayer(json_group);
-        //  selection_group.clearLayers();
-        //  await map.removeLayer(selection_group);
-
         // for each feature in our json
         // map.eachLayer(function(layer){     //iterate over map rather than clusters
         //     if (layer.getChildCount){         // if layer is markerCluster
@@ -91,76 +50,43 @@ async function filterLocations(event) {
         //      console.log('the cluster has ',layer.getAllChildMarkers())
         //      }
         //    });
-    
-    // const selection_group = new L.markerClusterGroup({
-    //     maxClusterRadius: 0,
-    //     iconCreateFunction: function (cluster) {
-    //         return L.divIcon({
-    //             html: '<b>' + cluster.getChildCount() + '</b>',
-    //             className: 'clustered_sites',
-    //             iconSize: L.point(15, 15)
-    //         });
-    
-    //     }
-    // });
     console.log(' what does the empty sel group look like ', selection_group)
-    // for (junk in all_layers){
-    //     console.log(' layer is ',junk)
-    // }
-
-    // console.log('BEFORE ANYTHING starts and the all layers looks like ', all_layers)
     //console.log('JSON group is ',json_group._featureGroup)
     num_filters = ((filter.length / 2)) ;
     console.log('how many types of filters will there be ',num_filters)
-    //setup2();
     for (layer in json_group._layers) {
-        console.log('before the re-load ',json_group._layers[layer].data);
+        //console.log('before the re-load ',json_group._layers[layer].data);
                     json_group.removeLayer(layer)
     }
-
     await $.get("./data/COM.json", function (json_data) {
-
-
         $.each(json_data, function (object) {
             // console.log(json_data[object]);
             const provider = json_data[object];
             const marker = markerLogic(provider);
-            console.log('######adding a new item to json_group ',marker)
+            //console.log('######adding a new item to json_group ',marker)
             marker.addTo(json_group);
             json_group.addLayer(marker);
             //selection_group.addLayer(marker)
         });
-        
-        //map.removeLayer(json_group);
-        //map.removeLayer(selection_group)
-        // activeLayer = json_group;
     });
-    if (num_filters === 0){
-        num_filters = -2;
-        for (layer in json_group._layers) {
-            // console.log('adding this layer',layer)
-            selection_group.addLayer(json_group._layers[layer])
-        }
-
-    }
+    // uncomment this if we change the way Accepting New Patients work.  For now it is always being sent over
+    // if (num_filters === 0){
+    //     num_filters = -2;
+    //     for (layer in json_group._layers) {
+    //         // console.log('adding this layer',layer)
+    //         selection_group.addLayer(json_group._layers[layer])
+    //     }
+    // }
     for (j=0; j <= num_filters+1; j+=2){
         if (j === 2 && num_filters === 1) {continue}
         console.log("filter number ",j , ' is being processed')
         selection_group.clearLayers()
         filter_is = filter[j]
-        //setup2(json_group);
-
-
-
-        // for (layer in json_group._layers) {
-        //     console.log('back from setup2 and  all the data looks like this ',json_group._layers[layer].data);
-        // }
         console.log('STARTING the LOOP for filter ',j,' - ',filter_is,' has these options ', filter[j+1])
         for (layer in json_group._layers) {
             // current target layer that we're looking at
             const targetLayer = json_group._layers[layer];
             console.log('did we get a NEW target layer ', targetLayer.data)
-            //console.log('how many did the user pick')
             var need_it = false;
             var need_it_c = [];
             processing_cluster = false;
@@ -207,11 +133,6 @@ async function filterLocations(event) {
                                     console.log('CLUSTER----FOUND ONE THAT WE NEED not yet written',
                                     each_layer[i].data['Agency'], ' looking for ', filter[j+1][m])
                                     if (! need_it_c[i] ) {
-                                        // if (j > 0 ) {
-                                        //     need_it_c = true;
-                                        //     console.log('we need this one but its already saved')
-                                        //     continue
-                                        // } 
                                         each_layer[i].data['Latitude'] =  each_layer[i]._latlng.lat;
                                         each_layer[i].data['Longitude'] = each_layer[i]._latlng.lng;
                                         each_layer[i].data['Agency'] =    each_layer[i].data.Agency;
@@ -232,10 +153,8 @@ async function filterLocations(event) {
                                         need_it_c[i] = false
                                     }
                                     //if (j>0){
-                                        // console.log('we dont need this one from the cluster ')
                                         // need_it_c = false
                                         // json_group._featureGroup.removeLayer(each_layer)
-                                        // console.log('could we remove the one layer from the cluster???')
                                     //}
                                 } // end of looking at one piece of a cluster
 
@@ -272,14 +191,9 @@ async function filterLocations(event) {
                 //console.log('MMMMMMMMMMMMMMMM SINGLE---',json_group._featureGroup._layers(layer));
 
                 if (!need_it){
-                    // if(need_it_c) {continue}
                     console.log('must not need this',j)
-                    // if (j===0) {
-                        //console.log(' just removed ', json_group._featureGroup._layers[layer].data)
-                        // json_group._featureGroup._layers[layer].removeLayer
-                            json_group.removeLayer(layer)
-                            console.log(' we able to remove this layer ')
-                    // }
+                    json_group.removeLayer(layer)
+                    console.log(' we able to remove this layer ')
                 } else {console.log('need it is ',need_it)}
             }   
             console.log('end of the m loop')
@@ -310,14 +224,6 @@ async function filterLocations(event) {
         console.log('how many records did we save ',selection_group._map)
 
         console.log('what does the json look like after the filter ', selection_group)
-        // regenerate the json group so we can start the loop over again with the same structure
-        //map.addLayer(selection_group);
-        // all_layers = selection_group._featureGroup._layers
-        // console.log('did we get passed the group thing ',all_layers)
-        // for (junk in all_layers){
-        //     console.log(' layer is ',junk)
-        // }
-        // all_layers = selection_group._layers
     }
     console.log('end of the filtering')
     await map.removeLayer(json_group);
@@ -329,26 +235,24 @@ async function filterLocations(event) {
     await map.addLayer(selection_group);
     console.log('was able to add selection group to map')
     let i = 0;
-    selection_group.eachLayer(function(){ i += 1; });
+    selection_group.eachLayer(function(){ 
+        i += 1; 
+        console.log('here is each layer', layer.data)
+    });
     console.log('Map has', i, 'layers.');
     if (i === 0){
         alert('No agencies meet your criteria')
     }
-
-    // map.addLayer(json_group)
-
-    // configureAutocomplete(selection_group);
-
     // set active layer
     activeLayer = selection_group;
     selection_group.on('clusterclick', function (event) {
         // declare the empty content variable to append to
         let clusterPopupContent = "";
-        console.log('starting the cluster click')
+        console.log('starting the cluster click selection_group ',event)
         async function getChildMarkerContent() {
             console.log('ready')
             await $.each(event.layer.getAllChildMarkers(), function (index, value) {
-                console.log('looking at each one ', value)
+                console.log('looking at each one selection_group ', value)
                 // append content 
                 // console.log('looping as part of the popup build')
                 clusterPopupContent += value._popup._content + '<br><br>';
@@ -371,5 +275,8 @@ async function filterLocations(event) {
                     .setContent(clusterPopupContent)
                     .openOn(map);
             });
+        // this is here because 2nd - n identifies dont work without it....
+        console.log('try to zoom in justq a hair')
+        map.zoomIn(.00001)
     });
 }
