@@ -596,7 +596,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
                 id: i,
                 Agency: results[i]['agency'],
                 Insurance: results[i]['insurance'],
-                HouseNumbe: results[i]['housenumber'],
+                HouseNumber: results[i]['housenumber'],
                 Street: results[i]['street'],
                 City: results[i]['city'],
                 State: results[i]['state'],
@@ -706,7 +706,7 @@ function markerLogic(data, selection_marker) {
     // TODO -- SWH - not sure we need all of these fields - maybe just Agency (5/17/19)
     circle_marker.data = {
         'Agency': data['Agency'],
-        'HouseNumber': data['HouseNumbe'],
+        'HouseNumber': data['HouseNumber'],
         'Street': data['Street'],
         'Unit': data['Unit'],
         'City': data['City'],
