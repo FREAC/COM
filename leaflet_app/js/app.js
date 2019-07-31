@@ -255,7 +255,7 @@ geocoder.on('results', function (result) {
         querySearchArea(result);
         console.log('finished with the query search area ready to scroll ', document.body.scrollHeight)
         window.scrollTo(0,document.body.scrollHeight);
-        console.log('SCROLLLLLLED')
+
     }
 });
 
@@ -729,7 +729,7 @@ function markerLogic(data, selection_marker) {
         'Which_cate': data['Which_cate'],
         'Practice_a': data['Practice_A'],
         'Areas_Serv': data['Areas_Serv'],
-        'telehealth': data['telehealth'],
+        'telehealth': data['telehealth services'],
         'mhnum': data['mhnum']
 
     };
