@@ -77,8 +77,7 @@ async function filterLocations(event) {
     //         selection_group.addLayer(json_group._layers[layer])
     //     }
     // }
-    for (j=0; j <= num_filters+1; j+=2){
-        if (j === 2 && num_filters === 1) {continue}
+    for (j=0; j < num_filters*2; j+=2){
         console.log("filter number ",j , ' is being processed')
         selection_group.clearLayers()
         filter_is = filter[j]
