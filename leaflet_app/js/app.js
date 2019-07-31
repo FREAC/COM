@@ -182,7 +182,7 @@ const topRight = [32, -79];
 const map = new L.Map('map', {
     renderer: L.canvas(),
     center: new L.LatLng(28.3, -83.1),
-    minZoom: 7,
+    minZoom: 6,
     maxZoom: 19,
     zoom: 7,
     maxBounds: [bottomLeft, topRight]
@@ -243,12 +243,20 @@ geocoder.on('results', function (result) {
             'left': ''
         })
     }
-
+    console.log('what are the results from the geocode event ',result.results[0])
     clearSelection();
-    querySearchArea(result);
-    console.log('finished with the query search area ready to scroll ', document.body.scrollHeight)
-    window.scrollTo(0,document.body.scrollHeight);
-    console.log('SCROLLLLLLED')
+    if (result.results[0].properties.mhnum) {
+        // just zoom to the place
+        var z = 11;
+        zoomToLocation(result.results[0].latlng.lat, result.results[0].latlng.lng, z = 11, result.results[0].properties) 
+
+    } else {
+        // This was a regular address zoom
+        querySearchArea(result);
+        console.log('finished with the query search area ready to scroll ', document.body.scrollHeight)
+        window.scrollTo(0,document.body.scrollHeight);
+        console.log('SCROLLLLLLED')
+    }
 });
 
 // check whether on mobile devices
@@ -477,9 +485,9 @@ function zoomToLocation(lat, lng, z = 11, data) {
             data['Unit'] = ''
         }
 
-        var pop_text = `<b>${data['Agency']}</b><br>
-                    ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
-                    ${data['City']}, ${data['State']} ${data['PostalCode']}`;
+        var pop_text = `<b>${data['agency']}</b><br>
+                    ${data['housenumber']} ${data['street']} ${data['unit']}<br>
+                    ${data['city']}, ${data['state']} ${data['postalcode']}`;
         var popup = L.popup({
                 maxWidth: 200
             })
