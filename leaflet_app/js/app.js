@@ -362,7 +362,17 @@ $('#filter_by').click(function () {
 // reload the page so all filters are reset
 $('#reload_page').click(function () {
     console.log('trying to clear all filters')
-    window.location.reload();
+
+            $('option:selected').prop("selected", false);
+            $('.mpick').prev(".fs-dropdown").find(".fs-options .fs-option").each(function () {
+                $(this).removeClass('selected', false);
+            });
+    
+            $('.fs-label').html('Select some options');
+            selection_group.clearLayers(); // remove selections
+            map.addLayer(json_group_c);
+            map.addLayer(json_group);
+    //window.location.reload();  // Old way of clearing the page
     console.log('got them cleared with a page reload')
 });
 // Radius dropdown functionality
