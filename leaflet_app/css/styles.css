@@ -17,7 +17,8 @@ body {
 
 #legend {
   /* background-color: #E1D4B7;   */
-  background-color: #35b6b9;
+  /* background-color: #35b6b9; */
+  background-color: transparent;
 }
 
 #json_one_results {
@@ -131,7 +132,7 @@ body {
   border-radius: 90%;
   width: 5px;
   height: 5px;
-  background-color: #35b6b9;
+  background-color: #35b7b7;
   /* background-color:red; */
   text-align: center;
   font-size: 7px;

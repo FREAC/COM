@@ -85,7 +85,7 @@ async function filterLocations(event) {
         for (layer in json_group._layers) {
             // current target layer that we're looking at
             const targetLayer = json_group._layers[layer];
-            console.log('did we get a NEW target layer ', targetLayer.data)
+            console.log('did we get a NEW target layer ', targetLayer.data, layer)
             var need_it = false;
             var need_it_c = [];
             processing_cluster = false;

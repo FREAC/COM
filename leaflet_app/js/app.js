@@ -64,6 +64,30 @@ const json_group = new L.FeatureGroup({
 
     }
 });
+function checkForMHNUM() {
+var mhnum = getUrlParam('mhnum')
+// now can we loop through everything and find this mhnum?
+
+$(document).ready(function () {
+// console.log('did we get the mhnum ',mhnum, map._layers)
+// console.log('did we get the mhnum part 2 ',mhnum, json_group)
+//     console.log('trying to loop through json_group')
+    // for (layer in json_group._layers) {
+    map.eachLayer(function(layer){
+        try {
+            // console.log('hey 2',layer.data)
+            // console.log('hey 4',layer.data.mhnum)
+                 if (mhnum === layer.data.mhnum) {
+                     const lat = layer._latlng['lat'];
+                     const lon = layer._latlng['lng'];
+                    //  var z = 11;
+                    //  the_data = layer.data;
+                     zoomToLocation(lat, lon, 99, layer.data)             
+                 }
+        } catch{}
+    })
+})
+}
 // this one is used just on the initial load
 const json_group_c = new L.markerClusterGroup({
         maxClusterRadius: 0,
@@ -149,6 +173,7 @@ function getUrlParam(parameter, defaultvalue){
         }
     return urlparameter;
 }
+
 // initial setup function to loop through json that
 // assigns marker and add to map
 async function setup() {
@@ -167,6 +192,7 @@ async function setup() {
         map.addLayer(json_group_c);
         map.addLayer(selection_group)
         activeLayer = json_group;
+        checkForMHNUM();
     });
 }
 
@@ -460,13 +486,18 @@ function configurePopup(data) {
 // general function that will take in lat and lon
 // then will zoom to and highlight desired feature
 function zoomToLocation(lat, lng, z = 11, data) {
+    // console.log('starting the zoom to location function', data)
     // if a marker is already present on the map, remove it
     if (selection_marker) {
         map.removeLayer(selection_marker);
     }
-
-    // set view to location
-    map.flyTo(new L.LatLng(lat, lng), z);
+    if (z === 99) {
+        // came from a mhnum zoom request
+        map.flyTo(new L.LatLng(lat, lng), 11);
+    } else {
+        // set view to location
+        map.flyTo(new L.LatLng(lat, lng), z);
+    }
 
     // Set marker location
     const marker_location = new L.LatLng(lat, lng);
@@ -480,14 +511,25 @@ function zoomToLocation(lat, lng, z = 11, data) {
     map.addLayer(selection_marker);
 
     try {
+        if (z === 99) {
+            // we came from a zoom to a specific MHNYM
+            // this needs things to be upper case
+            if (data['Unit'] === undefined || data['Unit'] === null) {
+                data['Unit'] = ''
+            }
 
-        if (data['Unit'] === undefined || data['Unit'] === null) {
-            data['Unit'] = ''
+            var pop_text = `<b>${data['Agency']}</b><br>
+                        ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
+                        ${data['City']}, ${data['State']} ${data['PostalCode']}`;
+        } else {
+            if (data['unit'] === undefined || data['unit'] === null) {
+                data['unit'] = ''
+            }
+
+            var pop_text = `<b>${data['agency']}</b><br>
+                        ${data['housenumber']} ${data['street']} ${data['unit']}<br>
+                        ${data['city']}, ${data['state']} ${data['postalcode']}`;
         }
-
-        var pop_text = `<b>${data['agency']}</b><br>
-                    ${data['housenumber']} ${data['street']} ${data['unit']}<br>
-                    ${data['city']}, ${data['state']} ${data['postalcode']}`;
         var popup = L.popup({
                 maxWidth: 200
             })
