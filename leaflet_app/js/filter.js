@@ -221,7 +221,11 @@ async function filterLocations(event) {
     }
     console.log('end of the filtering')
     await map.removeLayer(json_group);
-    await map.removeLayer(json_group_c);
+    if (num_filters > 0) {
+        await map.removeLayer(json_group_c);
+    } else {
+        // we tried to filter without selecting anything so dont remove the json_group_c
+    }
     //selection_group.clearLayers();
     await map.removeLayer(selection_group);
     // Add our selection markers in our JSON file on the map
@@ -233,7 +237,7 @@ async function filterLocations(event) {
         i += 1; 
     });
     console.log('Map has', i, 'layers.');
-    if (i === 0){
+    if (i === 0 && num_filters > 0){
         alert('No agencies meet your criteria')
     }
     // set active layer
