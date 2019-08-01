@@ -73,7 +73,7 @@ $(document).ready(function () {
 // console.log('did we get the mhnum part 2 ',mhnum, json_group)
 //     console.log('trying to loop through json_group')
     // for (layer in json_group._layers) {
-    map.eachLayer(function(layer){
+    json_group.eachLayer(function(layer){
         try {
             // console.log('hey 2',layer.data)
             // console.log('hey 4',layer.data.mhnum)
@@ -84,7 +84,7 @@ $(document).ready(function () {
                     //  the_data = layer.data;
                      zoomToLocation(lat, lon, 99, layer.data)             
                  }
-        } catch{}
+        } catch{console.log('does it ever blow?')}
     })
 })
 }
@@ -210,7 +210,7 @@ const map = new L.Map('map', {
     center: new L.LatLng(28.3, -83.1),
     minZoom: 6,
     maxZoom: 19,
-    zoom: 7,
+    zoom: 6,
     maxBounds: [bottomLeft, topRight]
 });
 
