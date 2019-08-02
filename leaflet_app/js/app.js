@@ -238,6 +238,12 @@ setup();
 // Base map
 L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 
+// load open street maps code
+// L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+//     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+//     subdomains: ['a','b','c']
+// }).addTo( map );
+
 // ESRI Geocoder 
 
 var arcgisOnline = L.esri.Geocoding.arcgisOnlineProvider();
