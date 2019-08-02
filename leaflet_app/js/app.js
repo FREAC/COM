@@ -361,6 +361,8 @@ $('#filter_by').click(function () {
 
 // reload the page so all filters are reset
 $('#reload_page').click(function () {
+    // now get the radius before we clear everything
+    const r_size = parseInt($radius.val());
     console.log('trying to clear all filters')
     // the next 5 lines clear any pick list
     $('option:selected').prop("selected", false);
@@ -368,18 +370,32 @@ $('#reload_page').click(function () {
         $(this).removeClass('selected', false);
     });
     $('.fs-label').html('Select some options');
-
+    // now put the radius back to where it was
+    switch (r_size) {
+        case 8047:
+                $('#radius>option:eq(1)').prop('selected',true)
+            break;
+        case 16093:
+                $('#radius>option:eq(2)').prop('selected',true)
+            break;
+        case 40234:
+                $('#radius>option:eq(3)').prop('selected',true)
+            break;
+        case 80467:
+                $('#radius>option:eq(4)').prop('selected',true)
+            break;
+        case 804670:
+                $('#radius>option:eq(5)').prop('selected',true)
+            break;
+    }
     selection_group.clearLayers(); // remove selections
     // now we just need to call the filterLocations with NO filters to reset everything 
     filterLocations(event)
-    // now requery the circle
-    const r_size = parseInt($radius.val());
     activeLayer = json_group
     setTimeout (function () {
         pointsInCircle(searchArea, r_size, activeLayer);
     },500)
     //window.location.reload();  // Old way of clearing the page
-    //console.log('got them cleared with a page reload')
 });
 // Radius dropdown functionality
 const $radius = $('#radius');
