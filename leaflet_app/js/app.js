@@ -362,18 +362,24 @@ $('#filter_by').click(function () {
 // reload the page so all filters are reset
 $('#reload_page').click(function () {
     console.log('trying to clear all filters')
+    // the next 5 lines clear any pick list
+    $('option:selected').prop("selected", false);
+    $('.mpick').prev(".fs-dropdown").find(".fs-options .fs-option").each(function () {
+        $(this).removeClass('selected', false);
+    });
+    $('.fs-label').html('Select some options');
 
-            $('option:selected').prop("selected", false);
-            $('.mpick').prev(".fs-dropdown").find(".fs-options .fs-option").each(function () {
-                $(this).removeClass('selected', false);
-            });
-    
-            $('.fs-label').html('Select some options');
-            selection_group.clearLayers(); // remove selections
-            map.addLayer(json_group_c);
-            map.addLayer(json_group);
+    selection_group.clearLayers(); // remove selections
+    // now we just need to call the filterLocations with NO filters to reset everything 
+    filterLocations(event)
+    // now requery the circle
+    const r_size = parseInt($radius.val());
+    activeLayer = json_group
+    setTimeout (function () {
+        pointsInCircle(searchArea, r_size, activeLayer);
+    },500)
     //window.location.reload();  // Old way of clearing the page
-    console.log('got them cleared with a page reload')
+    //console.log('got them cleared with a page reload')
 });
 // Radius dropdown functionality
 const $radius = $('#radius');
@@ -584,7 +590,6 @@ function insertTabulator(data) {
 // This figures out how many points are within our circle
 function pointsInCircle(circle, meters_user_set, groupLayer) {
     console.log('ssssssssssssssssstarting points is a circle ', circle, meters_user_set)
-
     if (circle !== undefined) {
         // Only run if we have an address entered
         // Lat, long of circle

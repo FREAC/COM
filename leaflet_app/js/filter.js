@@ -222,9 +222,16 @@ async function filterLocations(event) {
     console.log('end of the filtering')
     await map.removeLayer(json_group);
     if (num_filters > 0) {
+        console.log('1 or more filters applied so we need to remove json_group_c')
         await map.removeLayer(json_group_c);
     } else {
         // we tried to filter without selecting anything so dont remove the json_group_c
+        console.log('no filters found so we need to make sure json_group_c --IS-- there by adding it')
+        //await map.addLayer(json_group_c);
+        // I think we need selection_group to look exactly like json_group
+        json_group.eachLayer(function(layer) {
+            selection_group.addLayer(layer)
+        })
     }
     //selection_group.clearLayers();
     await map.removeLayer(selection_group);
