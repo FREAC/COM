@@ -244,6 +244,14 @@ L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 //     subdomains: ['a','b','c']
 // }).addTo( map );
 
+// Use this code for an imagery background
+
+// var mapLink = '<a href="https://www.esri.com/">Esri</a>';
+// var wholink = 'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+// L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+//     attribution: '&copy; '+mapLink+', '+wholink,maxZoom: 18,
+// }).addTo(map);
+
 // ESRI Geocoder 
 
 var arcgisOnline = L.esri.Geocoding.arcgisOnlineProvider();
