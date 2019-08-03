@@ -42,7 +42,6 @@ const setActiveLayer = (map) => {
 
 const filteredLayersArray = (allLayers, filterArr, id) => allLayers.filter(layer => {
     if (!layer.data) { // if there's no data, false
-        alert("no data found");
         return false
     } else { // if there IS data
         // console.log(layer);
@@ -54,6 +53,9 @@ const filteredLayersArray = (allLayers, filterArr, id) => allLayers.filter(layer
         const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
         const intersectionFilter = checkFilterPresence(currentLayerArr, filterArr)
         if (intersectionFilter) {
+            if (intersectionFilter.length === 0 || !intersectionFilter.length) {
+
+            }
             return intersectionFilter.length > 0 // return if there are more than 0 results
         }
         activeLayer = selection_group;
@@ -80,7 +82,8 @@ const checkFilterPresence = (currentLayerArr, filterArr) => {
 const checkIfAndFilterEmpty = async (andFilter, id) => {
     // return true if we only perform or logic; false if we perform and logic
     const andFilterTruthArr = Object.keys(andFilter).map(key => {
-        if (key !== id && andFilter[key] !== undefined && andFilter[key].length > 0) {
+        // if (key !== id && andFilter[key] !== undefined && andFilter[key].length > 0) {
+        if (key !== id && andFilter[key] !== undefined) {
             return false;
         } else {
             return true;
@@ -117,11 +120,14 @@ $(".mpick").change(async function (event) {
     console.log({isandfilterempty : andFilterCheck});
     // currently selected filters
     const orFilterSelections = await assignSelectToFilterObject(id, value, filterObject);
+    console.log(andFilter);
 
     if (andFilterCheck) { // if true, there are no other filters to compare to; only and filter will be executed
 
         if (value !== null) {
             const filteredLayers = await filteredLayersArray(allLayers, orFilterSelections, id);
+            console.log(filteredLayers);
+            
             // add layers to andFilter object
             if (filteredLayers.length === 0) {
                 box.show('No data found');
