@@ -823,7 +823,7 @@ function markerLogic(data, selection_marker) {
         'Which_cate': data['Which_cate'],
         'Practice_a': data['Practice_A'],
         'Areas_Serv': data['Areas_Serv'],
-        'telehealth': data['telehealth services'],
+        'telehealth': data['telehealth'],
         'mhnum': data['mhnum']
 
     };
