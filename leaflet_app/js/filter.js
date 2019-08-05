@@ -122,8 +122,10 @@ $(".mpick").change(async function (event) {
 
     // check to see if we need to perform AND logic
     const andFilterCheck = await checkIfAndFilterEmpty(andFilter, this.id);
+    console.log({isandfilterempty : andFilterCheck});
     // currently selected filters
-    
+    const orFilterSelections = await assignSelectToFilterObject(id, value, filterObject);
+
     if (andFilterCheck) { // if true, there are no other filters to compare to; only and filter will be executed
 
         if (value !== null) {
@@ -134,6 +136,8 @@ $(".mpick").change(async function (event) {
                 let accum = undefined;
                 for (let i = 0; i < Object.keys(andAccumulator).length; i++) {
                     const key = Object.keys(andAccumulator)[i]
+                    console.log(andAccumulator[key]);
+                    
                     if (andAccumulator[key] !== undefined && andAccumulator[key].length > 0) {
                         accum = accum === undefined ? // if a result of none is found then [] is returned not undefined.
                             andAccumulator[key] :
