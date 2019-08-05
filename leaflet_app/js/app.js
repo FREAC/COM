@@ -581,7 +581,7 @@ function zoomToLocation(lat, lng, z = 11, data) {
             var pop_text = `<b>${data['agency']}</b><br>
                         ${data['housenumber']} ${data['street']} ${data['unit']}<br>
                         ${data['city']}, ${data['state']} ${data['postalcode']}<br>
-                        ${data['Phone_Numb']}`;
+                        ${data['phone_numb']}`;
         }
         var popup = L.popup({
                 maxWidth: 200
