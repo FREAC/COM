@@ -426,7 +426,8 @@ $radius.change(function () {
 function createPopup(data) {
     const content = `<b>${data['Agency']}</b><br> 
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
-                    ${data['City']}, ${data['State']} ${data['PostalCode']}`;
+                    ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
+                    ${data['Phone_Numb']}`;
     return L.popup({
         closeButton: false
     }).setContent(content);
@@ -517,7 +518,8 @@ function configurePopup(data) {
 
         var pop_text = `<b>${data['Agency']}</b><br> 
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
-                    ${data['City']}, ${data['State']} ${data['PostalCode']}`;
+                    ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
+                    ${data['Phone_Numb']}`;
         var popup = L.popup({
                 maxWidth: 200
             })
@@ -566,7 +568,8 @@ function zoomToLocation(lat, lng, z = 11, data) {
 
             var pop_text = `<b>${data['Agency']}</b><br>
                         ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
-                        ${data['City']}, ${data['State']} ${data['PostalCode']}`;
+                        ${data['City']}, ${data['State']} ${data['PostalCode']}
+                        ${data['Phone_Numb']}`;
         } else {
             if (data['unit'] === undefined || data['unit'] === null) {
                 data['unit'] = ''
@@ -574,7 +577,8 @@ function zoomToLocation(lat, lng, z = 11, data) {
 
             var pop_text = `<b>${data['agency']}</b><br>
                         ${data['housenumber']} ${data['street']} ${data['unit']}<br>
-                        ${data['city']}, ${data['state']} ${data['postalcode']}`;
+                        ${data['city']}, ${data['state']} ${data['postalcode']}<br>
+                        ${data['Phone_Numb']}`;
         }
         var popup = L.popup({
                 maxWidth: 200
