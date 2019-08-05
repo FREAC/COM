@@ -44,11 +44,9 @@ const filteredLayersArray = (allLayers, filterArr, id) => allLayers.filter(layer
     if (!layer.data) { // if there's no data, false
         return false
     } else { // if there IS data
-        // console.log(layer);
 
         const currentLayer = layer.data[id]; // current layer in json_group
         // currentLayerArr are target attributes from map (insurance, categories, etc.)
-        // console.log(layer);
         
         const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
         const intersectionFilter = checkFilterPresence(currentLayerArr, filterArr)
@@ -97,22 +95,23 @@ const checkIfAndFilterEmpty = async (andFilter, id) => {
 }
 
 const orFilters = (filterObject) => {
-    Object.keys(filterObject).map(async (item) => {
-        console.log(item);
-        
+    Object.keys(filterObject).map(async (item) => {        
         // perform OR filter
         if (filterObject[item] !== undefined) {
             const filteredLayers = await filteredLayersArray(allLayers, filterObject[item], item);
             // add results to andFilter
-            console.log(filterObject[item]);
-            console.log(filteredLayers);
-            
             return andFilter[item] = filteredLayers;
         } else {
             andFilter[item] = undefined;
         }
     });
     return andFilter;
+}
+
+const emptyResultMsg = (andResults) => {        
+    if (andResults.length === 0) {
+        box.show("No data found, please revise search");
+    }
 }
 
 $(".mpick").change(async function (event) {
@@ -122,7 +121,6 @@ $(".mpick").change(async function (event) {
 
     // check to see if we need to perform AND logic
     const andFilterCheck = await checkIfAndFilterEmpty(andFilter, this.id);
-    console.log({isandfilterempty : andFilterCheck});
     // currently selected filters
     const orFilterSelections = await assignSelectToFilterObject(id, value, filterObject);
 
@@ -136,7 +134,6 @@ $(".mpick").change(async function (event) {
                 let accum = undefined;
                 for (let i = 0; i < Object.keys(andAccumulator).length; i++) {
                     const key = Object.keys(andAccumulator)[i]
-                    console.log(andAccumulator[key]);
                     
                     if (andAccumulator[key] !== undefined && andAccumulator[key].length > 0) {
                         accum = accum === undefined ? // if a result of none is found then [] is returned not undefined.
@@ -144,10 +141,12 @@ $(".mpick").change(async function (event) {
                             andFilter(accum, andAccumulator[key])
                     }
                 }
+                accum = [];
                 return accum
             }
             const andResults = intersectionArray(orResults);
             displayFilteredData(andResults);
+            emptyResultMsg(andResults);
             searchByRadiusSize(); // update search results table
         } else {
             // if there are no selections, add the whole json_group back
@@ -176,8 +175,8 @@ $(".mpick").change(async function (event) {
             return accum
         }
         const andResults = intersectionArray(orResults);
-        console.log(andResults);
         displayFilteredData(andResults);
+        emptyResultMsg(andResults);
         searchByRadiusSize(); // update search results table
     }
 });
