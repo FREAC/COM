@@ -73,19 +73,22 @@ $(document).ready(function () {
 // console.log('did we get the mhnum part 2 ',mhnum, json_group)
 //     console.log('trying to loop through json_group')
     // for (layer in json_group._layers) {
-    json_group.eachLayer(function(layer){
-        try {
-            // console.log('hey 2',layer.data)
-            // console.log('hey 4',layer.data.mhnum)
-                 if (mhnum === layer.data.mhnum) {
-                     const lat = layer._latlng['lat'];
-                     const lon = layer._latlng['lng'];
-                    //  var z = 11;
-                    //  the_data = layer.data;
-                     zoomToLocation(lat, lon, 99, layer.data)             
-                 }
-        } catch{console.log('does it ever blow?')}
-    })
+    if (mhnum > 0) {
+        json_group.eachLayer(function(layer){
+            try {
+                // console.log('hey 2',layer.data)
+                // console.log('hey 4',layer.data.mhnum)
+                    if (mhnum === layer.data.mhnum) {
+                        console.log('found the MHNUM to zoom to')
+                        const lat = layer._latlng['lat'];
+                        const lon = layer._latlng['lng'];
+                        //  var z = 11;
+                        //  the_data = layer.data;
+                        zoomToLocation(lat, lon, 99, layer.data)             
+                    }
+            } catch{console.log('does it ever blow?')}
+        })
+    } else {console.log('no mhnum supplied on this run')}
 })
 }
 // this one is used just on the initial load
@@ -285,7 +288,7 @@ geocoder.on('results', function (result) {
     }
     console.log('what are the results from the geocode event ',result.results[0])
     clearSelection();
-    if (result.results[0].properties.mhnum) {
+    if (result.results[0].properties.mhnum || result.results[0].properties.mmhid) {
         // just zoom to the place
         var z = 11;
         zoomToLocation(result.results[0].latlng.lat, result.results[0].latlng.lng, z = 11, result.results[0].properties) 
