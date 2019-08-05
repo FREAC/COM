@@ -1,7 +1,7 @@
 'use strict';
 
 // Colors
-const default_fill_color = "#ED9118";
+const default_fill_color = "#35b6b9"
 const default_outline_color = "#FFFFFF";
 const selected_color = "#2BBED8";
 const selected_fill_opacity = 1;
