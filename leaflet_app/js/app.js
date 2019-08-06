@@ -598,6 +598,7 @@ function zoomToLocation(lat, lng, z = 11, data) {
 function insertTabulator(data) {
     table = new Tabulator("#results-table", {
         height: 200,
+        width: 400,
         data: data,
         layout: "fitColumns",
         selectable: 1,
@@ -605,7 +606,8 @@ function insertTabulator(data) {
             title: "Provider",
             field: "agency"
         }, {
-            title: "Phone Number",
+            width: 120,
+            title: "Phone",
             field: "Phone_Numb"
         }],
         rowClick: function (event, row) {
