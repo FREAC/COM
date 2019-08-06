@@ -162,3 +162,13 @@ body {
   display: table;
   clear: both;
 }
+.tabulator-print-header, tabulator-print-footer{
+  text-align:center;
+}
+@media print
+{    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}

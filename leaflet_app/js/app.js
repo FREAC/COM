@@ -397,8 +397,16 @@ $('#filter_by').click(function () {
     setTimeout (function () {
         pointsInCircle(searchArea, r_size, activeLayer);
     },500)
-});
+});    
 
+//print button
+$("#print-table").on("click", function(){
+    // if first arg is false then the entire table is printed
+    // more print documentation here: http://tabulator.info/docs/4.3/print
+    table.showColumn("dist")
+    table.print(false, true);
+    table.hideColumn("dist")
+});
 // reload the page so all filters are reset
 $('#reload_page').click(function () {
     // now get the radius before we clear everything
@@ -621,10 +629,14 @@ function zoomToLocation(lat, lng, z = 11, data) {
 function insertTabulator(data) {
     table = new Tabulator("#results-table", {
         height: 200,
-        width: 400,
+        // width: 400,
         data: data,
         layout: "fitColumns",
         selectable: 1,
+        // printAsHtml:false,
+        printCopyStyle: true,
+        printHeader:"<h1>Providers Meeting Your Criteria<h1>",
+        printFooter:"<h2>FSU College of Medicine<h2>",
         columns: [{
             title: "Provider",
             field: "agency"
@@ -632,6 +644,10 @@ function insertTabulator(data) {
             width: 120,
             title: "Phone",
             field: "Phone_Numb"
+        }, {
+            title: "Distance from address (miles)",
+            field: "dist",
+            visible: false
         }],
         rowClick: function (event, row) {
             // NOTE: New function parameter to pass all of the row information to the zoomtolocation
@@ -697,7 +713,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
                     website: layer.data.Website,
                     phone_numb: layer.data.Phone_Numb,
                     phonenumber:layer.data.Phone_Numb,
-                    dist: distance_from_layer_circle,
+                    dist: (distance_from_layer_circle / 1609).toFixed(2),
                     latitude: layer_lat_long.lat,
                     longitude: layer_lat_long.lng
                 });
@@ -732,6 +748,8 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
                 Phone_Numb: results[i]['phone_numb'],
                 lat: results[i]['latitude'],
                 lng: results[i]['longitude'],
+                dist: results[i]['dist'],
+
 
                 agency: results[i]['agency'],
                 insurance: results[i]['insurance'],

@@ -46,6 +46,7 @@
 	<script type="text/javascript" src="js/lib/leaflet-1.4.0.min.js"></script>
 	<script type="text/javascript" src="js/lib/leaflet-providers.min.js"></script>
 	<script type="text/javascript" src="js/lib/tabulator-4.2.1.min.js"></script>
+	<script type="text/javascript" src="js/lib/tabulator.min.js"></script>
 	<script type="text/javascript" src="js/lib/jquery.easy-autocomplete-1.3.5.min.js"></script>
 	<script type="text/javascript" src="js/lib/locate-control-0.66.1.min.js"></script>
 	<script type="text/javascript" src="js/lib/esri-leaflet-2.2.4.min.js"></script>
@@ -371,12 +372,12 @@
 			<div class="col-9 d-flex">
 				<!-- <button type="button" style="background-color:#67d1d3;"  -->
 				<button type="button" style="background-color:#FDD200;" 
-					class="btn btn-light flex-fill" id="filter_by">Click here after you have made your selections
+					class="btn btn-light flex-fill no-print" id="filter_by">Click here after you have made your selections
 				</button>
 			</div>
 			<div class="col-9 d-flex">
 				<button type="button" style="background-color:#35b7b7;" 
-					class="btn btn-light flex-fill" id="reload_page">Click here to clear all filters
+					class="btn btn-light flex-fill no-print" id="reload_page">Click here to clear all filters
 				</button>
 			</div>
 		
@@ -386,11 +387,16 @@
 				<div class="row p-8">
 					<div class="col" id='results'>
 						<!-- TODO Combine this with the results-table div -->
+
 						<h3>Results</h3>
 						<p><span id="json_one_results_title"><span id="json_one_results">0</span> <span
 									id="json_one_title">providers</span></span>
 							are within the given radius.</p>
-						<div id="results-table" style='width:100%'></div>
+							<div class="table-controls no-print">
+								<button id="print-table" style="display:none">Print Map and Full Table</button>
+							</div> 
+						<div id="results-table" class='no-print' style='width:100%'></div>
+
 					</div>
 				</div>
 				<h6><b>Search Radius</b></h6>
@@ -405,7 +411,7 @@
 					</select>
 					<br />
 					<div class="col-10 d-flex">
-						<button type="button" class="btn btn-light flex-fill" 
+						<button type="button" class="btn btn-light flex-fill no-print" 
 								style="background-color:#FDD200;" 
 								id="clear-search">Click here to Clear Search
 							Results</button>
