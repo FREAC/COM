@@ -203,19 +203,54 @@ async function setup() {
 ///////////////////////////////////////////////
 ///////////////////////////////////////////////
 ///////////////////////////////////////////////
+// Base map
+// L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 
+// load open street maps code
+		//OSM tiles attribution and URL
+        var osmLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+        var osmURL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmAttrib = '&copy; ' + osmLink;
+        
+        //Carto tiles attribution and URL
+        var cartoLink = '<a href="http://cartodb.com/attributions">CartoDB</a>';
+        var cartoURL = 'http://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png';
+        var cartoAttrib = '&copy; ' + osmLink + ' &copy; ' + cartoLink;
+        
+        // Use this code for an imagery background
+        
+        var aerialLink = '<a href="https://www.esri.com/">Esri</a>';
+        var aerialURL  = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+        var aerialAttrib = 'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+
+        var osmMap = L.tileLayer(osmURL, {attribution: osmAttrib});
+        var cartoMap = L.tileLayer(cartoURL, {attribution: cartoAttrib});
+        var aerialMap = L.tileLayer(aerialURL, {attribution: aerialAttrib});
+        
+        //Base layers definition and addition
+        var baseLayers = {
+            "CartoDB": cartoMap,
+            "Aerial View": aerialMap,
+            "OSM Map": osmMap
+        };
+ 
 const bottomLeft = [24, -88];
 const topRight = [32, -79];
 
 // Map
 const map = new L.Map('map', {
     renderer: L.canvas(),
+    layers: [cartoMap],
     center: new L.LatLng(28.3, -83.1),
     minZoom: 6,
     maxZoom: 19,
     zoom: 6,
     maxBounds: [bottomLeft, topRight]
 });
+
+//Add baseLayers to map as control layers
+// commented out as of 8/6/19 by SWH
+// L.control.layers(baseLayers).addTo(map);
 
 map.on({
     contextmenu: function (e) {
@@ -238,22 +273,10 @@ map.on({
 // Load the data
 setup();
 
-// Base map
-L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 
-// load open street maps code
-// L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-//     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-//     subdomains: ['a','b','c']
-// }).addTo( map );
 
-// Use this code for an imagery background
 
-// var mapLink = '<a href="https://www.esri.com/">Esri</a>';
-// var wholink = 'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
-// L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-//     attribution: '&copy; '+mapLink+', '+wholink,maxZoom: 18,
-// }).addTo(map);
+
 
 // ESRI Geocoder 
 
