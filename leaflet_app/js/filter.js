@@ -126,33 +126,25 @@ $(".mpick").change(async function (event) {
 
     if (andFilterCheck) { // if true, there are no other filters to compare to; only and filter will be executed
 
-        if (value !== null) {
-            // assign or filters to andFilter object
-            const orResults = await orFilters(filterObject);
-            const andFilter = (arr1, arr2) => arr1.filter(value => arr2.includes(value));
-            const intersectionArray = (andAccumulator) => {
-                let accum = undefined;
-                for (let i = 0; i < Object.keys(andAccumulator).length; i++) {
-                    const key = Object.keys(andAccumulator)[i]
-                    
-                    if (andAccumulator[key] !== undefined && andAccumulator[key].length > 0) {
-                        accum = accum === undefined ? // if a result of none is found then [] is returned not undefined.
-                            andAccumulator[key] :
-                            andFilter(accum, andAccumulator[key])
-                    }
+
+            if (value !== null) {
+                const filteredLayers = await filteredLayersArray(allLayers, orFilterSelections, id);
+                console.log(filteredLayers);
+                
+                // add layers to andFilter object
+                if (filteredLayers.length === 0) {
+                    box.show('No data found');
                 }
-                accum = [];
-                return accum
+                andFilter[this.id] = filteredLayers; // 
+                console.log(filteredLayers);
+                // checking to see if we get clusters back
+                displayFilteredData(filteredLayers);
+                searchByRadiusSize(); // update search results table
+            } else {
+                // if there are no selections, add the whole json_group back
+                map.addLayer(json_group);
+                searchByRadiusSize(); // update search results table
             }
-            const andResults = intersectionArray(orResults);
-            displayFilteredData(andResults);
-            emptyResultMsg(andResults);
-            searchByRadiusSize(); // update search results table
-        } else {
-            // if there are no selections, add the whole json_group back
-            map.addLayer(json_group);
-            searchByRadiusSize(); // update search results table
-        }
 
     } else { // perform and operation
         // assign or filters to andFilter object
