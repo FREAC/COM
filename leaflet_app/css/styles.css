@@ -150,6 +150,9 @@ body {
   float: left;
   width: 50%;
   padding: 10px;
+  border-style: solid;
+  border-width: thin;
+  border-color: #35b7b7;
   /* height: 300px; Should be removed. Only for demonstration */
 }
 
