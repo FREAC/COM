@@ -21,6 +21,18 @@ const andFilter = {
     "Practice_a": undefined
 }
 
+const populateFilterObjectWithDefaultSelections = () => {
+    const mpickObj = $('.mpick');
+    console.log(mpickObj);
+    for (i=0; i < mpickObj.length; i++) {
+        console.log(mpickObj[i]);
+    }
+    const keys = Object.keys($('.mpick'));
+    
+}
+
+populateFilterObjectWithDefaultSelections();
+
 const assignSelectToFilterObject = (id, value, filterObject) => {
     if (value) {
         filterObject[id] = value;
