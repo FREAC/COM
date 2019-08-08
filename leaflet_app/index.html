@@ -92,7 +92,7 @@
 						</div>
 					</div>
 
-<div class="row2">
+<div class="row2 no-print">
 	<div class="column2" style="border-right: none !important">
 						<h6><b>Insurance options</b></h6>
 							<select class="mpick" multiple="multiple" name="Insurance" >
@@ -389,11 +389,14 @@
 						<!-- TODO Combine this with the results-table div -->
 
 						<h3>Results</h3>
+						<div id='filters_used' class='filters_used ' style='border-style:solid'>
+
+						</div>
 						<p><span id="json_one_results_title"><span id="json_one_results">0</span> <span
 									id="json_one_title">providers</span></span>
 							are within the given radius.</p>
 							<div class="table-controls no-print">
-								<button id="print-table" style="display:none">Print Map and Full Table</button>
+								<button id="print-table" style="display:block">Print Map and Full Table</button>
 							</div> 
 						<div id="results-table" class='no-print' style='width:100%'></div>
 

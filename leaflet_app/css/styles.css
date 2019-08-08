@@ -172,3 +172,6 @@ body {
         display: none !important;
     }
 }
+.hidden_element {
+  display: none;
+}

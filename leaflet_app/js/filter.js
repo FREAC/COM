@@ -9,8 +9,9 @@ function filterOptions(filterObject) {
 }
 // first get an array ready to hold the filters
 
-async function filterLocations(event) {
 
+function getFilters() {
+    console.log('STARTING TO GET THE FILTERS')
     var filter = []
     const restrict2 = $('.mpick')
     num_filters_to_look_at = restrict2.length
@@ -42,6 +43,13 @@ async function filterLocations(event) {
             filter.push(sv,filter_vals)
         }
     }
+    return(filter)
+}
+
+async function filterLocations(event) {
+    console.log('so lets get started')
+    var filter = getFilters()
+    
     console.log('what does the filter look like ',filter)
         // for each feature in our json
         // map.eachLayer(function(layer){     //iterate over map rather than clusters

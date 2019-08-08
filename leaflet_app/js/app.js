@@ -381,31 +381,130 @@ $('#clear-search').click(function () {
     });
 });
 
-function doAdelay(){
+async function doAdelay(){
     console.log('starting the ddddddelay')
-    setTimeout(function(){return true;},300000);
+    setTimeout(function(){return true;},30000);
     console.log('FFFFFFFFFinhsed with the delayyyyy')
-};
+};  
 // Filter by my selections
-$('#filter_by').click(function () {
+$('#filter_by').click(async function () {
+    console.log('GGGGGGGGGGGGGGGGo get the filter text')
+        var filterText = await generateFilterText();
     selection_group.clearLayers();
     map.removeLayer(selection_group);
     filterLocations(event)
-    // doAdelay();
     console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@finished the filterlocations function')
+
     const r_size = parseInt($radius.val());
     setTimeout (function () {
         pointsInCircle(searchArea, r_size, activeLayer);
     },500)
+    console.log('did we eeeeeeeeeeeeeeeeeeeeeever get our text ',filterText)
+    $('#filters_used').html(filterText)
+    $('#filters_used').removeClass('hidden_element')   
 });    
+// Generate the filters text
+async function generateFilterText(){
+    console.log('first load the Pretty Options text')
+    // var insuranceOptions, practice_aOptions, which_cateOptions, specialtyOptions, servesOptions, telehealthOptions, 
+    //     acceptingOptions =  loadPrettyNames()
+    var insuranceOptions  = await prettyInsurance();
+    var practiceOptions   = await prettyPractic_a();
+    var area_servOptions  = await prettyArea_Serv();
+    var which_cateOptions = await prettyWhich_cate();
+    var specialtyOptions  = await prettySpecialty();
+    var servesOptions     = await prettyServes();
+    var telehealthOptions = await prettyTelehealth();
+    var acceptingOptions  = await prettyAccepting();
+    console.log('did we get the options loaded ok ', insuranceOptions)
+    var theFilters = await getFilters()
+    console.log('FFFFFFINished with the getFilters function')
+    var filterText = ''
+    if (theFilters.length > 0) {
+        // need to put the filter name and values back to proper format (caps and spaces)
+        var num_filters = ((theFilters.length / 2)) ;
+        console.log('looking at ',num_filters,' filters00000000000')
+        for (j=0; j < num_filters*2; j+=2){
+            //console.log('filter ',j, ' is ',toTitleCase(theFilters[j]), theFilters[j+1].length)
+            var theFilterValues = ''
+            for (jj=0; jj<theFilters[j+1].length; jj++){
+                // console.log('jj is ', jj, 'value being processed',theFilters[j+1][jj])
+                console.log('whats is next ',theFilters[j])
+                // need to break back apart each piece and space them by looking them up in the array
+                switch (theFilters[j]){
+                    case 'Insurance':
+                    case '<b>Insurance</b>':
+                        theFilters[j] = '<b>Insurance</b>'
+                        theFilterValues += insuranceOptions[insuranceOptions.indexOf(theFilters[j+1][jj]) + 1] + ', '
+                        break;
+                    case 'Practice_a':
+                    case '<b>Practice_a</b>':
+                        theFilters[j] = '<b>Practice Location</b>';
+                        theFilterValues += practiceOptions[practiceOptions.indexOf(theFilters[j+1][jj]) + 1] + ', ';
+                        break;
+                    case 'Areas_Serv':
+                    case '<b>Areas Served</b>':
+                        theFilters[j] = '<b>Areas Served</b>';
+                        theFilterValues += area_servOptions[area_servOptions.indexOf(theFilters[j+1][jj]) + 1] + ', ';
+                        break;
+                    case 'Which_cate':
+                    case '<b>Primary Practice Activity</b>':
+                        theFilters[j] = '<b>Primary Practice Activity</b>'
+                        theFilterValues += which_cateOptions[which_cateOptions.indexOf(theFilters[j+1][jj]) + 1] + ', '
+                        break;
+                    case 'Specialty':
+                    case '<b>Practice Categories</b>':
+                        theFilters[j] = '<b>Practice Categories</b>';
+                        theFilterValues += specialtyOptions[specialtyOptions.indexOf(theFilters[j+1][jj]) + 1] + ', ';
+                        break;
+                    case 'Serves':
+                    case '<b>Client Types</b>':
+                        theFilters[j] = '<b>Client Types</b>';
+                        theFilterValues += servesOptions[servesOptions.indexOf(theFilters[j+1][jj]) + 1] + ', ';
+                        break;
+                    case 'telehealth':
+                    case '<b>Telehealth?</b>':
+                        theFilters[j] = '<b>Telehealth?</b>';
+                        theFilterValues += telehealthOptions[telehealthOptions.indexOf(theFilters[j+1][jj]) + 1] + ', ';
+                        break;
+                    case 'Accepting':
+                    case '<b>Accepting New Patients?</b>':
+                        theFilters[j] = '<b>Accepting New Patients?</b>';
+                        theFilterValues += acceptingOptions[acceptingOptions.indexOf(theFilters[j+1][jj]) + 1] + ', ';
+                        break;    
+                    default:         
+                        theFilters[j] = 'NOT SURE';   
+                        theFilterValues += theFilters[j+1][jj]  + ', ';
+                        break;
+                }
+
+            }
+            // console.log('befor the slice ',theFilterValues,theFilterValues.length)
+            theFilterValues = theFilterValues.slice(0,-2)
+            // console.log('finished building the value piece', theFilterValues, theFilterValues.length)
+            filterText += theFilters[j] + '<br />' + theFilterValues + '<br /><br />'
+        }
+    }
+    // console.log('completely ddddddone with filtertext')
+    return filterText
+}
 
 //print button
-$("#print-table").on("click", function(){
+$("#print-table").on("click",async function(){
     // if first arg is false then the entire table is printed
     // more print documentation here: http://tabulator.info/docs/4.3/print
+    // console.log('did we get the filters ',theFilters)
+    var filterText =  await generateFilterText();
+    console.log('now set the text ',filterText)
+
+    $('#filters_used').html(filterText)
+    $('#filters_used').removeClass('hidden_element')    
     table.showColumn("dist")
     table.print(false, true);
     table.hideColumn("dist")
+    // $('#filters_used').html('')
+    // $('#filters_used').addClass('hidden_element')
+
 });
 // reload the page so all filters are reset
 $('#reload_page').click(function () {
@@ -444,6 +543,9 @@ $('#reload_page').click(function () {
         pointsInCircle(searchArea, r_size, activeLayer);
     },500)
     //window.location.reload();  // Old way of clearing the page
+    // finally wipeout whats in the filter box
+    $('#filters_used').html('')
+    $('#filters_used').addClass('hidden_element')
 });
 // Radius dropdown functionality
 const $radius = $('#radius');
@@ -633,7 +735,7 @@ function insertTabulator(data) {
         data: data,
         layout: "fitColumns",
         selectable: 1,
-        // printAsHtml:false,
+        printAsHtml:false,
         printCopyStyle: true,
         printHeader:"<h1>Providers Meeting Your Criteria<h1>",
         printFooter:"<h2>FSU College of Medicine<h2>",
@@ -872,4 +974,73 @@ function markerLogic(data, selection_marker) {
     };
 
     return circle_marker;
+}
+async function prettyInsurance() {
+    return  ['acceptsmostinsuranceplans','Accepts most insurance plans','aetna','Aetna','beacon','Beacon',
+    'beechstreet','Beech Street','bigbendprovidernetwork','Big Bend Provider Network','bluecrossblueshield',
+    'Blue Cross Blue Shield','capitalhealthplan','Capital Health Plan','cenpatico','Cenpatico',"children'smedical",
+    "Children's Medical",'cigna','Cigna','compsych','ComPsych','coventry','Coventry','employeeassistanceprogram',
+    'Employee Assistance Program','firsthealth','First Health','healthease','HealthEASE','healthykids','Healthy Kids',
+    'humana','Humana','magellan','Magellan','Magellan Behavioral Health','Magellan Behavioral Health',
+    'medicaid','Medicaid','medicaidhmo','Medicaid HMO','medicare','Medicare','medicareadvantage',
+    'Medicare Advantage','newdirections','New Directions','nochargeforservices','No charge for services','optum',
+    'Optum','prestige','Prestige','psychcare','Psychcare','selfpaybycashorcheck','Self pay by cash or check',
+    'slidingscalefeesavailable','Sliding scale fees available','staywell','Staywell','sunshinehealth','Sunshine Health',
+    'tricare','Tricare','unitedbehavioralhealth','United Behavioral Health','unitedhealthcarewellcare',
+    'United Healthcare Wellcare','valueoptions','Valueoptions','wellcare','Wellcare','other','Other']
+}
+
+async function prettyPractic_a() {
+    return ['alachua','Alachua','baker','Baker','bay','Bay','bradford','Bradford','brevard','Brevard','broward','Broward',
+	'calhoun','Calhoun','charlotte','Charlotte','citrus','Citrus','clay','Clay','collier','Collier','columbia','Columbia','desoto',
+	'DeSoto','dixie','Dixie','duval','Duval','escambia','Escambia','flagler','Flagler','franklin','Franklin','gadsden','Gadsden',
+	'gilchrist','Gilchrist','glades','Glades','gulf','Gulf','hamilton','Hamilton','hardee','Hardee','hendry','Hendry','hernando',
+	'Hernando','highlands','Highlands','hillsborough','Hillsborough','holmes','Holmes','indianriver','Indian River',
+	'jackson','Jackson','jefferson','Jefferson','lafayette','Lafayette','lake','Lake','lee>Lee','leon','Leon','levy','Levy','liberty',
+	'Liberty','madison','Madison','manatee','Manatee','marion','Marion','martin','Martin','miami-dade','Miami-Dade',
+	'monroe','Monroe','nassau','Nassau','okaloosa','Okaloosa','okeechobee','Okeechobee','orange','Orange','osceola',
+	'Osceola','palmbeach','Palm Beach','pasco','Pasco','pinellas','Pinellas','polk','Polk','putnam','Putnam','stjohns','St Johns',
+	'stlucie','St Lucie','santarosa','Santa Rosa','sarasota','Sarasota','seminole','Seminole','sumter','Sumter','suwannee',
+	'Suwannee','taylor','Taylor','union','Union','volusia','Volusia','wakulla','Wakulla','walton','Walton','washington',
+	'Washington']
+}
+async function prettyArea_Serv(){
+    return ['alachua','Alachua','baker','Baker','bay','Bay','bradford','Bradford','brevard','Brevard','broward','Broward',
+	'calhoun','Calhoun','charlotte','Charlotte','citrus','Citrus','clay','Clay','collier','Collier','columbia','Columbia','desoto',
+	'DeSoto','dixie','Dixie','duval','Duval','escambia','Escambia','flagler','Flagler','franklin','Franklin','gadsden','Gadsden',
+	'gilchrist','Gilchrist','glades','Glades','gulf','Gulf','hamilton','Hamilton','hardee','Hardee','hendry','Hendry','hernando',
+	'Hernando','highlands','Highlands','hillsborough','Hillsborough','holmes','Holmes','indianriver','Indian River',
+	'jackson','Jackson','jefferson','Jefferson','lafayette','Lafayette','lake','Lake','lee>Lee','leon','Leon','levy','Levy','liberty',
+	'Liberty','madison','Madison','manatee','Manatee','marion','Marion','martin','Martin','miami-dade','Miami-Dade',
+	'monroe','Monroe','nassau','Nassau','okaloosa','Okaloosa','okeechobee','Okeechobee','orange','Orange','osceola',
+	'Osceola','palmbeach','Palm Beach','pasco','Pasco','pinellas','Pinellas','polk','Polk','putnam','Putnam','stjohns','St Johns',
+	'stlucie','St Lucie','santarosa','Santa Rosa','sarasota','Sarasota','seminole','Seminole','sumter','Sumter','suwannee',
+	'Suwannee','taylor','Taylor','union','Union','volusia','Volusia','wakulla','Wakulla','walton','Walton','washington',
+	'Washington']
+}
+async function prettyWhich_cate(){
+    return ['notselected','Not Selected','certifiedlactationconsultant','Certified Lactation Consultant',
+	'doula','Doula','hotline','Hotline','housingsupport','Housing Support','licensedclinicalsocialworker',
+	'Licensed Clinical Social Worker','licensedmarriageandfamilytherapist','Licensed Marriage and Family Therapist',
+	'licensedmentalhealthcounselor','Licensed Mental Health Counselor','psychiatrist','Psychiatrist',
+	'psychologis','Psychologist','supportgroup','Support Group','treatmentcenter','Treatment Center']
+}
+async function prettySpecialty(){
+    return ['abuse','Abuse','addictions','Addictions','anxiety','Anxiety','counseling','Counseling','crisiscounseling',
+	'Crisis Counseling','depression','Depression','domesticviolence','Domestic Violence','eatingdisorder','Eating Disorder',
+	'evaluations','Evaluations','grief','Grief','homelessness','Homelessness','housingassistance','Housing Assistance',
+	'inpatient','Inpatient','lgbtq','LGBTQ','marriageandrelationship','Marriage and Relationship','maternal',
+	'Maternal Mental Health','parenting','Parenting','psychotherapy','Psychotherapy','referrals','Referrals','resource',
+	'Resource','suicideprevention','Suicide Prevention','trauma','Trauma']
+}
+async function prettyServes(){
+    return ['individual','Individual','adolescents','Adolescents','caregivers','Caregivers','children','Children','couples',
+	'Couples','family','Family','geriatrics','Geriatrics','groups','Groups','women','Women']
+}
+async function prettyTelehealth(){
+    return ['notselected','Not Selected','yes(viavideo)','Yes (via video)','yes(viaphone)','Yes (via phone)','yes(other)',
+	'Yes (other)']
+}
+async function prettyAccepting(){
+    return ['notselected','Not Selected','yes','Yes','no','No','waitlist','Waitlist']
 }
