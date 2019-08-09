@@ -28,6 +28,9 @@ const populateFilterObjectWithDefaultSelections = () => {
     for (i=0; i < mpickObj.length; i++) {
         if (mpickObj[i].value) {
             console.log(mpickObj[i].value);
+            filterObject[mpickObj[i].id] = mpickObj[i].value;
+            console.log(filterObject);
+            
         }
     }
     const keys = Object.keys($('.mpick'));
@@ -38,6 +41,8 @@ const populateFilterObjectWithDefaultSelections = () => {
 }
 
 populateFilterObjectWithDefaultSelections();
+
+
 
 const assignSelectToFilterObject = (id, value, filterObject) => {
     if (value) {
