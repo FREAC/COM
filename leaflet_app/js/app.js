@@ -708,7 +708,7 @@ function markerLogic(data, selection_marker) {
         'Serves': data['Serves'],
         'Which_cate': data['Which_cate'],
         'Areas_Serv': data['Areas_Serv'],
-        'Practice_a': data['Practice_a'],
+        'Practice_A': data['Practice_A'],
         'Accepting': data['Accepting']
     };
 

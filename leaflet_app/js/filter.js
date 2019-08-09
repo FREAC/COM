@@ -23,11 +23,17 @@ const andFilter = {
 
 const populateFilterObjectWithDefaultSelections = () => {
     const mpickObj = $('.mpick');
-    console.log(mpickObj);
+    // console.log(mpickObj);
+    // console.log(mpickObj[2].value);
     for (i=0; i < mpickObj.length; i++) {
-        console.log(mpickObj[i]);
+        if (mpickObj[i].value) {
+            console.log(mpickObj[i].value);
+        }
     }
     const keys = Object.keys($('.mpick'));
+    keys.map(key => {
+        
+    });
     
 }
 
