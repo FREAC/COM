@@ -1,5 +1,8 @@
 'use strict';
 
+// comment out the next line to re-enable console messages
+console.log = function() {}
+
 // Colors
 // const default_fill_color = "#ED9118";
 const default_fill_color = "#35b6b9";
@@ -182,8 +185,11 @@ function getUrlParam(parameter, defaultvalue){
 async function setup() {
     selection_group.clearLayers();
     $.get("./data/COM.json", function (json_data) {
-        $.each(json_data, function (object) {
-            //console.log('this is each object ',json_data[object]);
+        $.each(json_data, async function (object) {
+            console.log('this is each object ',           json_data[object]['Phone_Numb'],json_data[object]['Agency']);
+            json_data[object]['Phone_Numb'] = await formatPhone(json_data[object]['Phone_Numb'])
+            json_data[object]['phone_numb'] = await formatPhone(json_data[object]['Phone_Numb'])
+            // console.log(' the new phone is ',phone, data)
             const provider = json_data[object];
             const marker = markerLogic(provider);
             marker.addTo(json_group);
@@ -208,12 +214,12 @@ async function setup() {
 
 // load open street maps code
 		//OSM tiles attribution and URL
-        var osmLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+        var osmLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>';
         var osmURL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         var osmAttrib = '&copy; ' + osmLink;
         
         //Carto tiles attribution and URL
-        var cartoLink = '<a href="http://cartodb.com/attributions">CartoDB</a>';
+        var cartoLink = '<a href="https://cartodb.com/attributions">CartoDB</a>';
         var cartoURL = 'http://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png';
         var cartoAttrib = '&copy; ' + osmLink + ' &copy; ' + cartoLink;
         
@@ -301,7 +307,7 @@ var geocoder = L.esri.Geocoding.geosearch({
     //searchBounds: [bottomLeft, topRight]
 }).addTo(map);
 
-geocoder.on('results', function (result) {
+geocoder.on('results', async function (result) {
     // if mobile browser true
     if (L.Browser.mobile) {
         $('.geocoder-control').css({
@@ -311,6 +317,7 @@ geocoder.on('results', function (result) {
     }
     console.log('what are the results from the geocode event ',result.results[0])
     clearSelection();
+    result.results[0].properties['phone_numb'] = await formatPhone(result.results[0].properties['phone_numb'])
     if (result.results[0].properties.mhnum || result.results[0].properties.mmhid) {
         // just zoom to the place
         var z = 11;
@@ -491,6 +498,7 @@ async function generateFilterText(){
 
 //print button
 $("#print-table").on("click",async function(){
+    // console.log('What called this ',window.location.href)
     // if first arg is false then the entire table is printed
     // more print documentation here: http://tabulator.info/docs/4.3/print
     // console.log('did we get the filters ',theFilters)
@@ -558,12 +566,22 @@ $radius.change(function () {
         // $('#map').css('z-index', '2')
     }
 });
-
+async function formatPhone(phone){
+    // try to format the phone number- send back original if you fail
+    var cleaned = ('' + phone).replace(/\D/g, '')
+    var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/)
+    if (match) {
+        return '(' + match[1] + ') ' + match[2] + '-' + match[3]
+    } else {
+        return phone
+    }
+}
 function createPopup(data) {
     const content = `<b>${data['Agency']}</b><br> 
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
-                    ${data['Phone_Numb']}`;
+                    ${data['Phone_Numb']} <br><a href="http://staging.bodhtree.com:4200/?mhnum=${data['mhnum']}" target=_blank>Click for provider details<br>
+                        (Opens in a new tab)</a>`;
     return L.popup({
         closeButton: false
     }).setContent(content);
@@ -655,7 +673,7 @@ function configurePopup(data) {
         var pop_text = `<b>${data['Agency']}</b><br> 
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
-                    ${data['Phone_Numb']}`;
+                    ${data['Phone_Numb']}  `;
         var popup = L.popup({
                 maxWidth: 200
             })
@@ -705,7 +723,7 @@ function zoomToLocation(lat, lng, z = 11, data) {
             var pop_text = `<b>${data['Agency']}</b><br>
                         ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                         ${data['City']}, ${data['State']} ${data['PostalCode']}
-                        ${data['Phone_Numb']}`;
+                        ${data['Phone_Numb']}` ;
         } else {
             if (data['unit'] === undefined || data['unit'] === null) {
                 data['unit'] = ''
@@ -984,7 +1002,7 @@ async function prettyInsurance() {
     'humana','Humana','magellan','Magellan','Magellan Behavioral Health','Magellan Behavioral Health',
     'medicaid','Medicaid','medicaidhmo','Medicaid HMO','medicare','Medicare','medicareadvantage',
     'Medicare Advantage','newdirections','New Directions','nochargeforservices','No charge for services','optum',
-    'Optum','prestige','Prestige','psychcare','Psychcare','selfpaybycashorcheck','Self pay by cash or check',
+    'Optum','prestige','Prestige','psychcare','Psychcare','selfpaybycheckorcash','Self pay by check or cash',
     'slidingscalefeesavailable','Sliding scale fees available','staywell','Staywell','sunshinehealth','Sunshine Health',
     'tricare','Tricare','unitedbehavioralhealth','United Behavioral Health','unitedhealthcarewellcare',
     'United Healthcare Wellcare','valueoptions','Valueoptions','wellcare','Wellcare','other','Other']
@@ -996,11 +1014,11 @@ async function prettyPractic_a() {
 	'DeSoto','dixie','Dixie','duval','Duval','escambia','Escambia','flagler','Flagler','franklin','Franklin','gadsden','Gadsden',
 	'gilchrist','Gilchrist','glades','Glades','gulf','Gulf','hamilton','Hamilton','hardee','Hardee','hendry','Hendry','hernando',
 	'Hernando','highlands','Highlands','hillsborough','Hillsborough','holmes','Holmes','indianriver','Indian River',
-	'jackson','Jackson','jefferson','Jefferson','lafayette','Lafayette','lake','Lake','lee>Lee','leon','Leon','levy','Levy','liberty',
+	'jackson','Jackson','jefferson','Jefferson','lafayette','Lafayette','lake','Lake','lee','Lee','leon','Leon','levy','Levy','liberty',
 	'Liberty','madison','Madison','manatee','Manatee','marion','Marion','martin','Martin','miami-dade','Miami-Dade',
 	'monroe','Monroe','nassau','Nassau','okaloosa','Okaloosa','okeechobee','Okeechobee','orange','Orange','osceola',
-	'Osceola','palmbeach','Palm Beach','pasco','Pasco','pinellas','Pinellas','polk','Polk','putnam','Putnam','stjohns','St Johns',
-	'stlucie','St Lucie','santarosa','Santa Rosa','sarasota','Sarasota','seminole','Seminole','sumter','Sumter','suwannee',
+	'Osceola','palmbeach','Palm Beach','pasco','Pasco','pinellas','Pinellas','polk','Polk','putnam','Putnam','st.johns','St. Johns',
+	'st.lucie','St. Lucie','santarosa','Santa Rosa','sarasota','Sarasota','seminole','Seminole','sumter','Sumter','suwannee',
 	'Suwannee','taylor','Taylor','union','Union','volusia','Volusia','wakulla','Wakulla','walton','Walton','washington',
 	'Washington']
 }
@@ -1010,11 +1028,11 @@ async function prettyArea_Serv(){
 	'DeSoto','dixie','Dixie','duval','Duval','escambia','Escambia','flagler','Flagler','franklin','Franklin','gadsden','Gadsden',
 	'gilchrist','Gilchrist','glades','Glades','gulf','Gulf','hamilton','Hamilton','hardee','Hardee','hendry','Hendry','hernando',
 	'Hernando','highlands','Highlands','hillsborough','Hillsborough','holmes','Holmes','indianriver','Indian River',
-	'jackson','Jackson','jefferson','Jefferson','lafayette','Lafayette','lake','Lake','lee>Lee','leon','Leon','levy','Levy','liberty',
+	'jackson','Jackson','jefferson','Jefferson','lafayette','Lafayette','lake','Lake','lee','Lee','leon','Leon','levy','Levy','liberty',
 	'Liberty','madison','Madison','manatee','Manatee','marion','Marion','martin','Martin','miami-dade','Miami-Dade',
 	'monroe','Monroe','nassau','Nassau','okaloosa','Okaloosa','okeechobee','Okeechobee','orange','Orange','osceola',
-	'Osceola','palmbeach','Palm Beach','pasco','Pasco','pinellas','Pinellas','polk','Polk','putnam','Putnam','stjohns','St Johns',
-	'stlucie','St Lucie','santarosa','Santa Rosa','sarasota','Sarasota','seminole','Seminole','sumter','Sumter','suwannee',
+	'Osceola','palmbeach','Palm Beach','pasco','Pasco','pinellas','Pinellas','polk','Polk','putnam','Putnam','st.johns','St. Johns',
+	'st.lucie','St. Lucie','santarosa','Santa Rosa','sarasota','Sarasota','seminole','Seminole','sumter','Sumter','suwannee',
 	'Suwannee','taylor','Taylor','union','Union','volusia','Volusia','wakulla','Wakulla','walton','Walton','washington',
 	'Washington']
 }
@@ -1023,13 +1041,13 @@ async function prettyWhich_cate(){
 	'doula','Doula','hotline','Hotline','housingsupport','Housing Support','licensedclinicalsocialworker',
 	'Licensed Clinical Social Worker','licensedmarriageandfamilytherapist','Licensed Marriage and Family Therapist',
 	'licensedmentalhealthcounselor','Licensed Mental Health Counselor','psychiatrist','Psychiatrist',
-	'psychologis','Psychologist','supportgroup','Support Group','treatmentcenter','Treatment Center']
+	'psychologist','Psychologist','supportgroup','Support Group','treatmentcenter','Treatment Center']
 }
 async function prettySpecialty(){
     return ['abuse','Abuse','addictions','Addictions','anxiety','Anxiety','counseling','Counseling','crisiscounseling',
 	'Crisis Counseling','depression','Depression','domesticviolence','Domestic Violence','eatingdisorder','Eating Disorder',
 	'evaluations','Evaluations','grief','Grief','homelessness','Homelessness','housingassistance','Housing Assistance',
-	'inpatient','Inpatient','lgbtq','LGBTQ','marriageandrelationship','Marriage and Relationship','maternal',
+	'inpatient','Inpatient','lgbtq','LGBTQ','marriage/relationship','Marriage / Relationship','maternalmentalhealth',
 	'Maternal Mental Health','parenting','Parenting','psychotherapy','Psychotherapy','referrals','Referrals','resource',
 	'Resource','suicideprevention','Suicide Prevention','trauma','Trauma']
 }
