@@ -709,7 +709,8 @@ function markerLogic(data, selection_marker) {
         'Which_cate': data['Which_cate'],
         'Areas_Serv': data['Areas_Serv'],
         'Practice_A': data['Practice_A'],
-        'Accepting': data['Accepting']
+        'Accepting': data['Accepting'],
+        'telehealth': data['telehealth']
     };
 
     return circle_marker;
