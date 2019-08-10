@@ -259,12 +259,12 @@ L.tileLayer.provider('CartoDB.Voyager').addTo(map);
 
 const arcgisOnline = L.esri.Geocoding.arcgisOnlineProvider();
 const mmp = L.esri.Geocoding.featureLayerProvider({
-  url: 'https://admin205.ispa.fsu.edu/arcgis/rest/services/FREAC/mmh_test_service/FeatureServer/0',
-  searchFields: ['agency'], // Search these fields for text matches
-  label: 'Mental Health Agencies', // Group suggestions under this header
-  formatSuggestion: function(feature){
-    return feature.properties.agency; // format suggestions like this.
-  }
+    url: 'https://admin205.ispa.fsu.edu/arcgis/rest/services/FREAC/mmh_test_service/FeatureServer/0',
+    searchFields: ['agency'], // Search these fields for text matches
+    label: 'Mental Health Agencies', // Group suggestions under this header
+    formatSuggestion: function (feature) {
+        return feature.properties.agency; // format suggestions like this.
+    }
 });
 
 // ESRI Geocoder 
@@ -316,9 +316,9 @@ const locate = L.control.locate({
     showPopup: false
 }).addTo(map);
 
-const msgOptions = { 
+const msgOptions = {
     position: 'topright',
-    timeout: 3000 
+    timeout: 3000
 }
 const box = L.control.messagebox(msgOptions).addTo(map);
 
