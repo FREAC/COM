@@ -49,7 +49,7 @@ const filteredLayersArray = (allLayers, filterArr, id) => allLayers.filter(layer
 
         const currentLayer = layer.data[id]; // current layer in json_group
         // currentLayerArr are target attributes from map (insurance, categories, etc.)
-        
+
 
         const currentLayerArr = currentLayer.split(',') // convert comma separated string to arr
         const intersectionFilter = checkFilterPresence(currentLayerArr, filterArr)
@@ -98,7 +98,7 @@ const checkIfAndFilterEmpty = async (andFilter, id) => {
 }
 
 const orFilters = (filterObject) => {
-    Object.keys(filterObject).map(async (item) => {        
+    Object.keys(filterObject).map(async (item) => {
         // perform OR filter
         if (filterObject[item] !== undefined) {
             const filteredLayers = await filteredLayersArray(allLayers, filterObject[item], item);
@@ -111,7 +111,7 @@ const orFilters = (filterObject) => {
     return andFilter;
 }
 
-const emptyResultMsg = (andResults) => {        
+const emptyResultMsg = (andResults) => {
     if (andResults.length === 0) {
         box.show("No data found, please revise search");
     }
@@ -130,24 +130,22 @@ $(".mpick").change(async function (event) {
     if (andFilterCheck) { // if true, there are no other filters to compare to; only and filter will be executed
 
 
-            if (value !== null) {
-                const filteredLayers = await filteredLayersArray(allLayers, orFilterSelections, id);
-                console.log(filteredLayers);
-                
-                // add layers to andFilter object
-                if (filteredLayers.length === 0) {
-                    box.show('No data found');
-                }
-                andFilter[this.id] = filteredLayers; // 
-                console.log(filteredLayers);
-                // checking to see if we get clusters back
-                displayFilteredData(filteredLayers);
-                searchByRadiusSize(); // update search results table
-            } else {
-                // if there are no selections, add the whole json_group back
-                map.addLayer(json_group);
-                searchByRadiusSize(); // update search results table
+        if (value !== null) {
+            const filteredLayers = await filteredLayersArray(allLayers, orFilterSelections, id);
+
+            // add layers to andFilter object
+            if (filteredLayers.length === 0) {
+                box.show('No data found');
             }
+            andFilter[this.id] = filteredLayers; // 
+            // checking to see if we get clusters back
+            displayFilteredData(filteredLayers);
+            searchByRadiusSize(); // update search results table
+        } else {
+            // if there are no selections, add the whole json_group back
+            map.addLayer(json_group);
+            searchByRadiusSize(); // update search results table
+        }
 
     } else { // perform and operation
         // assign or filters to andFilter object
@@ -160,13 +158,13 @@ $(".mpick").change(async function (event) {
                 if (andAccumulator[key] !== undefined) {
                     if (andAccumulator[key].length > 0) {
                         accum = accum === undefined ? // if a result of none is found then [] is returned not undefined.
-                        andAccumulator[key] :
-                        andFilter(accum, andAccumulator[key])
+                            andAccumulator[key] :
+                            andFilter(accum, andAccumulator[key])
                     } else { // there is a filter that returned empty results and we need to fail the entire query
                         accum = [];
                     }
                 }
-            }            
+            }
             return accum
         }
         const andResults = intersectionArray(orResults);
