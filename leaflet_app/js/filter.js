@@ -139,7 +139,8 @@ $(".mpick").change(async function (event) {
             displayFilteredData(filteredLayers);
             searchByRadiusSize(); // update search results table
         } else {
-            // if there are no selections, add the whole json_group back
+            // if there are no selections, add the whole json_group backa
+            selection_group.clearLayers();
             map.addLayer(json_group);
             searchByRadiusSize(); // update search results table
         }

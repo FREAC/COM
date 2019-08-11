@@ -586,7 +586,6 @@ function pointsInCircle(circle, meters_user_set, map) {
         // TODO - fix this so we only have one case
 
         for (let i = 0; i < counter_points_in_circle; i++) {
-            console.log('what does a typical result look like, ', results[i].phonenumber)
             tableResults.push({
                 id: i,
                 Agency: results[i]['agency'],
