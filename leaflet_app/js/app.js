@@ -10,7 +10,9 @@ $(function () {
     // clear selection
     // https://stackoverflow.com/questions/52262677/fselect-clear-selection
     $('#clear-filters').click(function () {
-        $('option:selected').prop("selected", false);
+        // removed because it also resets the radius, but doesn't seem to affect anything else
+        // filter still get removed as expected
+        // $('option:selected').prop("selected", false); 
 
         $('.mpick').prev(".fs-dropdown").find(".fs-options .fs-option").each(function () {
             $(this).removeClass('selected', false);
@@ -628,7 +630,7 @@ function pointsInCircle(circle, meters_user_set, map) {
 
 // This both places a circle on the map AND counts the # of points in that circle
 function querySearchArea(location) {
-    //console.log('STARTING querysearcharea NOWWWWWW')
+    // console.log('STARTING querysearcharea NOWWWWWW')
     clearSelection();
     let r_size;
     if ($radius.val()) {
