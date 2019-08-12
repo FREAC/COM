@@ -175,3 +175,7 @@ body {
 .hidden_element {
   display: none;
 }
+
+.tabulator-cell {
+  font-family: times, serif; font-size:12pt;
+}

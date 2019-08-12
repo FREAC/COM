@@ -1,7 +1,7 @@
 'use strict';
 
 // comment out the next line to re-enable console messages
-console.log = function() {}
+// console.log = function() {}
 
 // Colors
 // const default_fill_color = "#ED9118";
@@ -215,12 +215,12 @@ async function setup() {
 // load open street maps code
 		//OSM tiles attribution and URL
         var osmLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>';
-        var osmURL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmURL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         var osmAttrib = '&copy; ' + osmLink;
         
         //Carto tiles attribution and URL
         var cartoLink = '<a href="https://cartodb.com/attributions">CartoDB</a>';
-        var cartoURL = 'http://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png';
+        var cartoURL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png';
         var cartoAttrib = '&copy; ' + osmLink + ' &copy; ' + cartoLink;
         
         // Use this code for an imagery background
@@ -759,7 +759,8 @@ function insertTabulator(data) {
         printFooter:"<h2>FSU College of Medicine<h2>",
         columns: [{
             title: "Provider",
-            field: "agency"
+            field: "agency",
+            cssClass: "tabhead"
         }, {
             width: 120,
             title: "Phone",
