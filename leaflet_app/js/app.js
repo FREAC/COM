@@ -787,7 +787,7 @@ function insertTabulator(data) {
 }
 
 // This figures out how many points are within our circle
-function pointsInCircle(circle, meters_user_set, groupLayer) {
+async function pointsInCircle(circle, meters_user_set, groupLayer) {
     console.log('ssssssssssssssssstarting points is a circle ', circle, meters_user_set)
     if (circle !== undefined) {
         // Only run if we have an address entered
@@ -856,6 +856,7 @@ function pointsInCircle(circle, meters_user_set, groupLayer) {
         console.log('hhhhhhhhhhhow many meet our criteria ',counter_points_in_circle)
         for (let i = 0; i < counter_points_in_circle; i++) {
             console.log('what does a typical result look like, ', results[i])
+            results[i]['phone_numb'] = await formatPhone(results[i]['phone_numb'])
             tableResults.push({
                 id: i,
                 Agency: results[i]['agency'],
