@@ -723,7 +723,8 @@ function zoomToLocation(lat, lng, z = 11, data) {
             var pop_text = `<b>${data['Agency']}</b><br>
                         ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                         ${data['City']}, ${data['State']} ${data['PostalCode']}
-                        ${data['Phone_Numb']}` ;
+                        ${data['Phone_Numb']} <br><a href="http://staging.bodhtree.com:4200/?mhnum=${data['mhnum']}" target=_blank>Click for provider details<br>
+                        (Opens in a new tab)</a>` ;
         } else {
             if (data['unit'] === undefined || data['unit'] === null) {
                 data['unit'] = ''
@@ -732,7 +733,8 @@ function zoomToLocation(lat, lng, z = 11, data) {
             var pop_text = `<b>${data['agency']}</b><br>
                         ${data['housenumber']} ${data['street']} ${data['unit']}<br>
                         ${data['city']}, ${data['state']} ${data['postalcode']}<br>
-                        ${data['phone_numb']}`;
+                        ${data['phone_numb']} <br><a href="http://staging.bodhtree.com:4200/?mhnum=${data['mhnum']}" target=_blank>Click for provider details<br>
+                        (Opens in a new tab)</a>`;
         }
         var popup = L.popup({
                 maxWidth: 200
