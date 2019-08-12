@@ -1056,11 +1056,11 @@ async function prettySpecialty(){
 	'Resource','suicideprevention','Suicide Prevention','trauma','Trauma']
 }
 async function prettyServes(){
-    return ['individual','Individual','adolescents','Adolescents','caregivers','Caregivers','children','Children','couples',
+    return ['individuals','Individuals','adolescents','Adolescents','caregivers','Caregivers','children','Children','couples',
 	'Couples','family','Family','geriatrics','Geriatrics','groups','Groups','women','Women']
 }
 async function prettyTelehealth(){
-    return ['notselected','Not Selected','yes(viavideo)','Yes (via video)','yes(viaphone)','Yes (via phone)','yes(other)',
+    return ['notselected','Not Selected','video','Video','phone','Phone','others','Others',
 	'Yes (other)']
 }
 async function prettyAccepting(){
