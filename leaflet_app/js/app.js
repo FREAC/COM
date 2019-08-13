@@ -808,6 +808,7 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
         const results = [];
 
         // Loop through each point in JSON file
+        var agencies_in = []
         groupLayer.eachLayer(function (layer) {
             //console.log('I think this is a provider ', layer)
             // Lat, long of current point
@@ -819,8 +820,9 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
 
             // See if meters is within raduis
             // The user has selected
-            if (distance_from_layer_circle <= meters_user_set) {
+           if (distance_from_layer_circle <= meters_user_set) {
                 counter_points_in_circle += 1;
+                agencies_in.push({ mhnum: layer.data.mhnum  })
                 //console.log('layer data looks like this? ', layer.data)
                 // We need all of the fields below for the popup from the Results table to work with all 
                 // the fields
@@ -856,6 +858,59 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
         // show others in the future so I put them all in) but the popup relies on capitalized fields
         // TODO - fix this so we only have one case
         console.log('hhhhhhhhhhhow many meet our criteria ',counter_points_in_circle)
+        // ----------------
+        // THIS WORKS ONLY IF NO FILTERS HAVE BEEN APPLIED.  IF WE EVER
+        // TRY TO MAKE THIS WORK WE PROBABLY NEED TO INCORPORATE THE LOGIC
+        // INTO THE FILTER FUNCTION RATHER THAN HERE
+        //
+        //
+        // now we need to add in ALL of the telehealth people
+        // console.log('here are the ones to skip ', agencies_in)
+        // var m = 0
+        // json_group_c.eachLayer(async function(layer){ 
+        //     if (layer.data['telehealth'].toLowerCase().includes('yes')) {
+        //         console.log('checking mhnum ', layer.data['mhnum'])
+        //         var already_in = false;
+        //         for (var jj=0; jj<agencies_in.length;jj++) {
+        //             console.log('whats in ', agencies_in[jj]['mhnum'])
+        //             if (agencies_in[jj]['mhnum'] === layer.data['mhnum']) {
+        //                 // already in
+        //                 console.log('this id is already in ', layer.data['mhnum'])
+        //                 already_in = true;
+        //                 break;
+        //             }
+        //         }
+        //         if (already_in) {
+        //             // dont do anything
+        //         } else {
+        //             var idd = counter_points_in_circle + m;
+        //             m = m + 1;
+        //             console.log('found a telehealth to add in ', layer.data, layer.data['mhnum'])
+        //             layer.data['phone_numb'] = await formatPhone(layer.data['phone_numb'])
+        //             results.push({
+        //                 agency: layer.data.Agency+"***",
+        //                 insurance: layer.data.Insurance,
+        //                 housenumber: layer.data.HouseNumber,
+        //                 street: layer.data.Street,
+        //                 city: layer.data.City,
+        //                 state: layer.data.State,
+        //                 postalcode: layer.data.PostalCode,
+        //                 website: layer.data.Website,
+        //                 phone_numb: layer.data.Phone_Numb,
+        //                 phonenumber:layer.data.Phone_Numb,
+        //                 dist: 0,
+        //                 latitude: layer.latitude,
+        //                 longitude: layer.longitude
+        //             });
+
+        //         }
+        //     }
+
+        // });
+        // counter_points_in_circle = counter_points_in_circle + m;
+        // end of adding the telehealth people in
+        // ------------------
+
         for (let i = 0; i < counter_points_in_circle; i++) {
             console.log('what does a typical result look like, ', results[i])
             results[i]['phone_numb'] = await formatPhone(results[i]['phone_numb'])
