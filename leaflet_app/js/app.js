@@ -761,8 +761,14 @@ function insertTabulator(data) {
         printFooter:"<h2>FSU College of Medicine<h2>",
         columns: [{
             title: "Provider",
-            field: "agency",
-            cssClass: "tabhead"
+            field: "agency", 
+            formatter:function(row){
+                var agency = row.getData().Agency;
+                if (agency.includes('***')) {
+                    row.getElement().style.backgroundColor ="red";
+                }
+                return agency;
+            },
         }, {
             width: 120,
             title: "Phone",
@@ -844,6 +850,10 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
                 });
             }
         });
+        results.push({
+            agency: "*** Remember there may be telehealth providers outside your search area ***",
+            phone_numb: ""
+        })
 
         //Sort the list by increasing distance from point
         results.sort(function (a, b) {
@@ -911,7 +921,7 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
         // end of adding the telehealth people in
         // ------------------
 
-        for (let i = 0; i < counter_points_in_circle; i++) {
+        for (let i = 0; i <= counter_points_in_circle; i++) {
             console.log('what does a typical result look like, ', results[i])
             results[i]['phone_numb'] = await formatPhone(results[i]['phone_numb'])
             tableResults.push({
