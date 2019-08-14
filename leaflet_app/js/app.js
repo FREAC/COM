@@ -765,7 +765,7 @@ function insertTabulator(data) {
             formatter:function(row){
                 var agency = row.getData().Agency;
                 if (agency.includes('***')) {
-                    row.getElement().style.backgroundColor ="red";
+                    row.getElement().style.backgroundColor ="#b0e8e8";
                 }
                 return agency;
             },
