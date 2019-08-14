@@ -67,8 +67,9 @@ async function filterLocations(event) {
                     json_group.removeLayer(layer)
     }
     await $.get("./data/COM.json", function (json_data) {
-        $.each(json_data, function (object) {
+        $.each(json_data, async function (object) {
             // console.log(json_data[object]);
+            json_data[object]['Phone_Numb'] = await formatPhone(json_data[object]['Phone_Numb'])
             const provider = json_data[object];
             const marker = markerLogic(provider);
             //console.log('######adding a new item to json_group ',marker)

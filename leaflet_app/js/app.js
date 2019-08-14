@@ -577,6 +577,9 @@ async function formatPhone(phone){
     }
 }
 function createPopup(data) {
+    if (data['Unit'] === undefined || data['Unit'] === null  || data['Unit'] === '0') {
+        data['Unit'] = ''
+    }
     const content = `<b>${data['Agency']}</b><br> 
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
@@ -666,7 +669,7 @@ $(".mpick").change(function (event) {
 function configurePopup(data) {
     try {
 
-        if (data['Unit'] === undefined || data['Unit'] === null) {
+        if (data['Unit'] === undefined || data['Unit'] === null  || data['Unit'] === '0') {
             data['Unit'] = ''
         }
 
@@ -716,7 +719,7 @@ function zoomToLocation(lat, lng, z = 11, data) {
         if (z === 99) {
             // we came from a zoom to a specific MHNYM
             // this needs things to be upper case
-            if (data['Unit'] === undefined || data['Unit'] === null) {
+            if (data['Unit'] === undefined || data['Unit'] === null  || data['Unit'] === '0') {
                 data['Unit'] = ''
             }
 
@@ -726,7 +729,7 @@ function zoomToLocation(lat, lng, z = 11, data) {
                         ${data['Phone_Numb']} <br><a href="http://staging.bodhtree.com:4200/?mhnum=${data['mhnum']}" target=_blank>Click for provider details<br>
                         (Opens in a new tab)</a>` ;
         } else {
-            if (data['unit'] === undefined || data['unit'] === null) {
+            if (data['unit'] === undefined || data['unit'] === null  || data['Unit'] === '0') {
                 data['unit'] = ''
             }
 
