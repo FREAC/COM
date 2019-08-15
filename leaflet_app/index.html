@@ -96,44 +96,62 @@
 	<div class="column2" style="border-right: none !important">
 						<h6><b>Insurance options</b></h6>
 							<select class="mpick" multiple="multiple" name="Insurance" >
-									<option value="acceptsmostinsuranceplans">Accepts most insurance plans</option>
-									<option value="aetna">Aetna</option>
-									<option value="beacon">Beacon</option>
-									<option value="beechstreet">Beech Street</option>
-									<option value="bigbendprovidernetwork">Big Bend Provider Network</option>
-									<option value="bluecrossblueshield">Blue Cross Blue Shield</option>
-									<option value="capitalhealthplan">Capital Health Plan</option>
-									<option value="cenpatico">Cenpatico</option>
-									<option value="children'smedical">Children's Medical</option>
-									<option value="cigna">Cigna</option>
-									<option value="compsych">ComPsych</option>
-									<option value="coventry">Coventry</option>
-									<option value="employeeassistanceprogram">Employee Assistance Program</option>
-									<option value="firsthealth">First Health</option>
-									<option value="healthease">HealthEASE</option>
-									<option value="healthykids">Healthy Kids</option>
-									<option value="humana">Humana</option>
-									<option value="magellan">Magellan</option>
-									<option value="magellanbehavioralhealth">Magellan Behavioral Health</option>
-									<option value="medicaid">Medicaid</option>
-									<option value="medicaidhmo">Medicaid HMO</option>
-									<option value="medicare">Medicare</option>
-									<option value="medicareadvantage">Medicare Advantage</option>
-									<option value="newdirections">New Directions</option>
-									<option value="nochargeforservices">No charge for services</option>
-									<option value="optum">Optum</option>
-									<option value="prestige">Prestige</option>
-									<option value="psychcare">Psychcare</option>
-									<option value="selfpaybycheckorcash">Self pay by check or cash</option>
-									<option value="slidingscalefeesavailable">Sliding scale fees available</option>
-									<option value="staywell">Staywell</option>
-									<option value="sunshinehealth">Sunshine Health</option>
-									<option value="tricare">Tricare</option>
-									<option value="unitedbehavioralhealth">United Behavioral Health</option>
-									<option value="unitedhealthcarewellcare">United Healthcare Wellcare</option>
-									<option value="valueoptions">Valueoptions</option>
-									<option value="wellcare">Wellcare</option>
-									<option value="other">Other</option>
+								<option value="accepts most insurance plans">accepts most insurance plans</option>
+								<option value="Aetna">Aetna</option>
+								<option value="assistance provided for filing with insurance">assistance provided for filing with insurance</option>
+								<option value="Beacon">Beacon</option>
+								<option value="Beech Street">Beech Street</option>
+								<option value="Big Bend Community Based Care">Big Bend Community Based Care</option>
+								<option value="Big Bend Provider Network">Big Bend Provider Network</option>
+								<option value="Blue Cross Blue Shield">Blue Cross Blue Shield</option>
+								<option value="Capital Health Plan">Capital Health Plan</option>
+								<option value="Cenpatico">Cenpatico</option>
+								<option value="Children's Medical">Children's Medical</option>
+								<option value="Cigna">Cigna</option>
+								<option value="ComPsych">ComPsych</option>
+								<option value="Corphealth">Corphealth</option>
+								<option value="Coventry">Coventry</option>
+								<option value="EAPrefer">EAPrefer</option>
+								<option value="Employee Assistance Program">Employee Assistance Program</option>
+								<option value="First Health">First Health</option>
+								<option value="Great West">Great West</option>
+								<option value="Guardian">Guardian</option>
+								<option value="HealthEASE">HealthEASE</option>
+								<option value="Healthy Kids">Healthy Kids</option>
+								<option value="Horizon health">Horizon health</option>
+								<option value="Humana">Humana</option>
+								<option value="Lifesynch/Humana">Lifesynch/Humana</option>
+								<option value="Magellan">Magellan</option>
+								<option value="Magellan Behavioral Health">Magellan Behavioral Health</option>
+								<option value="Medicaid">Medicaid</option>
+								<option value="Medicaid HMO">Medicaid HMO</option>
+								<option value="Medical Mutual">Medical Mutual</option>
+								<option value="Medicare">Medicare</option>
+								<option value="Medicare Advantage">Medicare Advantage</option>
+								<option value="Medipass">Medipass</option>
+								<option value="MHN">MHN</option>
+								<option value="New Directions">New Directions</option>
+								<option value="no charge for services">no charge for services</option>
+								<option value="no insurance accepted - all self pay">no insurance accepted - all self pay</option>
+								<option value="Optum">Optum</option>
+								<option value="out-of-network">out-of-network</option>
+								<option value="PHCS">PHCS</option>
+								<option value="Prestige">Prestige</option>
+								<option value="Psychcare">Psychcare</option>
+								<option value="qualifying patients seen at no charge">qualifying patients seen at no charge</option>
+								<option value="self pay by cash or check">self pay by cash or check</option>
+								<option value="sliding scale fees available">sliding scale fees available</option>
+								<option value="Staywell">Staywell</option>
+								<option value="Sunshine Health">Sunshine Health</option>
+								<option value="Tricare">Tricare</option>
+								<option value="United Behavioral Health">United Behavioral Health</option>
+								<option value="United Healthcare Wellcare">United Healthcare Wellcare</option>
+								<option value="Universal/CompCare">Universal/CompCare</option>
+								<option value="Valueoptions">Valueoptions</option>
+								<option value="Victim's Comp">Victim's Comp</option>
+								<option value="Vista">Vista</option>
+								<option value="Wellcare">Wellcare</option>
+								<option value="other">Other</option>
 							</select>
 					
 				
@@ -285,9 +303,9 @@
 									</select>
 						
 				
-								<h6><b>Primary practice activity</b></h6>
-									<select class="mpick"  name='Which_cate' id="Which_cate">
-										<option value="not_selected" default selected hidden>Not Selected</option>
+								<h6><b>Practice/Agency Categories</b></h6>
+									<select class="mpick"  name='Which_cate' id="Which_cate" class='mpick' multiple="multiple">
+										<option value="not_selected" disabled default selected hidden>Not Selected</option>
 										<option value="certifiedlactationconsultant">Certified Lactation Consulant</option>
 										<option value="doula">Doula</option>
 										<option value="hotline">Hotline</option>
@@ -299,11 +317,12 @@
 										<option value="psychologist">Psychologist</option>
 										<option value="supportgroup">Support Group</option>
 										<option value="treatmentcenter">Treatment Center</option>
+										<option value="other">Other</option>
 									</select>	
 	</div>
 	<div class="column2">
 				
-						<h6><b>Practice Categories</b></h6>
+						<h6><b>Practice/Agency Specialties</b></h6>
 						<select class="mpick" multiple="multiple" name='Specialty' id="Specialty">
 							<option value="abuse">Abuse</option>
 							<option value="addictions">Addictions</option>
@@ -323,7 +342,6 @@
 							<option value="maternalmentalhealth">Maternal Mental Health</option>
 							<option value="parenting">Parenting</option>
 							<option value="psychotherapy">Psychotherapy</option>
-							<!-- <option value="referrals">Referrals</option> -->
 							<option value="resource">Resource</option>
 							<option value="suicideprevention">Suicide Prevention</option>
 							<option value="trauma">Trauma</option>

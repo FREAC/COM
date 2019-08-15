@@ -442,7 +442,7 @@ async function generateFilterText(){
                     case 'Insurance':
                     case '<b>Insurance</b>':
                         theFilters[j] = '<b>Insurance</b>'
-                        theFilterValues += insuranceOptions[insuranceOptions.indexOf(theFilters[j+1][jj]) + 1] + ', '
+                        theFilterValues += insuranceOptions[insuranceOptions.indexOf(theFilters[j+1][jj].toLowerCase().replace(/\s/g,'')) + 1] + ', '
                         break;
                     case 'Practice_a':
                     case '<b>Practice_a</b>':
@@ -508,8 +508,14 @@ $("#print-table").on("click",async function(){
     $('#filters_used').html(filterText)
     $('#filters_used').removeClass('hidden_element')    
     table.showColumn("dist")
+    table.showColumn("housenumber")
+    table.showColumn("street")
+    table.showColumn("city")
     table.print(false, true);
     table.hideColumn("dist")
+    table.hideColumn("housenumber")
+    table.hideColumn("street")
+    table.hideColumn("city")
     // $('#filters_used').html('')
     // $('#filters_used').addClass('hidden_element')
 
@@ -753,6 +759,23 @@ function zoomToLocation(lat, lng, z = 11, data) {
 // create a reusable Tabulator object
 function insertTabulator(data) {
     table = new Tabulator("#results-table", {
+        rowFormatter:function(row){
+            var whatMedia = window.styleMedia.type
+            // console.log('can I show stuff here ',whatMedia)
+            //
+            //this conditional format does NOT work but leaving it in for now.
+            //
+            if (whatMedia === 'print') {
+                // console.log('putting on the borders for the table ')
+                row.getElement().style.borderWidth = "thin",
+                row.getElement().style.borderStyle = "solid"
+            }
+            var agency = row.getData().Agency;
+            if (agency.includes('***')) {
+                row.getElement().style.backgroundColor ="#b0e8e8";
+            }
+            return agency;
+        },
         height: 200,
         // width: 400,
         data: data,
@@ -764,19 +787,25 @@ function insertTabulator(data) {
         printFooter:"<h2>FSU College of Medicine<h2>",
         columns: [{
             title: "Provider",
-            field: "agency", 
-            formatter:function(row){
-                var agency = row.getData().Agency;
-                if (agency.includes('***')) {
-                    row.getElement().style.backgroundColor ="#b0e8e8";
-                }
-                return agency;
-            },
+            field: "agency"
         }, {
             width: 120,
             title: "Phone",
             field: "Phone_Numb"
         }, {
+            title: "Street Number",
+            field: "housenumber",
+            visible: false
+        },
+        {
+            title: "Street",
+            field: "street",
+            visible: false
+        },{
+            title: "City",
+            field: "city",
+            visible: false
+        },{
             title: "Distance from address (miles)",
             field: "dist",
             visible: false
@@ -1066,18 +1095,25 @@ function markerLogic(data, selection_marker) {
     return circle_marker;
 }
 async function prettyInsurance() {
-    return  ['acceptsmostinsuranceplans','Accepts most insurance plans','aetna','Aetna','beacon','Beacon',
-    'beechstreet','Beech Street','bigbendprovidernetwork','Big Bend Provider Network','bluecrossblueshield',
-    'Blue Cross Blue Shield','capitalhealthplan','Capital Health Plan','cenpatico','Cenpatico',"children'smedical",
-    "Children's Medical",'cigna','Cigna','compsych','ComPsych','coventry','Coventry','employeeassistanceprogram',
-    'Employee Assistance Program','firsthealth','First Health','healthease','HealthEASE','healthykids','Healthy Kids',
-    'humana','Humana','magellan','Magellan','Magellan Behavioral Health','Magellan Behavioral Health',
-    'medicaid','Medicaid','medicaidhmo','Medicaid HMO','medicare','Medicare','medicareadvantage',
-    'Medicare Advantage','newdirections','New Directions','nochargeforservices','No charge for services','optum',
-    'Optum','prestige','Prestige','psychcare','Psychcare','selfpaybycheckorcash','Self pay by check or cash',
-    'slidingscalefeesavailable','Sliding scale fees available','staywell','Staywell','sunshinehealth','Sunshine Health',
-    'tricare','Tricare','unitedbehavioralhealth','United Behavioral Health','unitedhealthcarewellcare',
-    'United Healthcare Wellcare','valueoptions','Valueoptions','wellcare','Wellcare','other','Other']
+    return  ['accepts most insurance plans','accepts most insurance plans','aetna','Aetna',
+	'assistanceprovidedforfilingwithinsurance','assistance provided for filing with insurance','beacon','Beacon',
+	'beechstreet','Beech Street','bigbendcommunitybasedcare','Big Bend Community Based Care',
+	'bigbendprovidernetwork','Big Bend Provider Network','bluecrossblueshield','Blue Cross Blue Shield',
+	'capitalhealthplan','Capital Health Plan','cenpatico','Cenpatico',"children'smedical","Children's Medical",
+	'cigna','Cigna','compsych','ComPsych','corphealth','Corphealth','coventry','Coventry','eaprefer','EAPrefer',
+	'employeeassistanceprogram','Employee Assistance Program','firsthealth','First Health','greatwest','Great West',
+	'guardian','Guardian','healthease','HealthEASE','healthykids','Healthy Kids','horizonhealth','Horizon health',
+	'humana','Humana','lifesynch/humana','Lifesynch/Humana','magellan','Magellan','magellanbehavioralhealth',
+	'Magellan Behavioral Health','medicaid','Medicaid','medicaidhmo','Medicaid HMO','medicalmutual','Medical Mutual',
+	'medicare','Medicare','medicareadvantage','Medicare Advantage','medipass','Medipass','mhn','MHN','newdirections',
+	'New Directions','nochargeforservices','no charge for services','noinsuranceaccepted-all self pay',
+	'no insurance accepted - all self pay','optum','Optum','out-of-network','out-of-network','phcs','PHCS','prestige',
+	'Prestige','psychcare','Psychcare','qualifyingpatientsseenatnocharge','qualifying patients seen at no charge',
+	'selfpaybycashorcheck','self pay by cash or check','slidingscalefeesavailable','sliding scale fees available',
+	'staywell','Staywell','sunshinehealth','Sunshine Health','tricare','Tricare','unitedbehavioralhealth',
+	'United Behavioral Health','unitedhealthcarewellcare','United Healthcare Wellcare','universal/compcare',
+	'Universal/CompCare','valueoptions','Valueoptions',"victim'scomp","Victim's Comp",'vista','Vista','wellcare',
+	'Wellcare']
 }
 
 async function prettyPractic_a() {
@@ -1113,7 +1149,8 @@ async function prettyWhich_cate(){
 	'doula','Doula','hotline','Hotline','housingsupport','Housing Support','licensedclinicalsocialworker',
 	'Licensed Clinical Social Worker','licensedmarriageandfamilytherapist','Licensed Marriage and Family Therapist',
 	'licensedmentalhealthcounselor','Licensed Mental Health Counselor','psychiatrist','Psychiatrist',
-	'psychologist','Psychologist','supportgroup','Support Group','treatmentcenter','Treatment Center']
+    'psychologist','Psychologist','supportgroup','Support Group','treatmentcenter','Treatment Center',
+    'other','Other']
 }
 async function prettySpecialty(){
     return ['abuse','Abuse','addictions','Addictions','anxiety','Anxiety','counseling','Counseling','crisiscounseling',
