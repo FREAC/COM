@@ -1106,7 +1106,7 @@ async function prettyInsurance() {
 	'humana','Humana','lifesynch/humana','Lifesynch/Humana','magellan','Magellan','magellanbehavioralhealth',
 	'Magellan Behavioral Health','medicaid','Medicaid','medicaidhmo','Medicaid HMO','medicalmutual','Medical Mutual',
 	'medicare','Medicare','medicareadvantage','Medicare Advantage','medipass','Medipass','mhn','MHN','newdirections',
-	'New Directions','nochargeforservices','no charge for services','noinsuranceaccepted-all self pay',
+	'New Directions','nochargeforservices','no charge for services','noinsuranceaccepted-allselfpay',
 	'no insurance accepted - all self pay','optum','Optum','out-of-network','out-of-network','phcs','PHCS','prestige',
 	'Prestige','psychcare','Psychcare','qualifyingpatientsseenatnocharge','qualifying patients seen at no charge',
 	'selfpaybycheckorcash','self pay by check or cash','slidingscalefeesavailable','sliding scale fees available',
