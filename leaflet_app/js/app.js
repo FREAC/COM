@@ -773,8 +773,13 @@ function insertTabulator(data) {
             var agency = row.getData().Agency;
             if (agency.includes('***')) {
                 row.getElement().style.backgroundColor ="#b0e8e8";
+                row.getElement().style.color ="#174f4f";
+                row.getElement().style.textShadow ="2px 2px 5px red";
+                row.getElement().style.fontWeight ="bold";
+                return "<span style='font-weight:bold;'>"+ agency + "</span>";
+            } else {
+                return agency;
             }
-            return agency;
         },
         height: 200,
         // width: 400,
@@ -791,7 +796,20 @@ function insertTabulator(data) {
         }, {
             width: 120,
             title: "Phone",
-            field: "Phone_Numb"
+            field: "Phone_Numb",
+            cellClick: function (event, row) {
+                // NOTE: New function parameter to pass all of the row information to the zoomtolocation
+                //       function so it can handle the popup
+    
+                const lat = row.getData().lat;
+                const lng = row.getData().lng;
+                const zoom = map.getZoom();
+                if (zoom < 12) {
+                    zoomToLocation(lat, lng, zoom, row._row.data);
+                } else {
+                    zoomToLocation(lat, lng, zoom, row._row.data);
+                }
+            }
         }, {
             title: "Street Number",
             field: "housenumber",
@@ -817,6 +835,7 @@ function insertTabulator(data) {
             const lat = row.getData().lat;
             const lng = row.getData().lng;
             const zoom = map.getZoom();
+            console.log('what kind of data are we sending over ',row._row.data)
             if (zoom < 12) {
                 zoomToLocation(lat, lng, zoom, row._row.data);
             } else {
@@ -866,6 +885,7 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
                 // the fields
                 //console.log(' show me ALLLLLLLLLLL the data ',layer.data)
                 results.push({
+                    mhnum: layer.data.mhnum,
                     agency: layer.data.Agency,
                     insurance: layer.data.Insurance,
                     housenumber: layer.data.HouseNumber,
@@ -884,7 +904,7 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
         });
         results.push({
             agency: "*** Remember there may be telehealth providers outside your search area ***",
-            phone_numb: ""
+            phone_numb: "<<LOOK HERE"
         })
 
         //Sort the list by increasing distance from point
@@ -958,6 +978,7 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
             results[i]['phone_numb'] = await formatPhone(results[i]['phone_numb'])
             tableResults.push({
                 id: i,
+                mhnum: results[i]['mhnum'],
                 Agency: results[i]['agency'],
                 Insurance: results[i]['insurance'],
                 HouseNumber: results[i]['housenumber'],
