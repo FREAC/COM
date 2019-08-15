@@ -1109,7 +1109,7 @@ async function prettyInsurance() {
 	'New Directions','nochargeforservices','no charge for services','noinsuranceaccepted-all self pay',
 	'no insurance accepted - all self pay','optum','Optum','out-of-network','out-of-network','phcs','PHCS','prestige',
 	'Prestige','psychcare','Psychcare','qualifyingpatientsseenatnocharge','qualifying patients seen at no charge',
-	'selfpaybycashorcheck','self pay by cash or check','slidingscalefeesavailable','sliding scale fees available',
+	'selfpaybycheckorcash','self pay by check or cash','slidingscalefeesavailable','sliding scale fees available',
 	'staywell','Staywell','sunshinehealth','Sunshine Health','tricare','Tricare','unitedbehavioralhealth',
 	'United Behavioral Health','unitedhealthcarewellcare','United Healthcare Wellcare','universal/compcare',
 	'Universal/CompCare','valueoptions','Valueoptions',"victim'scomp","Victim's Comp",'vista','Vista','wellcare',
