@@ -455,13 +455,13 @@ async function generateFilterText(){
                         theFilterValues += area_servOptions[area_servOptions.indexOf(theFilters[j+1][jj]) + 1] + ', ';
                         break;
                     case 'Which_cate':
-                    case '<b>Primary Practice Activity</b>':
-                        theFilters[j] = '<b>Primary Practice Activity</b>'
+                    case '<b>Practice/Agency Categories</b>':
+                        theFilters[j] = '<b>Practice/Agency Categories</b>'
                         theFilterValues += which_cateOptions[which_cateOptions.indexOf(theFilters[j+1][jj]) + 1] + ', '
                         break;
                     case 'Specialty':
-                    case '<b>Practice Categories</b>':
-                        theFilters[j] = '<b>Practice Categories</b>';
+                    case '<b>Practice/Agency Specialties</b>':
+                        theFilters[j] = '<b>Practice/Agency Specialties</b>';
                         theFilterValues += specialtyOptions[specialtyOptions.indexOf(theFilters[j+1][jj]) + 1] + ', ';
                         break;
                     case 'Serves':
