@@ -67,33 +67,7 @@ const json_group = new L.FeatureGroup({
 
     }
 });
-function checkForMHNUM() {
-var mhnum = getUrlParam('mhnum')
-// now can we loop through everything and find this mhnum?
 
-$(document).ready(function () {
-// console.log('did we get the mhnum ',mhnum, map._layers)
-// console.log('did we get the mhnum part 2 ',mhnum, json_group)
-//     console.log('trying to loop through json_group')
-    // for (layer in json_group._layers) {
-    if (mhnum > 0) {
-        json_group.eachLayer(function(layer){
-            try {
-                // console.log('hey 2',layer.data)
-                // console.log('hey 4',layer.data.mhnum)
-                    if (mhnum === layer.data.mhnum) {
-                        console.log('found the MHNUM to zoom to')
-                        const lat = layer._latlng['lat'];
-                        const lon = layer._latlng['lng'];
-                        //  var z = 11;
-                        //  the_data = layer.data;
-                        zoomToLocation(lat, lon, 99, layer.data)             
-                    }
-            } catch{console.log('does it ever blow?')}
-        })
-    } else {console.log('no mhnum supplied on this run')}
-})
-}
 // this one is used just on the initial load
 const json_group_c = new L.markerClusterGroup({
         maxClusterRadius: 0,
@@ -184,9 +158,11 @@ function getUrlParam(parameter, defaultvalue){
 // assigns marker and add to map
 async function setup() {
     selection_group.clearLayers();
+    var mhnum = getUrlParam('provider_id')
+    console.log('looking for this id ',mhnum)
     $.get("./data/COM.json", function (json_data) {
         $.each(json_data, async function (object) {
-            console.log('this is each object ',           json_data[object]['Phone_Numb'],json_data[object]['Agency']);
+            console.log('this is each object ',json_data[object]['mhnum']);
             json_data[object]['Phone_Numb'] = await formatPhone(json_data[object]['Phone_Numb'])
             json_data[object]['phone_numb'] = await formatPhone(json_data[object]['Phone_Numb'])
             // console.log(' the new phone is ',phone, data)
@@ -196,12 +172,21 @@ async function setup() {
             marker.addTo(json_group_c);
             json_group.addLayer(marker);
             json_group_c.addLayer(marker);
+            if (mhnum === json_data[object]['mhnum']) {
+                console.log('FFFFFFFFFFFFFFound it', json_data[object])
+
+                const lat = json_data[object]['Latitude'];
+                const lon = json_data[object]['Longitude'];
+                //  var z = 11;
+                //  the_data = layer.data;
+                console.log('trying to zoom to ',lat, lon)
+                zoomToLocation(lat, lon, 99, json_data[object]) 
+            }
         });
         //map.addLayer(json_group);
         map.addLayer(json_group_c);
         map.addLayer(selection_group)
         activeLayer = json_group;
-        checkForMHNUM();
     });
 }
 
@@ -589,7 +574,9 @@ function createPopup(data) {
     const content = `<b>${data['Agency']}</b><br> 
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
-                    ${data['Phone_Numb']} <br><a href="http://staging.bodhtree.com:4200/?mhnum=${data['mhnum']}" target=_blank>Click for provider details<br>
+                    ${data['Phone_Numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details
+                        (Opens in a new tab)</a>
+                        <br><a href="http://maps.google.com/maps?cbll=${data['Latitude']},${data['Longitude']}&layer=c" target=_blank>Click Google Street View
                         (Opens in a new tab)</a>`;
     return L.popup({
         closeButton: false
@@ -704,7 +691,7 @@ function zoomToLocation(lat, lng, z = 11, data) {
     }
     if (z === 99) {
         // came from a mhnum zoom request
-        map.flyTo(new L.LatLng(lat, lng), 11);
+        map.flyTo(new L.LatLng(lat, lng), 13);
     } else {
         // set view to location
         map.flyTo(new L.LatLng(lat, lng), z);
@@ -732,7 +719,7 @@ function zoomToLocation(lat, lng, z = 11, data) {
             var pop_text = `<b>${data['Agency']}</b><br>
                         ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                         ${data['City']}, ${data['State']} ${data['PostalCode']}
-                        ${data['Phone_Numb']} <br><a href="http://staging.bodhtree.com:4200/?mhnum=${data['mhnum']}" target=_blank>Click for provider details<br>
+                        ${data['Phone_Numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
                         (Opens in a new tab)</a>` ;
         } else {
             if (data['unit'] === undefined || data['unit'] === null  || data['Unit'] === '0') {
@@ -742,7 +729,7 @@ function zoomToLocation(lat, lng, z = 11, data) {
             var pop_text = `<b>${data['agency']}</b><br>
                         ${data['housenumber']} ${data['street']} ${data['unit']}<br>
                         ${data['city']}, ${data['state']} ${data['postalcode']}<br>
-                        ${data['phone_numb']} <br><a href="http://staging.bodhtree.com:4200/?mhnum=${data['mhnum']}" target=_blank>Click for provider details<br>
+                        ${data['phone_numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
                         (Opens in a new tab)</a>`;
         }
         var popup = L.popup({
