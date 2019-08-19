@@ -72,7 +72,7 @@ const json_group = new L.FeatureGroup({
 const json_group_c = new L.markerClusterGroup({
         maxClusterRadius: 0,
         spiderLegPolylineOptions: {opacity: 0.0},
-        spiderfyDistanceMultiplier: 100000.0,
+        spiderfyDistanceMultiplier: 1000000.0,
             iconCreateFunction: function (cluster) {
             return L.divIcon({
                 html: '<b>' + cluster.getChildCount() + '</b>',
@@ -245,7 +245,12 @@ const map = new L.Map('map', {
 
 map.on({
     contextmenu: function (e) {
+        // by uncommenting the next line, the user can RIGHT click and draw a circle.
+        // there seems to be a problem though if you do multiple right clicks in a row
+        //  the points on the map appear to move.
+        // map.zoomIn(1);
         querySearchArea(e);
+        map.zoomIn(.000001);
     },
     // Turn off mobile locate control after zoom
 
@@ -571,12 +576,16 @@ function createPopup(data) {
     if (data['Unit'] === undefined || data['Unit'] === null  || data['Unit'] === '0') {
         data['Unit'] = ''
     }
+    // console.log('lets see the data ',data)
+    data['n_latitude'] = data['N_Latitude']
+    data['n_longitude'] = data['N_Longitude']
     const content = `<b>${data['Agency']}</b><br> 
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
+                    ${data['address']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
                     ${data['Phone_Numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details
                         (Opens in a new tab)</a>
-                        <br><a href="http://maps.google.com/maps?cbll=${data['Latitude']},${data['Longitude']}&layer=c" target=_blank>Click Google Street View
+                        <br><a href="http://www.google.com/maps?layer=c&cbll=${data['N_Latitude']},${data['N_Longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View
                         (Opens in a new tab)</a>`;
     return L.popup({
         closeButton: false
@@ -668,6 +677,7 @@ function configurePopup(data) {
 
         var pop_text = `<b>${data['Agency']}</b><br> 
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
+                    ${data['address']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
                     ${data['Phone_Numb']}  `;
         var popup = L.popup({
@@ -710,17 +720,20 @@ function zoomToLocation(lat, lng, z = 11, data) {
 
     try {
         if (z === 99) {
-            // we came from a zoom to a specific MHNYM
+            // we came from a zoom to a specific MHNUM
             // this needs things to be upper case
             if (data['Unit'] === undefined || data['Unit'] === null  || data['Unit'] === '0') {
                 data['Unit'] = ''
             }
-
+            // ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
             var pop_text = `<b>${data['Agency']}</b><br>
-                        ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
+                        ${data['address']}<br>
                         ${data['City']}, ${data['State']} ${data['PostalCode']}
                         ${data['Phone_Numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
-                        (Opens in a new tab)</a>` ;
+                        (Opens in a new tab)</a>
+                        <br><a href="http://www.google.com/maps?layer=c&cbll=${data['N_Latitude']},${data['N_Longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View
+                        (Opens in a new tab)</a>`;
+
         } else {
             if (data['unit'] === undefined || data['unit'] === null  || data['Unit'] === '0') {
                 data['unit'] = ''
@@ -728,8 +741,11 @@ function zoomToLocation(lat, lng, z = 11, data) {
 
             var pop_text = `<b>${data['agency']}</b><br>
                         ${data['housenumber']} ${data['street']} ${data['unit']}<br>
+                        ${data['address']}<br>
                         ${data['city']}, ${data['state']} ${data['postalcode']}<br>
                         ${data['phone_numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
+                        (Opens in a new tab)</a>
+                        <br><a href="http://www.google.com/maps?layer=c&cbll=${data['n_latitude']},${data['n_longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View
                         (Opens in a new tab)</a>`;
         }
         var popup = L.popup({
@@ -877,12 +893,15 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
                     insurance: layer.data.Insurance,
                     housenumber: layer.data.HouseNumber,
                     street: layer.data.Street,
+                    address: layer.data.Address,
                     city: layer.data.City,
                     state: layer.data.State,
                     postalcode: layer.data.PostalCode,
                     website: layer.data.Website,
                     phone_numb: layer.data.Phone_Numb,
                     phonenumber:layer.data.Phone_Numb,
+                    n_latitude:layer.data.n_latitude,
+                    n_longitude: layer.data.n_longitude,
                     dist: (distance_from_layer_circle / 1609).toFixed(2),
                     latitude: layer_lat_long.lat,
                     longitude: layer_lat_long.lng
@@ -891,7 +910,7 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
         });
         results.push({
             agency: "*** Remember there may be telehealth providers outside your search area ***",
-            phone_numb: "<<LOOK HERE"
+            phone_numb: "<<<<<<<<< LOOK HERE <<<<<<<<<"
         })
 
         //Sort the list by increasing distance from point
@@ -970,6 +989,7 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
                 Insurance: results[i]['insurance'],
                 HouseNumber: results[i]['housenumber'],
                 Street: results[i]['street'],
+                Address: results[i]['address'],
                 City: results[i]['city'],
                 State: results[i]['state'],
                 PostalCode: results[i]['postalcode'],
@@ -977,6 +997,8 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
                 Phone_Numb: results[i]['phone_numb'],
                 lat: results[i]['latitude'],
                 lng: results[i]['longitude'],
+                n_latitude: results[i]['n_latitude'],
+                n_longitude: results[i]['n_longitude'],
                 dist: results[i]['dist'],
 
 
@@ -984,6 +1006,7 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
                 insurance: results[i]['insurance'],
                 housenumber: results[i]['housenumber'],
                 street: results[i]['street'],
+                address: results[i]['address'],
                 city: results[i]['city'],
                 state: results[i]['state'],
                 postalcode: results[i]['postalcode'],
@@ -1082,6 +1105,7 @@ function markerLogic(data, selection_marker) {
         'Agency': data['Agency'],
         'HouseNumber': data['HouseNumber'],
         'Street': data['Street'],
+        'Address': data['address'],
         'Unit': data['Unit'],
         'City': data['City'],
         'State': data['State'],
@@ -1096,7 +1120,11 @@ function markerLogic(data, selection_marker) {
         'Practice_a': data['Practice_A'],
         'Areas_Serv': data['Areas_Serv'],
         'telehealth': data['telehealth'],
-        'mhnum': data['mhnum']
+        'mhnum': data['mhnum'],
+        'N_Latitude': data['n_latitude'],
+        'N_Longitude': data['n_longitude'],
+        'n_latitude': data['n_latitude'],
+        'n_longitude': data['n_longitude']
 
     };
 

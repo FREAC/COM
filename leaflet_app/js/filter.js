@@ -68,7 +68,7 @@ async function filterLocations(event) {
     }
     await $.get("./data/COM.json", function (json_data) {
         $.each(json_data, async function (object) {
-            // console.log(json_data[object]);
+            //console.log('PUTTTTTTTTTTTTTTT the json_data object together ',json_data[object]);
             json_data[object]['Phone_Numb'] = await formatPhone(json_data[object]['Phone_Numb'])
             const provider = json_data[object];
             const marker = markerLogic(provider);
@@ -106,7 +106,7 @@ async function filterLocations(event) {
                         recordArr = targetLayer.data[filter[j]].split(",")
                         for (k=0; k<recordArr.length; k++){
                             console.log('testing ', filter[j+1][m],' is == to ',recordArr[k],k)
-                            if ( recordArr[k].toLowerCase().replace(/\s/g,'') === filter[j+1][m]
+                            if ( recordArr[k].toLowerCase().replace(/\s/g,'') === filter[j+1][m].toLowerCase().replace(/\s/g,'')
                             ) {
                                 console.log('m is ',m,' and length is ', filter[j+1].length-1)
                                 console.log('--FOUNDfound one but not written yet')
