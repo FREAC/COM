@@ -292,7 +292,7 @@ var geocoder = L.esri.Geocoding.geosearch({
     zoomToResult: false,
     expanded: true,
     useMapBounds: false,
-    placeholder: 'Search for an address or a provider name',
+    placeholder: '2. Enter an address / provider name',
     collapseAfterResult: false,
     //searchBounds: [bottomLeft, topRight]
 }).addTo(map);
@@ -577,16 +577,19 @@ function createPopup(data) {
         data['Unit'] = ''
     }
     // console.log('lets see the data ',data)
+    // this is the popup text if you just touch a point on the screen
     data['n_latitude'] = data['N_Latitude']
     data['n_longitude'] = data['N_Longitude']
-    const content = `<b>${data['Agency']}</b><br> 
+    // for possible use in the future
+    //    <br><a href="http://www.google.com/maps?layer=c&cbll=${data['N_Latitude']},${data['N_Longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)</a>
+    const content = `<b>${data['Agency']}</b><br>
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['address']}<br>
+                    ${data['Relevance']} | ${data['MatchLevel']} <br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
                     ${data['Phone_Numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details
                         (Opens in a new tab)</a>
-                        <br><a href="http://www.google.com/maps?layer=c&cbll=${data['N_Latitude']},${data['N_Longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View
-                        (Opens in a new tab)</a>`;
+`;
     return L.popup({
         closeButton: false
     }).setContent(content);
@@ -677,7 +680,7 @@ function configurePopup(data) {
 
         var pop_text = `<b>${data['Agency']}</b><br> 
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
-                    ${data['address']}<br>
+                    ${data['address']}<br> 
                     ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
                     ${data['Phone_Numb']}  `;
         var popup = L.popup({
@@ -726,27 +729,31 @@ function zoomToLocation(lat, lng, z = 11, data) {
                 data['Unit'] = ''
             }
             // ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
+            // possible use in the future
+            // <br><a href="http://www.google.com/maps?layer=c&cbll=${data['N_Latitude']},${data['N_Longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)</a>
             var pop_text = `<b>${data['Agency']}</b><br>
-                        ${data['address']}<br>
+                        ${data['address']}<br> ${data['relevance']} <br>
                         ${data['City']}, ${data['State']} ${data['PostalCode']}
                         ${data['Phone_Numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
                         (Opens in a new tab)</a>
-                        <br><a href="http://www.google.com/maps?layer=c&cbll=${data['N_Latitude']},${data['N_Longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View
-                        (Opens in a new tab)</a>`;
+                        `;
 
         } else {
             if (data['unit'] === undefined || data['unit'] === null  || data['Unit'] === '0') {
                 data['unit'] = ''
             }
+            // this pop text is from picking an agency from the geocode box or from the results table
+            //console.log('PPPPPPPPPop text is ',data)
+            // possible use in the future
+            // <br><a href="http://www.google.com/maps?layer=c&cbll=${data['n_latitude']},${data['n_longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)</a>
 
             var pop_text = `<b>${data['agency']}</b><br>
                         ${data['housenumber']} ${data['street']} ${data['unit']}<br>
-                        ${data['address']}<br>
+                        ${data['Address']}<br> ${data['Relevance']} ${data['MatchLevel']} <br>
                         ${data['city']}, ${data['state']} ${data['postalcode']}<br>
                         ${data['phone_numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
                         (Opens in a new tab)</a>
-                        <br><a href="http://www.google.com/maps?layer=c&cbll=${data['n_latitude']},${data['n_longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View
-                        (Opens in a new tab)</a>`;
+                        `;
         }
         var popup = L.popup({
                 maxWidth: 200
@@ -894,6 +901,8 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
                     housenumber: layer.data.HouseNumber,
                     street: layer.data.Street,
                     address: layer.data.Address,
+                    relevance: layer.data.Relevance,
+                    matchlevel: layer.data.MatchLevel,
                     city: layer.data.City,
                     state: layer.data.State,
                     postalcode: layer.data.PostalCode,
@@ -1000,6 +1009,8 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
                 n_latitude: results[i]['n_latitude'],
                 n_longitude: results[i]['n_longitude'],
                 dist: results[i]['dist'],
+                Relevance: results[i]['relevance'],
+                MatchLevel: results[i]['matchlevel'],
 
 
                 agency: results[i]['agency'],
@@ -1106,6 +1117,8 @@ function markerLogic(data, selection_marker) {
         'HouseNumber': data['HouseNumber'],
         'Street': data['Street'],
         'Address': data['address'],
+        'Relevance': data['Relevance'],
+        'MatchLevel': data['MatchLevel'],
         'Unit': data['Unit'],
         'City': data['City'],
         'State': data['State'],
@@ -1164,7 +1177,7 @@ async function prettyPractic_a() {
 	'Osceola','palmbeach','Palm Beach','pasco','Pasco','pinellas','Pinellas','polk','Polk','putnam','Putnam','st.johns','St. Johns',
 	'st.lucie','St. Lucie','santarosa','Santa Rosa','sarasota','Sarasota','seminole','Seminole','sumter','Sumter','suwannee',
 	'Suwannee','taylor','Taylor','union','Union','volusia','Volusia','wakulla','Wakulla','walton','Walton','washington',
-	'Washington']
+	'Washington','telehealthonly','Telehealth Only']
 }
 async function prettyArea_Serv(){
     return ['alachua','Alachua','baker','Baker','bay','Bay','bradford','Bradford','brevard','Brevard','broward','Broward',
@@ -1178,7 +1191,7 @@ async function prettyArea_Serv(){
 	'Osceola','palmbeach','Palm Beach','pasco','Pasco','pinellas','Pinellas','polk','Polk','putnam','Putnam','st.johns','St. Johns',
 	'st.lucie','St. Lucie','santarosa','Santa Rosa','sarasota','Sarasota','seminole','Seminole','sumter','Sumter','suwannee',
 	'Suwannee','taylor','Taylor','union','Union','volusia','Volusia','wakulla','Wakulla','walton','Walton','washington',
-	'Washington']
+	'Washington','telehealthonly','Telehealth Only']
 }
 async function prettyWhich_cate(){
     return ['notselected','Not Selected','certifiedlactationconsultant','Certified Lactation Consultant',

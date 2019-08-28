@@ -179,3 +179,9 @@ body {
 .tabulator-cell {
   font-family: times, serif; font-size:12pt;
 }
+.geocoder-control-input {
+  font-weight: 900;
+  font-size: 15px;
+  width: 320px;
+  /* height: 50px !important; */
+}
