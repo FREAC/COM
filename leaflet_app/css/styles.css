@@ -181,7 +181,7 @@ body {
 }
 .geocoder-control-input {
   font-weight: 900;
-  font-size: 15px;
+  font-size: 17px;
+  font-family: serif;
   width: 320px;
-  /* height: 50px !important; */
 }

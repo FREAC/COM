@@ -292,12 +292,14 @@ var geocoder = L.esri.Geocoding.geosearch({
     zoomToResult: false,
     expanded: true,
     useMapBounds: false,
-    placeholder: '2. Enter an address / provider name',
+    placeholder: '2. Enter an address or provider name',
     collapseAfterResult: false,
     //searchBounds: [bottomLeft, topRight]
 }).addTo(map);
-
+var results = L.layerGroup().addTo(map);
 geocoder.on('results', async function (result) {
+    // console.log('')
+    results.addLayer(L.marker(result.results[0].latlng));
     // if mobile browser true
     if (L.Browser.mobile) {
         $('.geocoder-control').css({
