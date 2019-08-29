@@ -238,6 +238,8 @@ const map = new L.Map('map', {
     zoom: 6,
     maxBounds: [bottomLeft, topRight]
 });
+//This will hold the marker for the address zoom
+var results = L.layerGroup().addTo(map);
 
 //Add baseLayers to map as control layers
 // commented out as of 8/6/19 by SWH
@@ -296,10 +298,7 @@ var geocoder = L.esri.Geocoding.geosearch({
     collapseAfterResult: false,
     //searchBounds: [bottomLeft, topRight]
 }).addTo(map);
-var results = L.layerGroup().addTo(map);
 geocoder.on('results', async function (result) {
-    // console.log('')
-    results.addLayer(L.marker(result.results[0].latlng));
     // if mobile browser true
     if (L.Browser.mobile) {
         $('.geocoder-control').css({
@@ -320,8 +319,14 @@ geocoder.on('results', async function (result) {
         querySearchArea(result);
         console.log('finished with the query search area ready to scroll ', document.body.scrollHeight)
         window.scrollTo(0,document.body.scrollHeight);
-
+        try {
+            results.clearLayers();
+        } catch {console.log('could not clear it')}
+        // original way we added the marker
+        // results.addLayer(L.marker(result.results[0].latlng));
+        L.marker(result.results[0].latlng).addTo(results);
     }
+
 });
 
 // check whether on mobile devices
@@ -584,10 +589,11 @@ function createPopup(data) {
     data['n_longitude'] = data['N_Longitude']
     // for possible use in the future
     //    <br><a href="http://www.google.com/maps?layer=c&cbll=${data['N_Latitude']},${data['N_Longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)</a>
+    data['Relevance'] = Math.round(data['Relevance'] * 100) / 100;
     const content = `<b>${data['Agency']}</b><br>
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['address']}<br>
-                    ${data['Relevance']} | ${data['MatchLevel']} <br>
+                    <font color='red'>${data['Relevance']} | ${data['MatchLevel']} </font><br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
                     ${data['Phone_Numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details
                         (Opens in a new tab)</a>
@@ -733,6 +739,7 @@ function zoomToLocation(lat, lng, z = 11, data) {
             // ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
             // possible use in the future
             // <br><a href="http://www.google.com/maps?layer=c&cbll=${data['N_Latitude']},${data['N_Longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)</a>
+            data['relevance'] = Math.round(data['relevance'] * 100) / 100;
             var pop_text = `<b>${data['Agency']}</b><br>
                         ${data['address']}<br> ${data['relevance']} <br>
                         ${data['City']}, ${data['State']} ${data['PostalCode']}
@@ -748,10 +755,10 @@ function zoomToLocation(lat, lng, z = 11, data) {
             //console.log('PPPPPPPPPop text is ',data)
             // possible use in the future
             // <br><a href="http://www.google.com/maps?layer=c&cbll=${data['n_latitude']},${data['n_longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)</a>
-
+            data['Relevance'] = Math.round(data['Relevance'] * 100) / 100;
             var pop_text = `<b>${data['agency']}</b><br>
                         ${data['housenumber']} ${data['street']} ${data['unit']}<br>
-                        ${data['Address']}<br> ${data['Relevance']} ${data['MatchLevel']} <br>
+                        ${data['Address']}<br> <font color='red'>${data['Relevance']} ${data['MatchLevel']}</font> <br>
                         ${data['city']}, ${data['state']} ${data['postalcode']}<br>
                         ${data['phone_numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
                         (Opens in a new tab)</a>
