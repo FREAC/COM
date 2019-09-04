@@ -185,4 +185,6 @@ body {
   font-family: serif;
   width: 320px;
   background-color:#98e8ef;
+  color: red;
+  text-emphasis-color: red;
 }

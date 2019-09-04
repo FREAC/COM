@@ -590,10 +590,10 @@ function createPopup(data) {
     // for possible use in the future
     //    <br><a href="http://www.google.com/maps?layer=c&cbll=${data['N_Latitude']},${data['N_Longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)</a>
     data['Relevance'] = Math.round(data['Relevance'] * 100) / 100;
+    // ${data['address']}<br>
+    // <font color='red'>${data['Relevance']} | ${data['MatchLevel']} </font><br>
     const content = `<b>${data['Agency']}</b><br>
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
-                    ${data['address']}<br>
-                    <font color='red'>${data['Relevance']} | ${data['MatchLevel']} </font><br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
                     ${data['Phone_Numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details
                         (Opens in a new tab)</a>
@@ -685,10 +685,9 @@ function configurePopup(data) {
         if (data['Unit'] === undefined || data['Unit'] === null  || data['Unit'] === '0') {
             data['Unit'] = ''
         }
-
+        // ${data['address']}<br> 
         var pop_text = `<b>${data['Agency']}</b><br> 
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
-                    ${data['address']}<br> 
                     ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
                     ${data['Phone_Numb']}  `;
         var popup = L.popup({
@@ -736,12 +735,13 @@ function zoomToLocation(lat, lng, z = 11, data) {
             if (data['Unit'] === undefined || data['Unit'] === null  || data['Unit'] === '0') {
                 data['Unit'] = ''
             }
-            // ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
+
             // possible use in the future
+            // ${data['address']}<br> ${data['relevance']} <br>
             // <br><a href="http://www.google.com/maps?layer=c&cbll=${data['N_Latitude']},${data['N_Longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)</a>
             data['relevance'] = Math.round(data['relevance'] * 100) / 100;
             var pop_text = `<b>${data['Agency']}</b><br>
-                        ${data['address']}<br> ${data['relevance']} <br>
+                        ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                         ${data['City']}, ${data['State']} ${data['PostalCode']}
                         ${data['Phone_Numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
                         (Opens in a new tab)</a>
@@ -754,11 +754,11 @@ function zoomToLocation(lat, lng, z = 11, data) {
             // this pop text is from picking an agency from the geocode box or from the results table
             //console.log('PPPPPPPPPop text is ',data)
             // possible use in the future
+            // ${data['Address']}<br> <font color='red'>${data['Relevance']} ${data['MatchLevel']}</font> <br>
             // <br><a href="http://www.google.com/maps?layer=c&cbll=${data['n_latitude']},${data['n_longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)</a>
             data['Relevance'] = Math.round(data['Relevance'] * 100) / 100;
             var pop_text = `<b>${data['agency']}</b><br>
                         ${data['housenumber']} ${data['street']} ${data['unit']}<br>
-                        ${data['Address']}<br> <font color='red'>${data['Relevance']} ${data['MatchLevel']}</font> <br>
                         ${data['city']}, ${data['state']} ${data['postalcode']}<br>
                         ${data['phone_numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
                         (Opens in a new tab)</a>
