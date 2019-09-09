@@ -150,7 +150,7 @@ function getUrlParam(parameter, defaultvalue){
     var urlparameter = defaultvalue;
     if(window.location.href.indexOf(parameter) > -1){
         urlparameter = getUrlVars()[parameter];
-        }
+    } 
     return urlparameter;
 }
 
@@ -162,9 +162,11 @@ async function setup() {
     console.log('looking for this id ',mhnum)
     $.get("./data/COM.json", function (json_data) {
         $.each(json_data, async function (object) {
-            console.log('this is each object ',json_data[object]['mhnum']);
+            // console.log('this is each object ',json_data[object]['mhnum']);
             json_data[object]['Phone_Numb'] = await formatPhone(json_data[object]['Phone_Numb'])
             json_data[object]['phone_numb'] = await formatPhone(json_data[object]['Phone_Numb'])
+            json_data[object]['website']    = await cleanWebsite(json_data[object]['website']);
+            //json_data[object]['Website']    = await cleanWebsite(json_data[object]['Website']);
             // console.log(' the new phone is ',phone, data)
             const provider = json_data[object];
             const marker = markerLogic(provider);
@@ -224,7 +226,7 @@ async function setup() {
             "Aerial View": aerialMap,
             "OSM Map": osmMap
         };
- 
+
 const bottomLeft = [24, -88];
 const topRight = [32, -79];
 
@@ -242,9 +244,10 @@ const map = new L.Map('map', {
 var results = L.layerGroup().addTo(map);
 
 //Add baseLayers to map as control layers
-// commented out as of 8/6/19 by SWH
-// L.control.layers(baseLayers).addTo(map);
-
+var showBase = getUrlParam('freac')
+if (showBase) {
+    L.control.layers(baseLayers).addTo(map);
+}
 map.on({
     contextmenu: function (e) {
         // by uncommenting the next line, the user can RIGHT click and draw a circle.
@@ -592,12 +595,16 @@ function createPopup(data) {
     data['Relevance'] = Math.round(data['Relevance'] * 100) / 100;
     // ${data['address']}<br>
     // <font color='red'>${data['Relevance']} | ${data['MatchLevel']} </font><br>
-    const content = `<b>${data['Agency']}</b><br>
+    // console.log('now that it is cleaned ', data['website'])
+    msContentScript content = `<b>${data['Agency']}</b><br>
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
                     ${data['Phone_Numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details
                         (Opens in a new tab)</a>
-`;
+                    `;
+    if (data['website']){
+        content = content.concat(`<br><a href="${data['website']}" target=_blank>Provider website (Opens in a new tab)</a>`)
+    }
     return L.popup({
         closeButton: false
     }).setContent(content);
@@ -703,7 +710,7 @@ function configurePopup(data) {
 
 // general function that will take in lat and lon
 // then will zoom to and highlight desired feature
-function zoomToLocation(lat, lng, z = 11, data) {
+async function zoomToLocation(lat, lng, z = 11, data) {
     // console.log('starting the zoom to location function', data)
     // if a marker is already present on the map, remove it
     if (selection_marker) {
@@ -742,27 +749,48 @@ function zoomToLocation(lat, lng, z = 11, data) {
             data['relevance'] = Math.round(data['relevance'] * 100) / 100;
             var pop_text = `<b>${data['Agency']}</b><br>
                         ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
-                        ${data['City']}, ${data['State']} ${data['PostalCode']}
+                        ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
                         ${data['Phone_Numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
                         (Opens in a new tab)</a>
                         `;
+            if (data['website']){
+                pop_text = pop_text.concat(`<br><a href="${data['website']}" target=_blank>Provider website (Opens in a new tab)</a>`)
+            }
 
         } else {
             if (data['unit'] === undefined || data['unit'] === null  || data['Unit'] === '0') {
                 data['unit'] = ''
             }
             // this pop text is from picking an agency from the geocode box or from the results table
-            //console.log('PPPPPPPPPop text is ',data)
+            console.log('PPPPPPPPPop text is ',data)
             // possible use in the future
             // ${data['Address']}<br> <font color='red'>${data['Relevance']} ${data['MatchLevel']}</font> <br>
             // <br><a href="http://www.google.com/maps?layer=c&cbll=${data['n_latitude']},${data['n_longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)</a>
             data['Relevance'] = Math.round(data['Relevance'] * 100) / 100;
-            var pop_text = `<b>${data['agency']}</b><br>
+            // console.log('what is the website unclean',data['website'])
+            data['website'] = await cleanWebsite(data['website'])
+            console.log('cleaned it is ',data['website'])
+            console.log('what is showbase',showBase)
+            if (showBase) {
+                var pop_text = `<b>${data['agency']}</b><br>
+                    ${data['housenumber']} ${data['street']} ${data['unit']}<br>
+                    ${data['address']}<br> <font color='red'>${data['Relevance']} ${data['MatchLevel']}</font> <br>            
+                    ${data['city']}, ${data['state']} ${data['postalcode']}<br>
+                    ${data['phone_numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
+                    (Opens in a new tab)</a>
+                `;
+            } else {
+                console.log('this is a local user')
+                var pop_text = `<b>${data['agency']}</b><br>
                         ${data['housenumber']} ${data['street']} ${data['unit']}<br>
                         ${data['city']}, ${data['state']} ${data['postalcode']}<br>
                         ${data['phone_numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
                         (Opens in a new tab)</a>
-                        `;
+                    `;
+            }
+            if (data['website']){
+                pop_text = pop_text.concat(`<br><a href="${data['website']}" target=_blank>Provider website (Opens in a new tab)</a>`)
+            }
         }
         var popup = L.popup({
                 maxWidth: 200
@@ -915,7 +943,7 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
                     city: layer.data.City,
                     state: layer.data.State,
                     postalcode: layer.data.PostalCode,
-                    website: layer.data.Website,
+                    website: layer.data.website,
                     phone_numb: layer.data.Phone_Numb,
                     phonenumber:layer.data.Phone_Numb,
                     n_latitude:layer.data.n_latitude,
@@ -999,7 +1027,7 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
 
         for (let i = 0; i <= counter_points_in_circle; i++) {
             console.log('what does a typical result look like, ', results[i])
-            results[i]['phone_numb'] = await formatPhone(results[i]['phone_numb'])
+            //results[i]['phone_numb'] = await formatPhone(results[i]['phone_numb'])
             tableResults.push({
                 id: i,
                 mhnum: results[i]['mhnum'],
@@ -1011,7 +1039,7 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
                 City: results[i]['city'],
                 State: results[i]['state'],
                 PostalCode: results[i]['postalcode'],
-                Website: results[i]['website'],
+                Website: await cleanWebsite(results[i]['website']),
                 Phone_Numb: results[i]['phone_numb'],
                 lat: results[i]['latitude'],
                 lng: results[i]['longitude'],
@@ -1031,7 +1059,7 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
                 state: results[i]['state'],
                 postalcode: results[i]['postalcode'],
                 phone_numb: results[i]['phone_numb'],
-                website: results[i]['website']
+                website: await cleanWebsite(results[i]['website'])
             });
         }
         // add tabulator object to screen
@@ -1132,7 +1160,8 @@ function markerLogic(data, selection_marker) {
         'City': data['City'],
         'State': data['State'],
         'PostalCode': data['PostalCode'],
-        'Website': '<a href="'+data['Website']+'">Click for website</a>',
+        'Website': data['Website'],
+        'website':data['website'],
         'Phone_Numb': data['Phone_Numb'],
         'Specialty': data['Specialty'],
         'Accepting': data['Accepting'],
@@ -1228,4 +1257,19 @@ async function prettyTelehealth(){
 }
 async function prettyAccepting(){
     return ['notselected','Not Selected','yes','Yes','no','No','waitlist','Waitlist']
+}
+async function cleanWebsite(website) {
+    //console.log('can we clean it ', website)
+    if (website){
+        //console.log('got one to try')
+        if(website.includes('https://') || website.includes('http://')) {
+            //console.log('has the http -- returning',website)
+            return website;
+        } else {
+            //console.log('need to append the http -- returning',website)
+            return website = 'http://' + website;
+        }
+    } else {
+        return ''
+    }
 }

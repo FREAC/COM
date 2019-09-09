@@ -68,8 +68,8 @@ async function filterLocations(event) {
     }
     await $.get("./data/COM.json", function (json_data) {
         $.each(json_data, async function (object) {
-            //console.log('PUTTTTTTTTTTTTTTT the json_data object together ',json_data[object]);
-            json_data[object]['Phone_Numb'] = await formatPhone(json_data[object]['Phone_Numb'])
+           json_data[object]['Phone_Numb'] = await formatPhone(json_data[object]['Phone_Numb'])
+           //json_data[object]['website']    = await cleanWebsite(json_data[object]['website'])
             const provider = json_data[object];
             const marker = markerLogic(provider);
             //console.log('######adding a new item to json_group ',marker)
@@ -90,11 +90,24 @@ async function filterLocations(event) {
         console.log("filter number ",j , ' is being processed')
         selection_group.clearLayers()
         filter_is = filter[j]
-        console.log('STARTING the LOOP for filter ',j,' - ',filter_is,' has these options ', filter[j+1])
+        console.log('STARTING the LOOP for filter ',j,' - |',filter_is,'| has these options ', filter[j+1])
         for (layer in json_group._layers) {
             // current target layer that we're looking at
             const targetLayer = json_group._layers[layer];
             console.log('did we get a NEW target layer ', targetLayer.data, layer)
+            // console.log('all fields ',targetLayer.data.Accepting,targetLayer.data.Address,targetLayer.data.Agency,targetLayer.data.Areas_Serv,targetLayer.data.City,targetLayer.data.HouseNumber,targetLayer.data.Insurance,targetLayer.data.Latitude,targetLayer.data.Longitude,targetLayer.data.MatchLevel,targetLayer.data.N_Latitude,targetLayer.data.N_Longitude,targetLayer.data.Phone_Numb,targetLayer.data.PostalCode,targetLayer.data.Practice_a,targetLayer.data.Relevance,targetLayer.data.Serves,targetLayer.data.Specialty,targetLayer.data.State,targetLayer.data.Street,targetLayer.data.Unit,targetLayer.data.Website,targetLayer.data.Which_cate,targetLayer.data.mhnumtargetLayer.data.n_latitude,targetLayer.data.n_longitude,targetLayer.data.telehealth)
+            // console.log('all fields ',targetLayer.data.Accepting,targetLayer.data.Address,targetLayer.data.Agency,
+            // targetLayer.data.Areas_Serv,targetLayer.data.City,
+            // targetLayer.data.HouseNumber,targetLayer.data.Insurance,
+            // targetLayer.data.Latitude,targetLayer.data.Longitude
+            // ,targetLayer.data.MatchLevel,targetLayer.data.N_Latitude,targetLayer.data.N_Longitude,targetLayer.data.Phone_Numb
+            // ,targetLayer.data.PostalCode,targetLayer.data.Practice_a,targetLayer.data.Relevance,targetLayer.data.Serves
+            // ,targetLayer.data.Specialty,targetLayer.data.State,targetLayer.data.Street,'|',targetLayer.data.Unit,'|'
+            // ,targetLayer.data.website,targetLayer.data.Website
+            // ,targetLayer.data.Which_cate,targetLayer.data.mhnum,targetLayer.data.n_latitude
+            // ,targetLayer.data.n_longitude,targetLayer.data.telehealth)
+            // targetLayer.data.website = await cleanWebsite(targetLayer.data.website);
+
             var need_it = false;
             var need_it_c = [];
             processing_cluster = false;
@@ -103,6 +116,7 @@ async function filterLocations(event) {
                         // be careful not to add the point in twice because it accepts, say, Aetna and Cigna
                         // THis is for single points
                         console.log('going to see if ', filter[j+1][m],' is in this record ',targetLayer.data[filter[j]])
+                        //console.log('can we see just the practic_a thing ',targetLayer.data['Practice_a'])
                         recordArr = targetLayer.data[filter[j]].split(",")
                         for (k=0; k<recordArr.length; k++){
                             console.log('testing ', filter[j+1][m],' is == to ',recordArr[k],k)
@@ -111,7 +125,9 @@ async function filterLocations(event) {
                                 console.log('m is ',m,' and length is ', filter[j+1].length-1)
                                 console.log('--FOUNDfound one but not written yet')
                                 if (! need_it ) {
-                                    console.log('FOUND ONE THAT WE NEED ',targetLayer.data['Agency'])
+                                    console.log('FOUND ONE THAT WE NEED BEFORE',targetLayer.data['website'])
+                                    targetLayer.data['website'] = await cleanWebsite(targetLayer.data['website'])
+                                    console.log('FOUND ONE THAT WE NEED AFTER ',targetLayer.data['website'])
                                     //console.log('make the marker now ', targetLayer.data)
                                     targetLayer.data['Latitude'] = targetLayer._latlng.lat;
                                     targetLayer.data['Longitude'] = targetLayer._latlng.lng;
