@@ -284,7 +284,7 @@ setup();
 var arcgisOnline = L.esri.Geocoding.arcgisOnlineProvider();
 var mmp = L.esri.Geocoding.featureLayerProvider({
 //   url: 'http://freac.maps.arcgis.com/home/webmap/viewer.html?webmap=a6081db80aa24a459de18eddfc26f871/0',
-  url: 'https://admin205.ispa.fsu.edu/arcgis/rest/services/FREAC/mmh_test_service/FeatureServer/0',
+  url: 'https://maps.freac.fsu.edu/arcgis/rest/services/FREAC/mmh_test_service/FeatureServer/0',
   searchFields: 'agency', // Search these fields for text matches
   label: 'Mental Health Agencies', // Group suggestions under this header
   formatSuggestion: function(feature){
@@ -596,7 +596,7 @@ function createPopup(data) {
     // ${data['address']}<br>
     // <font color='red'>${data['Relevance']} | ${data['MatchLevel']} </font><br>
     // console.log('now that it is cleaned ', data['website'])
-    msContentScript content = `<b>${data['Agency']}</b><br>
+    var content = `<b>${data['Agency']}</b><br>
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
                     ${data['Phone_Numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details
