@@ -247,6 +247,9 @@ var results = L.layerGroup().addTo(map);
 var showBase = getUrlParam('freac')
 if (showBase) {
     L.control.layers(baseLayers).addTo(map);
+} else {
+    // comment out the next line to re-enable console messages
+    console.log = function() {}
 }
 map.on({
     contextmenu: function (e) {
@@ -273,11 +276,6 @@ map.on({
 
 // Load the data
 setup();
-
-
-
-
-
 
 // ESRI Geocoder 
 
@@ -332,11 +330,6 @@ geocoder.on('results', async function (result) {
 
 });
 
-// check whether on mobile devices
-// Commented out based on issue #54
-// if (!L.Browser.mobile) {
-//     map.removeControl(locate);
-// }
 
 
 // Locate Button
@@ -354,6 +347,12 @@ const locate = L.control.locate({
     drawCircle: false,
     showPopup: false
 }).addTo(map);
+
+// check whether on mobile devices
+// Commented out based on issue #54
+if (!L.Browser.mobile) {
+    map.removeControl(locate);
+}
 
 function clearSelection({
     provider = true,
@@ -387,12 +386,7 @@ $('#clear-search').click(function () {
         radius: true
     });
 });
-
-async function doAdelay(){
-    console.log('starting the ddddddelay')
-    setTimeout(function(){return true;},30000);
-    console.log('FFFFFFFFFinhsed with the delayyyyy')
-};  
+  
 // Filter by my selections
 $('#filter_by').click(async function () {
     console.log('GGGGGGGGGGGGGGGGo get the filter text')
@@ -423,9 +417,9 @@ async function generateFilterText(){
     var servesOptions     = await prettyServes();
     var telehealthOptions = await prettyTelehealth();
     var acceptingOptions  = await prettyAccepting();
-    console.log('did we get the options loaded ok ', insuranceOptions)
+    // console.log('did we get the options loaded ok ', insuranceOptions)
     var theFilters = await getFilters()
-    console.log('FFFFFFINished with the getFilters function')
+    // console.log('FFFFFFINished with the getFilters function')
     var filterText = ''
     if (theFilters.length > 0) {
         // need to put the filter name and values back to proper format (caps and spaces)
@@ -606,34 +600,9 @@ function createPopup(data) {
         content = content.concat(`<br><a href="${data['website']}" target=_blank>Provider website (Opens in a new tab)</a>`)
     }
     return L.popup({
-        closeButton: false
+        closeButton: true
     }).setContent(content);
 }
-
-// JQuery Easy Autocomplete: http://easyautocomplete.com
-// const $easyAuto = $('#easy-auto');
-// $easyAuto.easyAutocomplete({
-//     url: "data/COM.json",
-//     getValue: "Agency",
-//     list: {
-//         maxNumberOfElements: 3,
-//         match: {
-//             enabled: true
-//         },
-//         onChooseEvent: function () {
-//             clearSelection({
-//                 provider: false,
-//                 radius: true
-//             });
-//             const data = $easyAuto.getSelectedItemData();
-//             var zzoom = undefined;
-//             // $('#map').css('z-index', '11');
-//             zoomToLocation(data.Latitude, data.Longitude, zzoom, data);
-//         }
-//     },
-//     requestDelay: 250,
-//     placeholder: 'Know the provider?  Type the name here'
-// });
 
 ///////////////////////////////////////
 ///////////////////////////////////////
@@ -966,65 +935,7 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
 
         // A container to hold the query results
         const tableResults = [];
-
-        // for every point in circle, add a tableResults object
-        // the table needs lower case fields (currently we only show agency but may want to
-        // show others in the future so I put them all in) but the popup relies on capitalized fields
-        // TODO - fix this so we only have one case
         console.log('hhhhhhhhhhhow many meet our criteria ',counter_points_in_circle)
-        // ----------------
-        // THIS WORKS ONLY IF NO FILTERS HAVE BEEN APPLIED.  IF WE EVER
-        // TRY TO MAKE THIS WORK WE PROBABLY NEED TO INCORPORATE THE LOGIC
-        // INTO THE FILTER FUNCTION RATHER THAN HERE
-        //
-        //
-        // now we need to add in ALL of the telehealth people
-        // console.log('here are the ones to skip ', agencies_in)
-        // var m = 0
-        // json_group_c.eachLayer(async function(layer){ 
-        //     if (layer.data['telehealth'].toLowerCase().includes('yes')) {
-        //         console.log('checking mhnum ', layer.data['mhnum'])
-        //         var already_in = false;
-        //         for (var jj=0; jj<agencies_in.length;jj++) {
-        //             console.log('whats in ', agencies_in[jj]['mhnum'])
-        //             if (agencies_in[jj]['mhnum'] === layer.data['mhnum']) {
-        //                 // already in
-        //                 console.log('this id is already in ', layer.data['mhnum'])
-        //                 already_in = true;
-        //                 break;
-        //             }
-        //         }
-        //         if (already_in) {
-        //             // dont do anything
-        //         } else {
-        //             var idd = counter_points_in_circle + m;
-        //             m = m + 1;
-        //             console.log('found a telehealth to add in ', layer.data, layer.data['mhnum'])
-        //             layer.data['phone_numb'] = await formatPhone(layer.data['phone_numb'])
-        //             results.push({
-        //                 agency: layer.data.Agency+"***",
-        //                 insurance: layer.data.Insurance,
-        //                 housenumber: layer.data.HouseNumber,
-        //                 street: layer.data.Street,
-        //                 city: layer.data.City,
-        //                 state: layer.data.State,
-        //                 postalcode: layer.data.PostalCode,
-        //                 website: layer.data.Website,
-        //                 phone_numb: layer.data.Phone_Numb,
-        //                 phonenumber:layer.data.Phone_Numb,
-        //                 dist: 0,
-        //                 latitude: layer.latitude,
-        //                 longitude: layer.longitude
-        //             });
-
-        //         }
-        //     }
-
-        // });
-        // counter_points_in_circle = counter_points_in_circle + m;
-        // end of adding the telehealth people in
-        // ------------------
-
         for (let i = 0; i <= counter_points_in_circle; i++) {
             console.log('what does a typical result look like, ', results[i])
             //results[i]['phone_numb'] = await formatPhone(results[i]['phone_numb'])
@@ -1261,12 +1172,12 @@ async function prettyAccepting(){
 async function cleanWebsite(website) {
     //console.log('can we clean it ', website)
     if (website){
-        //console.log('got one to try')
+        console.log('got one to try')
         if(website.includes('https://') || website.includes('http://')) {
-            //console.log('has the http -- returning',website)
+            console.log('has the http -- returning',website)
             return website;
         } else {
-            //console.log('need to append the http -- returning',website)
+            console.log('need to append the http -- returning http://',website)
             return website = 'http://' + website;
         }
     } else {
