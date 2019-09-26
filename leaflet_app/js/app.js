@@ -590,12 +590,13 @@ function createPopup(data) {
     // ${data['address']}<br>
     // <font color='red'>${data['Relevance']} | ${data['MatchLevel']} </font><br>
     // console.log('now that it is cleaned ', data['website'])
+    // <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details
+    //                 (Opens in a new tab)</a>
+
     var content = `<b>${data['Agency']}</b><br>
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
-                    ${data['Phone_Numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details
-                        (Opens in a new tab)</a>
-                    `;
+                    ${data['Phone_Numb']}                     `;
     if (data['website']){
         content = content.concat(`<br><a href="${data['website']}" target=_blank>Provider website (Opens in a new tab)</a>`)
     }
@@ -715,13 +716,14 @@ async function zoomToLocation(lat, lng, z = 11, data) {
             // possible use in the future
             // ${data['address']}<br> ${data['relevance']} <br>
             // <br><a href="http://www.google.com/maps?layer=c&cbll=${data['N_Latitude']},${data['N_Longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)</a>
+            // <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
+            //             (Opens in a new tab)</a>
+
             data['relevance'] = Math.round(data['relevance'] * 100) / 100;
             var pop_text = `<b>${data['Agency']}</b><br>
                         ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                         ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
-                        ${data['Phone_Numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
-                        (Opens in a new tab)</a>
-                        `;
+                        ${data['Phone_Numb']}                         `;
             if (data['website']){
                 pop_text = pop_text.concat(`<br><a href="${data['website']}" target=_blank>Provider website (Opens in a new tab)</a>`)
             }
@@ -740,22 +742,24 @@ async function zoomToLocation(lat, lng, z = 11, data) {
             data['website'] = await cleanWebsite(data['website'])
             console.log('cleaned it is ',data['website'])
             console.log('what is showbase',showBase)
+            // <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
+            // (Opens in a new tab)</a>
+
             if (showBase) {
                 var pop_text = `<b>${data['agency']}</b><br>
                     ${data['housenumber']} ${data['street']} ${data['unit']}<br>
                     ${data['address']}<br> <font color='red'>${data['Relevance']} ${data['MatchLevel']}</font> <br>            
                     ${data['city']}, ${data['state']} ${data['postalcode']}<br>
-                    ${data['phone_numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
-                    (Opens in a new tab)</a>
-                `;
+                    ${data['phone_numb']}                `;
             } else {
                 console.log('this is a local user')
+                // <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
+                // (Opens in a new tab)</a>
+
                 var pop_text = `<b>${data['agency']}</b><br>
                         ${data['housenumber']} ${data['street']} ${data['unit']}<br>
                         ${data['city']}, ${data['state']} ${data['postalcode']}<br>
-                        ${data['phone_numb']} <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
-                        (Opens in a new tab)</a>
-                    `;
+                        ${data['phone_numb']}                    `;
             }
             if (data['website']){
                 pop_text = pop_text.concat(`<br><a href="${data['website']}" target=_blank>Provider website (Opens in a new tab)</a>`)
