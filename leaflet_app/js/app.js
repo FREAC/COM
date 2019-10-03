@@ -596,7 +596,9 @@ function createPopup(data) {
     var content = `<b>${data['Agency']}</b><br>
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
-                    ${data['Phone_Numb']}                     `;
+                    ${data['Phone_Numb']}         
+                    <br><a href="http://bib.freac.fsu.edu/${data['mhnum']}" target=_blank>Click for provider details<br>
+                    (Opens in a new tab)</a>            `;
     if (data['website']){
         content = content.concat(`<br><a href="${data['website']}" target=_blank>Provider website (Opens in a new tab)</a>`)
     }
@@ -723,7 +725,9 @@ async function zoomToLocation(lat, lng, z = 11, data) {
             var pop_text = `<b>${data['Agency']}</b><br>
                         ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                         ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
-                        ${data['Phone_Numb']}                         `;
+                        ${data['Phone_Numb']}
+                        <br><a href="http://bib.freac.fsu.edu/${data['mhnum']}" target=_blank>Click for provider details<br>
+                        (Opens in a new tab)</a>                         `;
             if (data['website']){
                 pop_text = pop_text.concat(`<br><a href="${data['website']}" target=_blank>Provider website (Opens in a new tab)</a>`)
             }
@@ -750,7 +754,9 @@ async function zoomToLocation(lat, lng, z = 11, data) {
                     ${data['housenumber']} ${data['street']} ${data['unit']}<br>
                     ${data['address']}<br> <font color='red'>${data['Relevance']} ${data['MatchLevel']}</font> <br>            
                     ${data['city']}, ${data['state']} ${data['postalcode']}<br>
-                    ${data['phone_numb']}                `;
+                    ${data['phone_numb']}    
+                    <br><a href="http://bib.freac.fsu.edu/${data['mhnum']}" target=_blank>Click for provider details<br>
+                    (Opens in a new tab)</a>            `;
             } else {
                 console.log('this is a local user')
                 // <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
@@ -759,7 +765,10 @@ async function zoomToLocation(lat, lng, z = 11, data) {
                 var pop_text = `<b>${data['agency']}</b><br>
                         ${data['housenumber']} ${data['street']} ${data['unit']}<br>
                         ${data['city']}, ${data['state']} ${data['postalcode']}<br>
-                        ${data['phone_numb']}                    `;
+                        ${data['phone_numb']}  
+                        <br><a href="http://bib.freac.fsu.edu/${data['mhnum']}" target=_blank>Click for provider details<br>
+                        (Opens in a new tab)</a>
+                                          `;
             }
             if (data['website']){
                 pop_text = pop_text.concat(`<br><a href="${data['website']}" target=_blank>Provider website (Opens in a new tab)</a>`)
