@@ -597,7 +597,7 @@ function createPopup(data) {
                     ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
                     ${data['Phone_Numb']}         
-                    <br><a href="http://bib.freac.fsu.edu/${data['mhnum']}" target=_blank>Click for provider details<br>
+                    <br><a href="https://flmomsmhresources.org/${data['mhnum']}" target=_blank>Click for provider details<br>
                     (Opens in a new tab)</a>            `;
     if (data['website']){
         content = content.concat(`<br><a href="${data['website']}" target=_blank>Provider website (Opens in a new tab)</a>`)
@@ -726,7 +726,7 @@ async function zoomToLocation(lat, lng, z = 11, data) {
                         ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                         ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
                         ${data['Phone_Numb']}
-                        <br><a href="http://bib.freac.fsu.edu/${data['mhnum']}" target=_blank>Click for provider details<br>
+                        <br><a href="https://flmomsmhresources.org/${data['mhnum']}" target=_blank>Click for provider details<br>
                         (Opens in a new tab)</a>                         `;
             if (data['website']){
                 pop_text = pop_text.concat(`<br><a href="${data['website']}" target=_blank>Provider website (Opens in a new tab)</a>`)
@@ -746,7 +746,7 @@ async function zoomToLocation(lat, lng, z = 11, data) {
             data['website'] = await cleanWebsite(data['website'])
             console.log('cleaned it is ',data['website'])
             console.log('what is showbase',showBase)
-            // <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
+            // <br><a href="http://ing.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
             // (Opens in a new tab)</a>
 
             if (showBase) {
@@ -755,7 +755,7 @@ async function zoomToLocation(lat, lng, z = 11, data) {
                     ${data['address']}<br> <font color='red'>${data['Relevance']} ${data['MatchLevel']}</font> <br>            
                     ${data['city']}, ${data['state']} ${data['postalcode']}<br>
                     ${data['phone_numb']}    
-                    <br><a href="http://bib.freac.fsu.edu/${data['mhnum']}" target=_blank>Click for provider details<br>
+                    <br><a href="https://flmomsmhresources.org/${data['mhnum']}" target=_blank>Click for provider details<br>
                     (Opens in a new tab)</a>            `;
             } else {
                 console.log('this is a local user')
@@ -766,7 +766,7 @@ async function zoomToLocation(lat, lng, z = 11, data) {
                         ${data['housenumber']} ${data['street']} ${data['unit']}<br>
                         ${data['city']}, ${data['state']} ${data['postalcode']}<br>
                         ${data['phone_numb']}  
-                        <br><a href="http://bib.freac.fsu.edu/${data['mhnum']}" target=_blank>Click for provider details<br>
+                        <br><a href="https://flmomsmhresources.org/${data['mhnum']}" target=_blank>Click for provider details<br>
                         (Opens in a new tab)</a>
                                           `;
             }
