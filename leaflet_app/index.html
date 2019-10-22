@@ -13,114 +13,495 @@
 		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
 		integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+	<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+
 	<link rel="stylesheet" href="css/lib/leaflet.min.css" />
 	<link rel="stylesheet" href="css/lib/tabulator.min.css" />
 	<link rel="stylesheet" href="css/lib/easy-autocomplete.min.css" />
 	<link rel="stylesheet" href="css/lib/locate-control.min.css" />
 	<link rel="stylesheet" href="css/lib/esri-leaflet-geocoder.min.css" />
 
+	<link rel="stylesheet" href="plugin/Leaflet.markercluster-1.4.1/dist/MarkerCluster.Default.css">
+	<link rel="stylesheet" href="plugin/Leaflet.MarkerCluster.List-master/dist/leaflet-markercluster-list.css" />
+	<link rel="stylesheet" href="plugin/jQuery-UI-Multiple-Select-Widget/css/jquery.multiselect.css" />
+	<link rel="stylesheet" href="plugin/jQuery-UI-Multiple-Select-Widget/css/jquery.multiselect.filter.css" />
+	<link rel="stylesheet" href="plugin/Tagging-System-Autocomplete-Amsify-Suggestags/css/amsify.suggestags.css"
+		type="text/css">
+	<link rel="stylesheet"
+		href="plugin/jQuery-Plugin-For-Filterable-Multiple-Select-with-Checkboxes-fSelect/fSelect.css" type="text/css">
 	<!-- CSS: Custom fix -->
 	<link rel="stylesheet" href="css/styles.css" />
 
 	<!-- JS: Libs -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+	</script>
+
 	<script type="text/javascript" src="js/lib/jquery-3.4.1.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
 		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
 	</script>
 	<script type="text/javascript" src="js/lib/leaflet-1.4.0.min.js"></script>
 	<script type="text/javascript" src="js/lib/leaflet-providers.min.js"></script>
 	<script type="text/javascript" src="js/lib/tabulator-4.2.1.min.js"></script>
+	<script type="text/javascript" src="js/lib/tabulator.min.js"></script>
 	<script type="text/javascript" src="js/lib/jquery.easy-autocomplete-1.3.5.min.js"></script>
 	<script type="text/javascript" src="js/lib/locate-control-0.66.1.min.js"></script>
 	<script type="text/javascript" src="js/lib/esri-leaflet-2.2.4.min.js"></script>
 	<script type="text/javascript" src="js/lib/esri-leaflet-geocoder-2.2.14.min.js"></script>
 
+	<script type="text/javascript" src="plugin/Leaflet.markercluster-1.4.1/dist/leaflet.markercluster.js"></script>
+	<script type="text/javascript"
+		src="plugin/Leaflet.MarkerCluster.List-master/dist/leaflet-markercluster-list.src.js"></script>
+
+	<script type="text/javascript"
+		src="plugin/Tagging-System-Autocomplete-Amsify-Suggestags/js/jquery.amsify.suggestags.js"></script>
+	<script type="text/javascript" src="plugin/jQuery-UI-Multiple-Select-Widget/src/jquery.multiselect.js"></script>
+
+	<script src="plugin/jQuery-Plugin-For-Filterable-Multiple-Select-with-Checkboxes-fSelect/fSelect.js"></script>
 </head>
-
+<style>
+</style>
 <body>
-
+			  
 	<div class="container-fluid d-flex h-100">
 		<div class="row flex-fill d-flex">
 			<!-- Map -->
-			<div class="col-sm-7 order-sm-last overflow-hidden" id="map"></div>
+			<div class="col-sm-8 overflow-hidden " id="map"></div>
 
 			<!-- Sidebar-->
-			<div class="col-sm-5 order-sm-first overflow-auto mh-100" id="legend">
-				<h3>FSU College of Medicine<br>Maternal Mental Health Resource Directory</h3>
+
+
+			<div class="col-sm-4 order-sm-first overflow-auto mh-100" id="legend">
+				<!-- <h4>FSU College of Medicine<br>Maternal Mental Health Resource Directory</h4>
+				<div class="logo-main">
+					<a href="new-record.html"><img src="images/BHImpact.jpg" alt="" class="img-responsive"> </a>
+				</div> -->
 				<form>
-					<div class="form-row">
+					<!-- <div class="form-row">
 						<div class="col-sm-12 mb-2">
 							<input type="text" class="form-control" id="easy-auto">
 						</div>
-					</div>
+					</div> -->
 
 					<div class="form-row">
-						<div class="col-sm-12 mb-2 mt-2 mt-sm-0 btn-group btn-group-toggle blocks"
+						<div class="row col-sm-12 mb-2 mt-2 mt-sm-0 btn-group btn-group-toggle blocks"
 							data-toggle="buttons">
-							<label class="btn btn-garnet text-wrap btn-primary px-1 py-2">
-								<!-- Ttallahassee insurance -->
-								<input type="checkbox" name="options" id="insurance" autocomplete="off">
-								Ttallahassee insurance
-							</label>
-							<label class="btn btn-garnet text-wrap btn-primary px-1 py-2">
-								<!-- zipcode 32309/medicare -->
-								<input type="checkbox" name="options" id="medicare" autocomplete="off">
-								zipcode 32309/medicare
-							</label>
 						</div>
 					</div>
-
-					<div class="form-row">
-						<div class="col-6">
-							<select class="form-control" id="radius">
-								<option value="default" selected disabled hidden>Search radius</option>
-								<!-- Value is distance in meters -->
-								<option value="5347">5 miles</option>
-								<option value="10693">10 miles</option>
-								<option value="26734">25 miles</option>
-								<option value="53467">50 miles</option>
+					<h5><b>1. Filter the Providers (optional)</b></h5>
+<div class="row2 no-print">
+	<div class="column2" style="border-right: none !important">
+						<h6><b>Insurance<br />Options</b></h6>
+							<select class="mpick" multiple="multiple" name="Insurance" >
+								<option value="accepts most insurance plans">accepts most insurance plans</option>
+								<option value="Aetna">Aetna</option>
+								<option value="assistance provided for filing with insurance">assistance provided for filing with insurance</option>
+								<option value="Beacon">Beacon</option>
+								<option value="Beech Street">Beech Street</option>
+								<option value="Big Bend Community Based Care">Big Bend Community Based Care</option>
+								<option value="Big Bend Provider Network">Big Bend Provider Network</option>
+								<option value="Blue Cross Blue Shield">Blue Cross Blue Shield</option>
+								<option value="Capital Health Plan">Capital Health Plan</option>
+								<option value="Cenpatico">Cenpatico</option>
+								<option value="Children's Medical">Children's Medical</option>
+								<option value="Cigna">Cigna</option>
+								<option value="ComPsych">ComPsych</option>
+								<option value="Corphealth">Corphealth</option>
+								<option value="Coventry">Coventry</option>
+								<option value="EAPrefer">EAPrefer</option>
+								<option value="Employee Assistance Program">Employee Assistance Program</option>
+								<option value="First Health">First Health</option>
+								<option value="Great West">Great West</option>
+								<option value="Guardian">Guardian</option>
+								<option value="HealthEASE">HealthEASE</option>
+								<option value="Healthy Kids">Healthy Kids</option>
+								<option value="Horizon health">Horizon health</option>
+								<option value="Humana">Humana</option>
+								<option value="Lifesynch/Humana">Lifesynch/Humana</option>
+								<option value="Magellan">Magellan</option>
+								<option value="Magellan Behavioral Health">Magellan Behavioral Health</option>
+								<option value="Medicaid">Medicaid</option>
+								<option value="Medicaid HMO">Medicaid HMO</option>
+								<option value="Medical Mutual">Medical Mutual</option>
+								<option value="Medicare">Medicare</option>
+								<option value="Medicare Advantage">Medicare Advantage</option>
+								<option value="Medipass">Medipass</option>
+								<option value="MHN">MHN</option>
+								<option value="New Directions">New Directions</option>
+								<option value="no charge for services">no charge for services</option>
+								<option value="no insurance accepted - all self pay">no insurance accepted - all self pay</option>
+								<option value="Optum">Optum</option>
+								<option value="out-of-network">out-of-network</option>
+								<option value="PHCS">PHCS</option>
+								<option value="Prestige">Prestige</option>
+								<option value="Psychcare">Psychcare</option>
+								<option value="qualifying patients seen at no charge">qualifying patients seen at no charge</option>
+								<option value="self pay by check or cash">self pay by check or cash</option>
+								<option value="sliding scale fees available">sliding scale fees available</option>
+								<option value="Staywell">Staywell</option>
+								<option value="Sunshine Health">Sunshine Health</option>
+								<option value="Tricare">Tricare</option>
+								<option value="United Behavioral Health">United Behavioral Health</option>
+								<option value="United Healthcare Wellcare">United Healthcare Wellcare</option>
+								<option value="Universal/CompCare">Universal/CompCare</option>
+								<option value="Valueoptions">Valueoptions</option>
+								<option value="Victim's Comp">Victim's Comp</option>
+								<option value="Vista">Vista</option>
+								<option value="Wellcare">Wellcare</option>
 							</select>
-						</div>
-						<div class="col-6 d-flex">
-							<button type="button" class="btn btn-light flex-fill" id="clear-search">Clear</button>
-						</div>
-					</div>
+					
+				
+						<h6><b>Practice Location</b></h6>
+								<select class="mpick" name="Practice_a" id='Practice_a'>
+										<option value="not_selected" default selected  hidden>Not Selected</option>
+										<option value="alachua">Alachua</option>
+										<option value="baker">Baker</option>
+										<option value="bay">Bay</option>
+										<option value="bradford">Bradford</option>
+										<option value="brevard">Brevard</option>
+										<option value="broward">Broward</option>
+										<option value="calhoun">Calhoun</option>
+										<option value="charlotte">Charlotte</option>
+										<option value="citrus">Citrus</option>
+										<option value="clay">Clay</option>
+										<option value="collier">Collier</option>
+										<option value="columbia">Columbia</option>
+										<option value="desoto">DeSoto</option>
+										<option value="dixie">Dixie</option>
+										<option value="duval">Duval</option>
+										<option value="escambia">Escambia</option>
+										<option value="flagler">Flagler</option>
+										<option value="franklin">Franklin</option>
+										<option value="gadsden">Gadsden</option>
+										<option value="gilchrist">Gilchrist</option>
+										<option value="glades">Glades</option>
+										<option value="gulf">Gulf</option>
+										<option value="hamilton">Hamilton</option>
+										<option value="hardee">Hardee</option>
+										<option value="hendry">Hendry</option>
+										<option value="hernando">Hernando</option>
+										<option value="highlands">Highlands</option>
+										<option value="hillsborough">Hillsborough</option>
+										<option value="holmes">Holmes</option>
+										<option value="indianriver">Indian River</option>
+										<option value="jackson">Jackson</option>
+										<option value="jefferson">Jefferson</option>
+										<option value="lafayette">Lafayette</option>
+										<option value="lake">Lake</option>
+										<option value="lee">Lee</option>
+										<option value="leon">Leon</option>
+										<option value="levy">Levy</option>
+										<option value="liberty">Liberty</option>
+										<option value="madison">Madison</option>
+										<option value="manatee">Manatee</option>
+										<option value="marion">Marion</option>
+										<option value="martin">Martin</option>
+										<option value="miami-dade">Miami-Dade</option>
+										<option value="monroe">Monroe</option>
+										<option value="nassau">Nassau</option>
+										<option value="okaloosa">Okaloosa</option>
+										<option value="okeechobee">Okeechobee</option>
+										<option value="orange">Orange</option>
+										<option value="osceola">Osceola</option>
+										<option value="palmbeach">Palm Beach</option>
+										<option value="pasco">Pasco</option>
+										<option value="pinellas">Pinellas</option>
+										<option value="polk">Polk</option>
+										<option value="putnam">Putnam</option>
+										<option value="st.johns">St. Johns</option>
+										<option value="st.lucie">St. Lucie</option>
+										<option value="santarosa">Santa Rosa</option>
+										<option value="sarasota">Sarasota</option>
+										<option value="seminole">Seminole</option>
+										<option value="sumter">Sumter</option>
+										<option value="suwannee">Suwannee</option>
+										<option value="taylor">Taylor</option>
+										<option value="union">Union</option>
+										<option value="volusia">Volusia</option>
+										<option value="wakulla">Wakulla</option>
+										<option value="walton">Walton</option>
+										<option value="washington">Washington</option>										
+										<!-- <option value="telehealthonly">Telehealth Only</option>	 -->
+								</select>
+
+
+							<h6><b>Areas Served</b></h6>
+									<select class="mpick" multiple="multiple" name="Areas_Serv" id='Areas_Serv'>
+											<option value="alachua">Alachua</option>
+											<option value="baker">Baker</option>
+											<option value="bay">Bay</option>
+											<option value="bradford">Bradford</option>
+											<option value="brevard">Brevard</option>
+											<option value="broward">Broward</option>
+											<option value="calhoun">Calhoun</option>
+											<option value="charlotte">Charlotte</option>
+											<option value="citrus">Citrus</option>
+											<option value="clay">Clay</option>
+											<option value="collier">Collier</option>
+											<option value="columbia">Columbia</option>
+											<option value="desoto">DeSoto</option>
+											<option value="dixie">Dixie</option>
+											<option value="duval">Duval</option>
+											<option value="escambia">Escambia</option>
+											<option value="flagler">Flagler</option>
+											<option value="franklin">Franklin</option>
+											<option value="gadsden">Gadsden</option>
+											<option value="gilchrist">Gilchrist</option>
+											<option value="glades">Glades</option>
+											<option value="gulf">Gulf</option>
+											<option value="hamilton">Hamilton</option>
+											<option value="hardee">Hardee</option>
+											<option value="hendry">Hendry</option>
+											<option value="hernando">Hernando</option>
+											<option value="highlands">Highlands</option>
+											<option value="hillsborough">Hillsborough</option>
+											<option value="holmes">Holmes</option>
+											<option value="indianriver">Indian River</option>
+											<option value="jackson">Jackson</option>
+											<option value="jefferson">Jefferson</option>
+											<option value="lafayette">Lafayette</option>
+											<option value="lake">Lake</option>
+											<option value="lee">Lee</option>
+											<option value="leon">Leon</option>
+											<option value="levy">Levy</option>
+											<option value="liberty">Liberty</option>
+											<option value="madison">Madison</option>
+											<option value="manatee">Manatee</option>
+											<option value="marion">Marion</option>
+											<option value="martin">Martin</option>
+											<option value="miami-dade">Miami-Dade</option>
+											<option value="monroe">Monroe</option>
+											<option value="nassau">Nassau</option>
+											<option value="okaloosa">Okaloosa</option>
+											<option value="okeechobee">Okeechobee</option>
+											<option value="orange">Orange</option>
+											<option value="osceola">Osceola</option>
+											<option value="palmbeach">Palm Beach</option>
+											<option value="pasco">Pasco</option>
+											<option value="pinellas">Pinellas</option>
+											<option value="polk">Polk</option>
+											<option value="putnam">Putnam</option>
+											<option value="st.johns">St. Johns</option>
+											<option value="st.lucie">St. Lucie</option>
+											<option value="santarosa">Santa Rosa</option>
+											<option value="sarasota">Sarasota</option>
+											<option value="seminole">Seminole</option>
+											<option value="sumter">Sumter</option>
+											<option value="suwannee">Suwannee</option>
+											<option value="taylor">Taylor</option>
+											<option value="union">Union</option>
+											<option value="volusia">Volusia</option>
+											<option value="wakulla">Wakulla</option>
+											<option value="walton">Walton</option>
+											<option value="washington">Washington</option>										
+		
+											<!-- <option value="telehealthonly">Telehealth Only</option>	 -->
+									</select>
+						
+				
+								<h6><b>Practice/Agency Category</b></h6>
+									<select class="mpick"  name='Which_cate' id="Which_cate" >
+										<option value="not_selected"  default selected hidden>Not Selected</option>
+										<option value="certifiedlactationconsultant">Certified Lactation Consulant</option>
+										<option value="doula">Doula</option>
+										<option value="hotline">Hotline</option>
+										<option value="housingsupport">Housing Support</option>
+										<option value="licensedclinicalsocialworker">Licensed Clinical Social Worker</option>
+										<option value="licensedmarriageandfamilytherapist">Licensed Marriage and Family Therapist</option>
+										<option value="licensedmentalhealthcounselor">Licensed Mental Health Counselor</option>
+										<option value="psychiatrist">Psychiatrist</option>
+										<option value="psychologist">Psychologist</option>
+										<option value="supportgroup">Support Group</option>
+										<option value="treatmentcenter">Treatment Center</option>
+										<option value="other">Other</option>
+									</select>	
+	</div>
+	<div class="column2">
+				
+						<h6><b>Practice/Agency Specialties</b></h6>
+						<select class="mpick" multiple="multiple" name='Specialty' id="Specialty">
+							<option value="abuse">Abuse</option>
+							<option value="addictions">Addictions</option>
+							<option value="anxiety">Anxiety</option>
+							<option value="counseling">Counseling</option>
+							<option value="crisiscounseling">Crisis Counseling</option>
+							<option value="depression">Depression</option>
+							<option value="domesticviolence">Domestic Violence</option>
+							<option value="eatingdisorder">Eating Disorder</option>
+							<option value="evaluations">Evaluations</option>
+							<option value="grief">Grief</option>
+							<option value="homelessness">Homelessness</option>
+							<option value="housingassistance">Housing Assistance</option>
+							<option value="inpatient">Inpatient</option>
+							<option value="lgbtq">LGBTQ</option>
+							<option value="marriage/relationship">Marriage/Relationship</option>
+							<option value="maternalmentalhealth">Maternal Mental Health</option>
+							<option value="parenting">Parenting</option>
+							<option value="psychotherapy">Psychotherapy</option>
+							<option value="resource">Resource</option>
+							<option value="suicideprevention">Suicide Prevention</option>
+							<option value="trauma">Trauma</option>
+						</select>
+					
+					
+						<h6><b>Client Types</b></h6>
+						<select id="Serves" title="Basic example" class='mpick' multiple="multiple"
+							name="Serves" size="5">
+							<option value="individuals">Individuals</option>
+							<option value="adolescents">Adolescents</option>
+							<option value="caregivers">Caregivers</option>
+							<option value="children">Children</option>
+							<option value="couples">Couples</option>
+							<option value="family">Family</option>
+							<option value="geriatrics">Geriatrics</option>
+							<option value="groups">Groups</option>
+							<option value="women">Women</option>
+						</select>
+					
+
+					
+						<h6><b>Telehealth?</b></h6>
+							<select id="telehealth" title="Basic example" class='mpick' multiple="multiple"
+								name="telehealth" >
+								<option value="not_selected" default hidden>Not Selected</option>
+								<option value="video">Yes (via video)</option>
+								<option value="phone">Yes (via phone)</option>
+								<option value="others">Yes (other)</option>
+							</select>
+					
+					
+					<h6><b>Accepting New Patients?</b> </h6>
+						<select id="Accepting" class="mpick" name="Accepting">
+							<!-- <option value="" default> </option> -->
+							<option value="not_selected" default selected hidden>Not Selected</option>
+							<!-- <option value="yes"default selected hidden>Yes</option> -->
+							<option value="yes">Yes</option>
+							<option value="no">No</option>
+							<option value="waitlist">Waitlist</option>
+						</select>
+
+	</div>
+</div>
+		
+			<div class="col-10 d-flex">
+				<!-- <button type="button" style="background-color:#67d1d3;"  -->
+				<button type="button" style="background-color:#FDD200;" 
+					class="btn btn-light flex-fill no-print" id="filter_by"><b>Click here after you have made your selections</b>
+				</button>
+			</div>
+			<div class="col-10 d-flex">
+				<button type="button" style="background-color:#35b7b7;" 
+					class="btn btn-light flex-fill no-print" id="reload_page"><b>Click here to clear all filters</b>
+				</button>
+			</div>
+		
 				</form>
 
 				<!-- Results div -->
-				<div class="row p-3">
-					<div class="col">
+				<div class="row p-8">
+					<div class="col" id='results'>
 						<!-- TODO Combine this with the results-table div -->
-						<h3>Results</h3>
+
+						<h3>3. Results</h3>
+						<div id='filters_used' class='filters_used ' style='border-style:solid; background:#b0e8e8'>
+
+						</div>
 						<p><span id="json_one_results_title"><span id="json_one_results">0</span> <span
 									id="json_one_title">providers</span></span>
 							are within the given radius.</p>
-						<div id="results-table"></div>
+							<div class="table-controls no-print hidden_element">
+								<button id="print-table" style="display:block">Print Map and Full Table</button>
+							</div> 
+						<div id="results-table" class='no-print' style='width:100%'></div>
+
 					</div>
 				</div>
-				<div class="row p-3">
-					<div class="col">
-						<div id='about-section'>
-							<h3>About</h3>
-							<p>
-								This demo counts the number of group care facilities within a radius of a given point
-								and
-								displays them on a map using <a href="https://leafletjs.com/" target="_blank"
-									rel="noopener">Leaflet</a>.
-							</p>
-							<p>This project is sponsored by:<br><br>
-								<a href="https://www.sagerx.com/" target="_blank" rel="noopener"><img
-										alt="Sage Therapeutics" src="images/logo-sagerx.svg"></a>
-							</p>
+				<h6><b>Search Radius</b></h6>
+					<select class="form-control" id="radius">
+						<option value="default" selected disabled hidden>Search radius</option>
+						<!-- Value is distance in meters -->
+						<option value="8047">5 miles</option>
+						<option value="16093">10 miles</option>
+						<option value="40234">25 miles</option>
+						<option value="80467">50 miles</option>
+						<option value="804670">500 miles</option>
+					</select>
+					<br />
+					<div class="col-10 d-flex">
+						<button type="button" class="btn btn-light flex-fill no-print" 
+								style="background-color:#FDD200;" 
+								id="clear-search"><b>Click here to Clear Search	Results</b>
+						</button>
+					</div>
+
+					</div>
+					<div class="row p-3">
+						<div class="col">
+							<div id='about-section'>
+								<!-- <h3>About</h3>
+								<p>
+									This demo counts the number of group care facilities within a radius of a given
+									point
+									and
+									displays them on a map using <a href="https://leafletjs.com/" target="_blank"
+										rel="noopener">Leaflet</a>.
+								</p> -->
+								<!-- <p>This project is sponsored by:<br><br>
+									<a href="https://www.sagerx.com/" target="_blank" rel="noopener"><img
+											alt="Sage Therapeutics" src="images/logo-sagerx.svg"></a>
+								</p> -->
+
+
+								<!-- Footer top //Start-->
+								<!-- <div class="footer-top clearfix">
+										<div class="container">
+											<div class="col-sm-12 col-xs-12">
+												<div class="seal">
+													<img src="images/fsu-seal-3d.png" height="42" width="42">
+												</div>
+											</div>
+											<div class="col-sm-12 col-xs-12">
+												<div class="content-footer">
+													© Florida State University<br> College of Medicine <br>1115 West Call Street<br>Tallahassee,FL 32306-4300<br>Phone: <span>850-644-1855</span> 
+													Fax: <span>850-644-9399</span>
+												</div>            
+											</div>            
+											<div class="col-sm-3 col-xs-12">                
+													<div class="sage">    
+														<img src="images/logo-sagerx.svg">
+													</div>            
+											</div>                   
+										</div>
+								</div> -->
+							</div>
 						</div>
 					</div>
-				</div>
 			</div>
 		</div>
 	</div>
 	<!-- JS: Custom -->
 	<script type="text/javascript" src="js/filter.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
+	<script>
+		// When the user clicks on div, open the popup
+		function myFunction() {
+		var popup = document.getElementById("myPopup");
+		popup.classList.toggle("show");
+		}
+	</script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-12990511-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-12990511-3');
+</script>
+		
 </body>
 
 </html>

@@ -16,7 +16,9 @@ body {
 }
 
 #legend {
-  background-color: #E1D4B7;
+  /* background-color: #E1D4B7;   */
+  /* background-color: #35b6b9; */
+  background-color: transparent;
 }
 
 #json_one_results {
@@ -112,7 +114,7 @@ body {
 .show>.btn-outline-garnet.dropdown-toggle {
   color: #fff;
   background-color: #782F40;
-  border-color: #782F40;
+  border-color: #782F40; 
 }
 
 .btn-outline-garnet:not(:disabled):not(.disabled):active:focus,
@@ -124,4 +126,65 @@ body {
 .blocks .btn-primary {
   padding: 10px 12px;
   margin: 0 5px;
+}
+
+.clustered_sites {
+  border-radius: 90%;
+  width: 5px;
+  height: 5px;
+  background-color: #35b7b7;
+  /* background-color:red; */
+  text-align: center;
+  font-size: 7px;
+}
+/* this allows long dropdown options to wrap to a second line if necessary */		
+.fs-option {
+  word-break: normal;
+}
+* {
+  box-sizing: border-box;
+}
+
+/* Create two equal columns that floats next to each other */
+.column2 {
+  float: left;
+  width: 50%;
+  padding: 10px;
+  border-style: solid;
+  border-width: thin;
+  border-color: #35b7b7;
+  /* height: 300px; Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row2:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.tabulator-print-header, tabulator-print-footer{
+  text-align:center;
+}
+@media print
+{    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
+.hidden_element {
+  display: none;
+}
+
+.tabulator-cell {
+  font-family: times, serif; font-size:12pt;
+}
+.geocoder-control-input {
+  font-weight: 900;
+  font-size: 17px;
+  font-family: serif;
+  width: 320px;
+  background-color:#98e8ef;
+  color: red;
+  text-emphasis-color: red;
 }
