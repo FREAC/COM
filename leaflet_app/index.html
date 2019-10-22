@@ -31,6 +31,7 @@
 		href="plugin/jQuery-Plugin-For-Filterable-Multiple-Select-with-Checkboxes-fSelect/fSelect.css" type="text/css">
 	<!-- CSS: Custom fix -->
 	<link rel="stylesheet" href="css/styles.css" />
+	<link type="text/css" rel="stylesheet" href="plugin/w8r-Leaflet.Bookmarks-7c2dee7/dist/leaflet.bookmarks.css">
 
 	<!-- JS: Libs -->
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -61,11 +62,13 @@
 	<script type="text/javascript" src="plugin/jQuery-UI-Multiple-Select-Widget/src/jquery.multiselect.js"></script>
 
 	<script src="plugin/jQuery-Plugin-For-Filterable-Multiple-Select-with-Checkboxes-fSelect/fSelect.js"></script>
+	<script src="plugin/w8r-Leaflet.Bookmarks-7c2dee7/dist/Leaflet.Bookmarks.min.js"></script>
 </head>
 <style>
 </style>
 <body>
-			  
+		<input id='showHideFilters' class='btn btn-info hidden_element' data-toggle="collapse" 
+			data-target="#filterOptions,#filterButtons" value="Hide filters"></input>
 	<div class="container-fluid d-flex h-100">
 		<div class="row flex-fill d-flex">
 			<!-- Map -->
@@ -85,16 +88,18 @@
 							<input type="text" class="form-control" id="easy-auto">
 						</div>
 					</div> -->
-
+<!-- 
 					<div class="form-row">
 						<div class="row col-sm-12 mb-2 mt-2 mt-sm-0 btn-group btn-group-toggle blocks"
 							data-toggle="buttons">
 						</div>
-					</div>
-					<h5><b>1. Filter the Providers (optional)</b></h5>
-<div class="row2 no-print">
+					</div> -->
+
+					<h5><b>1. Filter the Providers (optional)</b></h5><div class="circle" style="background:#de2d26"></div>
+<div id="filterOptions" class="row2 no-print collapse show" >
 	<div class="column2" style="border-right: none !important">
-						<h6><b>Insurance<br />Options</b></h6>
+
+					<h6><b>Insurance<br />Options</b></h6>
 							<select class="mpick" multiple="multiple" name="Insurance" >
 								<option value="accepts most insurance plans">accepts most insurance plans</option>
 								<option value="Aetna">Aetna</option>
@@ -152,7 +157,6 @@
 								<option value="Vista">Vista</option>
 								<option value="Wellcare">Wellcare</option>
 							</select>
-					
 				
 						<h6><b>Practice Location</b></h6>
 								<select class="mpick" name="Practice_a" id='Practice_a'>
@@ -385,19 +389,19 @@
 
 	</div>
 </div>
-		
+		<div id='filterButtons' class="collapse show">
 			<div class="col-10 d-flex">
 				<!-- <button type="button" style="background-color:#67d1d3;"  -->
 				<button type="button" style="background-color:#FDD200;" 
-					class="btn btn-light flex-fill no-print" id="filter_by"><b>Click here after you have made your selections</b>
+					class="btn btn-light btn-outline-dark flex-fill no-print" id="filter_by"><b>Click here after you have made your selections</b>
 				</button>
 			</div>
 			<div class="col-10 d-flex">
 				<button type="button" style="background-color:#35b7b7;" 
-					class="btn btn-light flex-fill no-print" id="reload_page"><b>Click here to clear all filters</b>
+					class="btn btn-light btn-outline-dark flex-fill no-print" id="reload_page"><b>Click here to clear all filters</b>
 				</button>
 			</div>
-		
+		</div>
 				</form>
 
 				<!-- Results div -->
@@ -438,6 +442,7 @@
 					</div>
 
 					</div>
+	</div>
 					<div class="row p-3">
 						<div class="col">
 							<div id='about-section'>
