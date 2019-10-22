@@ -15,10 +15,10 @@ body {
   font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
-#legend {
-  /* background-color: #E1D4B7;   */
+.legend {
+  background-color: #E1D4B7;  
   /* background-color: #35b6b9; */
-  background-color: transparent;
+  /* background-color: transparent; */
 }
 
 #json_one_results {
@@ -136,6 +136,15 @@ body {
   /* background-color:red; */
   text-align: center;
   font-size: 7px;
+  
+}.clustered_sites_with_MMH {
+  border-radius: 90%;
+  width: 5px;
+  height: 5px;
+  background-color: #b3e9e9;
+  /* background-color:red; */
+  text-align: center;
+  font-size: 7px;
 }
 /* this allows long dropdown options to wrap to a second line if necessary */		
 .fs-option {
@@ -183,8 +192,18 @@ body {
   font-weight: 900;
   font-size: 17px;
   font-family: serif;
-  width: 320px;
+  /* width: 320px; */
   background-color:#98e8ef;
   color: red;
   text-emphasis-color: red;
+}
+
+
+.circle {
+  width: 5px;
+  height: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  font-size: 17px;
 }
