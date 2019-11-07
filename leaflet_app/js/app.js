@@ -280,9 +280,9 @@ async function setup() {
         var aerialURL  = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
         var aerialAttrib = 'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
 
-        var osmMap = L.tileLayer(osmURL, {attribution: osmAttrib});
-        var cartoMap = L.tileLayer(cartoURL, {attribution: cartoAttrib});
-        var aerialMap = L.tileLayer(aerialURL, {attribution: aerialAttrib});
+        var osmMap = L.tileLayer(osmURL, {attribution: osmAttrib, maxZoom: 22, maxNativeZoom: 19});
+        var cartoMap = L.tileLayer(cartoURL, {attribution: cartoAttrib, maxZoom: 22, maxNativeZoom: 20});
+        var aerialMap = L.tileLayer(aerialURL, {attribution: aerialAttrib, maxZoom: 22, maxNativeZoom: 21});
         
         //Base layers definition and addition
         var baseLayers = {
@@ -297,10 +297,11 @@ const topRight = [32, -79];
 // Map
 const map = new L.Map('map', {
     renderer: L.canvas(),
+    // layers: [cartoMap],
     layers: [cartoMap],
     center: new L.LatLng(28.3, -83.1),
     minZoom: 6,
-    maxZoom: 19,
+    maxZoom: 22,
     zoom: 6,
     maxBounds: [bottomLeft, topRight]
 });
