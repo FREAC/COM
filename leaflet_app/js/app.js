@@ -11,6 +11,11 @@ const default_fill_color = "#35b6b9";
 const default_outline_color = "#FFFFFF";
 const selected_color = "#2BBED8";
 const selected_fill_opacity = 1;
+//
+// if param freac = true then we allow some extra things to happen and console logs to show
+//
+var showBase = getUrlParam('freac')
+console.log('what did we get for param freac ',showBase)
 $(function () {
     $('.mpick').fSelect();
 });
@@ -49,16 +54,18 @@ function createLegend() {
     
     var div = L.DomUtil.create('div', 'info legend');
     var labels = ['<strong>Categories</strong>'],
-    categories = ['Maternal Mental Health','At least one MMH Provider','Other'];
+    categories = ['Maternal Mental Health','At least one Maternal <br />&nbsp&nbsp&nbsp&nbspMental Health Provider','Other'];
     
     for (var i = 0; i < categories.length; i++) {
                 div.innerHTML += 
                 labels.push(
-                    '<i class="circle" style="background:' + getColor(categories[i]) + 
-                                              ';color:' + getColor(categories[i]) +
-                    '">O</i>' +
+                    '<div class="circle" style="display:inline-block;background:' + getColor(categories[i]) + 
+                                                 '/*;color:' + getColor(categories[i]) +
+                    '"></div>' +
                 (categories[i] ? categories[i] : '+'));
             }
+            labels.push(
+                '<img src="css/lib/images/hospital.png" width="10" height="10">&nbsp;Hospital') 
             div.innerHTML = labels.join('<br>');
         return div;
         };
@@ -84,7 +91,11 @@ function markerStyle(fillColor, strokeColor, fillOpacity = 0.75,cat) {
 function fillC(cat){
     // console.log('did we get an attribute ',cat)
     if (cat.includes('Maternal Mental Health')) {
-        return '#ff0000'
+        if(showBase) {
+            return '#ff0000'
+        } else {
+            return default_fill_color;
+        }
     } else {
         // console.log('returning the default ',cat['Which_cate'])
         return default_fill_color;
@@ -110,16 +121,20 @@ const json_group = new L.FeatureGroup({
 });
 
 function setClass(cluster) {
-    console.log('cluster is ',cluster)
+    // console.log('cluster is ',cluster)
     const num_in_cluster = cluster._childCount
-    console.log('----Found a cluster with ', num_in_cluster,' pieces')
+    // console.log('----Found a cluster with ', num_in_cluster,' pieces')
     var each_layer = cluster.getAllChildMarkers()
-    console.log('here should be the whole cluster ',each_layer)
+    // console.log('here should be the whole cluster ',each_layer)
     var useClass = 'clustered_sites'
     for(var i=0; i<num_in_cluster; i++){
-        console.log('----here is the clustered specialty ',i,' ',each_layer[i].data.Specialty)
+        // console.log('----here is the clustered specialty ',i,' ',each_layer[i].data.Specialty)
         if (each_layer[i].data.Specialty.includes('Maternal Mental Health')){
-            useClass = 'clustered_sites_with_MMH'
+            if (showBase) {
+                useClass = 'clustered_sites_with_MMH'
+            } else {
+                useClass = 'clustered_sites'
+            }
         }
     }
     return useClass
@@ -215,13 +230,14 @@ function getColor(d) {
     return d === 'Maternal Mental Health' ? "#de2d26" :
            d === 'At least one MMH Provider' ? "#b3e9e9" :
            d === 'Other'  ? "#35b6b9" :
-                        "#ff7f00";
+                        "#b3e9e9";
 }
 // initial setup function to loop through json that
 // assigns marker and add to map
 async function setup() {
     selection_group.clearLayers();
     var mhnum = getUrlParam('provider_id')
+    var found_it = false;
     console.log('looking for this id ',mhnum)
     $.get("./data/COM.json", function (json_data) {
         $.each(json_data, async function (object) {
@@ -239,21 +255,34 @@ async function setup() {
             json_group_c.addLayer(marker);
             if (mhnum === json_data[object]['mhnum']) {
                 console.log('FFFFFFFFFFFFFFound it', json_data[object])
-
+                found_it = true;
                 const lat = json_data[object]['Latitude'];
                 const lon = json_data[object]['Longitude'];
                 //  var z = 11;
                 //  the_data = layer.data;
                 console.log('trying to zoom to ',lat, lon)
                 zoomToLocation(lat, lon, 99, json_data[object]) 
-            }
+            } 
+
         });
+
         //map.addLayer(json_group);
         map.addLayer(json_group_c);
         map.addLayer(selection_group)
         activeLayer = json_group;
+        $( function() {
+            $( "#dialog" ).dialog();
+            //
+            // Uncomment the next line to show the telehealth popup on the map
+            //
+            // $("#map").css('z-index',0)
+            //
+          } );
     });
- 
+    console.log('what is found_it ',found_it)
+    if (! found_it && (mhnum > '')) {
+        alert('Provider did not have a vaild address')
+    }
 }
   
 ///////////////////////////////////////////////
@@ -283,14 +312,37 @@ async function setup() {
         var osmMap = L.tileLayer(osmURL, {attribution: osmAttrib, maxZoom: 22, maxNativeZoom: 19});
         var cartoMap = L.tileLayer(cartoURL, {attribution: cartoAttrib, maxZoom: 22, maxNativeZoom: 20});
         var aerialMap = L.tileLayer(aerialURL, {attribution: aerialAttrib, maxZoom: 22, maxNativeZoom: 21});
-        
+
         //Base layers definition and addition
         var baseLayers = {
             "CartoDB": cartoMap,
             "Aerial View": aerialMap,
             "OSM Map": osmMap
         };
+/* 
+ * Workaround for 1px lines appearing in some browsers due to fractional transforms
+ * and resulting anti-aliasing.
+ * https://github.com/Leaflet/Leaflet/issues/3575
+ */
+//
+// SWH - 11/8/2019
+// this function was found here: https://github.com/Leaflet/Leaflet/issues/6101
+// it gets rid of the white grid lines that appear in imagery because of how Chrome renders the tiles.
+//  This may not be needed in the future if Chrome is "fixed"
+//
+(function(){
+    var originalInitTile = L.GridLayer.prototype._initTile
+    L.GridLayer.include({
+        _initTile: function (tile) {
+            originalInitTile.call(this, tile);
 
+            var tileSize = this.getTileSize();
+
+            tile.style.width = tileSize.x + 1 + 'px';
+            tile.style.height = tileSize.y + 1 + 'px';
+        }
+    });
+})()
 const bottomLeft = [24, -88];
 const topRight = [32, -79];
 
@@ -302,21 +354,27 @@ const map = new L.Map('map', {
     center: new L.LatLng(28.3, -83.1),
     minZoom: 6,
     maxZoom: 22,
-    zoom: 6,
+    zoom: 7,
     maxBounds: [bottomLeft, topRight]
 });
 
 //This will hold the marker for the address zoom
 var results = L.layerGroup().addTo(map);
 
-//Add baseLayers to map as control layers
-var showBase = getUrlParam('freac')
-if (showBase) {
-    L.control.layers(baseLayers).addTo(map);
-} else {
-    // comment out the next line to re-enable console messages
-    console.log = function() {}
-}
+// need this so we can change the background of the legend
+map.on("baselayerchange",
+  function(e) {
+    // e.name has the layer name
+    // e.layer has the layer reference
+    map.activeBaseLayer = e.layer;
+    // console.log("base map changed to " + e.name);
+    if(e.name === 'Aerial View'){
+        $('.legend').css('background-color','white')
+    } else {
+        $('.legend').css('background-color','rgba(53, 183, 183,.5)');
+    }
+  });
+
 map.on({
     contextmenu: function (e) {
         // by uncommenting the next line, the user can RIGHT click and draw a circle.
@@ -339,10 +397,61 @@ map.on({
         
     }
 });
+console.log('localstorage is set to ',localStorage.showMessage)
+if (localStorage.showMessage !== 'False'){
+    $.confirm({
+        buttons: {
+            close: function() {
+                // $.alert('you clicked close')
+            },
+            Dont_Show_Again: {
+                text: 'Do not show <br />this again',
+
+                action: function() {
+                    localStorage.showMessage = 'False';
+                    // $.alert('you clicked dont show again')
+                }
+            }
+        },
+        backgroundDismiss: false,
+        backgroundDismissAnimation: 'glow',
+    });
+}
 
 // Load the data
+console.log('call setup now')
 setup();
-createLegend();
+var icon = L.icon({
+    iconUrl: 'css/lib/images/hospital.png',
+    iconSize: [8, 8],
+    iconAnchor: [4, 4],
+    popupAnchor: [4, 4]
+  });
+const hospital_url = "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/gc_hospitals_sep17/FeatureServer/0/"
+const hospitals = new L.esri.featureLayer({
+    url: hospital_url,
+    pointToLayer: function (geojson, latlng) {
+        return L.marker(latlng, {
+          icon: icon
+        });
+      }
+})
+// Uncomment the next line to show the hospitals
+// hospitals.addTo(map)
+hospitals.bindPopup(function (layer) {
+    return L.Util.template('<p><strong>{NAME}</strong><br/>Phone: {PHONE}', layer.feature.properties);
+  });
+var overlayMaps = {
+    "hospitals": hospitals
+}
+//Add baseLayers to map as control layers
+if (showBase) {
+    L.control.layers(baseLayers, overlayMaps).addTo(map);
+    createLegend();
+} else {
+    // comment out the next line to re-enable console messages
+    //console.log = function() {}
+}
 
 // ESRI Geocoder 
 
@@ -367,6 +476,7 @@ var geocoder = L.esri.Geocoding.geosearch({
     // collapseAfterResult: true,
     // searchBounds: [bottomLeft, topRight]
 }).addTo(map);
+var geocodedAddress = ''
 geocoder.on('results', async function (result) {
     // if mobile browser true
     if (L.Browser.mobile) {
@@ -376,6 +486,7 @@ geocoder.on('results', async function (result) {
         })
     }
     console.log('what are the results from the geocode event ',result.results[0])
+    geocodedAddress = result.results[0]
     clearSelection();
     result.results[0].properties['phone_numb'] = await formatPhone(result.results[0].properties['phone_numb'])
     if (result.results[0].properties.mhnum || result.results[0].properties.mmhid) {
@@ -579,13 +690,9 @@ $("#print-table").on("click",async function(){
     $('#filters_used').html(filterText)
     $('#filters_used').removeClass('hidden_element')    
     table.showColumn("dist")
-    table.showColumn("housenumber")
-    table.showColumn("street")
     table.showColumn("city")
     table.print(false, true);
     table.hideColumn("dist")
-    table.hideColumn("housenumber")
-    table.hideColumn("street")
     table.hideColumn("city")
     // $('#filters_used').html('')
     // $('#filters_used').addClass('hidden_element')
@@ -661,7 +768,7 @@ function createPopup(data) {
     // this is the popup text if you just touch a point on the screen
     data['n_latitude'] = data['N_Latitude']
     data['n_longitude'] = data['N_Longitude']
-    // for possible use in the future
+    // for possible use in the future -- STREETVIEW
     //    <br><a href="http://www.google.com/maps?layer=c&cbll=${data['N_Latitude']},${data['N_Longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)</a>
     data['Relevance'] = Math.round(data['Relevance'] * 100) / 100;
     // ${data['address']}<br>
@@ -670,18 +777,32 @@ function createPopup(data) {
     // <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details
     //                 (Opens in a new tab)</a>
 
-    var content = `<b>${data['Agency']}</b><br>
+    if (showBase) {
+        try {
+            console.log('here is the addres they entered', result.results[0])
+        } catch  {console.log('dont have the address here')}
+        var content = `<b>${data['Agency']}</b><br>
                     <b>G:</b> ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                     <b>P:</b> ${data['address']} <br>
                     <b>G:</b> ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
-                    <b>P:</b> ${data['city_1']} , ${data['State']} ${data['zip']}<br>
+                    <b>P:</b> ${data['city']} , ${data['state']} ${data['zip']}<br>
                     ${data['Phone_Numb']}         
-                    <br><a href="http://www.google.com/maps?layer=c&cbll=${data['N_Latitude']},${data['N_Longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)</a>
+                    <br><a href="https://www.google.com/maps?layer=c&cbll=${data['N_Latitude']},${data['N_Longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)</a>
+                    <br><a href="https://flmomsmhresources.org/${data['mhnum']}" target=_blank>Click for provider details<br>
+                    (Opens in a new tab)</a> 
+                                        `;
+    } else {
+        var content = `<b>${data['Agency']}</b><br>
+                    ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
+                    ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
+                    ${data['Phone_Numb']}         
                     <br><a href="https://flmomsmhresources.org/${data['mhnum']}" target=_blank>Click for provider details<br>
                     (Opens in a new tab)</a>            `;
+    }
     if (data['website']){
         content = content.concat(`<br><a href="${data['website']}" target=_blank>Provider website (Opens in a new tab)</a>`)
     }
+
     return L.popup({
         closeButton: true
     }).setContent(content);
@@ -826,6 +947,13 @@ async function zoomToLocation(lat, lng, z = 11, data) {
             data['website'] = await cleanWebsite(data['website'])
             console.log('cleaned it is ',data['website'])
             console.log('what is showbase',showBase)
+            try {
+                console.log('what is the address we looked up ',geocodedAddress)
+                data['geocodedAddress'] = geocodedAddress.text
+            } catch {
+                console.log('failed trying to print result.results[0] ')
+                console.log('so what is results ', geocodedAddress)
+            }
             // <br><a href="http://ing.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
             // (Opens in a new tab)</a>
 
@@ -836,22 +964,34 @@ async function zoomToLocation(lat, lng, z = 11, data) {
                     ${data['city']}, ${data['state']} ${data['postalcode']}<br>
                     ${data['phone_numb']}    
                     <br><a href="https://flmomsmhresources.org/${data['mhnum']}" target=_blank>Click for provider details<br>
-                    (Opens in a new tab)</a>            `;
+                    (Opens in a new tab)</a>            
+                     `;
             } else {
-                console.log('this is a local user')
                 // <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
                 // (Opens in a new tab)</a>
 
                 var pop_text = `<b>${data['agency']}</b><br>
                         ${data['housenumber']} ${data['street']} ${data['unit']}<br>
-                        ${data['city']}, ${data['state']} ${data['postalcode']}<br>
+                        ${data['city']}, ${data['state']} ${data['PostalCode']}<br>
                         ${data['phone_numb']}  
                         <br><a href="https://flmomsmhresources.org/${data['mhnum']}" target=_blank>Click for provider details<br>
-                        (Opens in a new tab)</a>
+                        (Opens in a new tab)</a> 
                                           `;
             }
             if (data['website']){
                 pop_text = pop_text.concat(`<br><a href="${data['website']}" target=_blank>Provider website (Opens in a new tab)</a>`)
+            }
+            if (data['geocodedAddress'] && showBase && geocodedAddress.properties.mhnum === undefined){
+                try {
+                    console.log('all the properties are ',geocodedAddress.properties)
+                    console.log('from the geocoder ',geocodedAddress.properties.mhnum)
+                } catch {
+                    console.log('there must not be a mhnum as a property ', geocodedAddress.properties)
+                }
+                console.log('and the address they clicked on ', data['street'])
+                pop_text = pop_text.concat(`<br><a href="http://www.google.com/maps/dir/${data['geocodedAddress']}/${data['housenumber']} ${data['street']} ${data['unit']}
+                ${data['city']}, ${data['state']} ${data['PostalCode']}" 
+                target=_blank>Click for Google Directions (Opens in a new tab)</a>`)
             }
         }
         var popup = L.popup({
@@ -893,7 +1033,8 @@ function insertTabulator(data) {
         height: 200,
         // width: 400,
         data: data,
-        layout: "fitColumns",
+        // layout: "fitColumns",
+        layout: "fitDataFill",
         selectable: 1,
         printAsHtml:false,
         printCopyStyle: true,
@@ -901,9 +1042,10 @@ function insertTabulator(data) {
         printFooter:"<h2>FSU College of Medicine<h2>",
         columns: [{
             title: "Provider",
+            width: 120,
             field: "agency"
         }, {
-            width: 120,
+            width: 90,
             title: "Phone",
             field: "Phone_Numb",
             cellClick: function (event, row) {
@@ -913,21 +1055,19 @@ function insertTabulator(data) {
                 const lat = row.getData().lat;
                 const lng = row.getData().lng;
                 const zoom = map.getZoom();
-                if (zoom < 12) {
-                    zoomToLocation(lat, lng, zoom, row._row.data);
-                } else {
-                    zoomToLocation(lat, lng, zoom, row._row.data);
+                if (lat) {
+                    if (zoom < 12) {
+                        zoomToLocation(lat, lng, zoom, row._row.data);
+                    } else {
+                        zoomToLocation(lat, lng, zoom, row._row.data);
+                    }
                 }
             }
         }, {
-            title: "Street Number",
-            field: "housenumber",
-            visible: false
-        },
-        {
-            title: "Street",
-            field: "street",
-            visible: false
+            title: "Address",
+            field: "address",
+            minwidth: 150,
+            visible: true
         },{
             title: "City",
             field: "city",
@@ -945,10 +1085,12 @@ function insertTabulator(data) {
             const lng = row.getData().lng;
             const zoom = map.getZoom();
             console.log('what kind of data are we sending over ',row._row.data)
-            if (zoom < 12) {
-                zoomToLocation(lat, lng, zoom, row._row.data);
-            } else {
-                zoomToLocation(lat, lng, zoom, row._row.data);
+            if (lat) {
+                if (zoom < 12) {
+                    zoomToLocation(lat, lng, zoom, row._row.data);
+                } else {
+                    zoomToLocation(lat, lng, zoom, row._row.data);
+                }
             }
         },
     });
@@ -1119,7 +1261,7 @@ function querySearchArea(location) {
 // Assign these properties to each marker in the data
 function markerLogic(data, selection_marker) {
     // Create marker for data
-    // console.log('what is data now ',data['mhnum'],' -- ',data['Which_cate'],data)
+    //console.log('what is data now ',data['mhnum'],' -- ',data['Which_cate'],data)
     var categ = data['Which_cate']
     const popup = createPopup(data);
     const marker_location = new L.LatLng(data['Latitude'], data['Longitude']);
@@ -1129,27 +1271,27 @@ function markerLogic(data, selection_marker) {
     circle_marker.on({
         mouseover: function (event) {
             if (event.target !== selection_marker) {
-                event.target.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity));
+                event.target.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity,data));
             }
         },
         mouseout: function (event) {
             if (event.target !== selection_marker) {
-                event.target.setStyle(markerStyle(default_fill_color, default_outline_color));
+                event.target.setStyle(markerStyle(default_fill_color, default_outline_color,1.0,data));
             }
         },
         click: function (event) {
             if (selection_marker === undefined) {
                 selection_marker = event.target
-                event.target.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity));
+                event.target.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity,data));
             } else {
-                selection_marker.setStyle(markerStyle(default_fill_color, default_outline_color));
+                selection_marker.setStyle(markerStyle(default_fill_color, default_outline_color,1.0.data));
                 selection_marker = event.target;
-                selection_marker.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity));
+                selection_marker.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity,data));
             }
         },
         popupclose: function (event) {
             selection_marker = undefined;
-            event.target.setStyle(markerStyle(default_fill_color, default_outline_color));
+            event.target.setStyle(markerStyle(default_fill_color, default_outline_color,1.0,data));
         },
         contextmenu: function () {}
     });

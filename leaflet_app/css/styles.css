@@ -16,7 +16,7 @@ body {
 }
 
 .legend {
-  background-color: #E1D4B7;  
+  background-color: rgba(53, 183, 183,.5);
   /* background-color: #35b6b9; */
   /* background-color: transparent; */
 }
@@ -135,6 +135,7 @@ body {
   background-color: #35b7b7;
   /* background-color:red; */
   text-align: center;
+  padding-top: 3px !important;
   font-size: 7px;
   
 }.clustered_sites_with_MMH {
@@ -144,6 +145,7 @@ body {
   background-color: #b3e9e9;
   /* background-color:red; */
   text-align: center;
+  padding-top: 3px !important;
   font-size: 7px;
 }
 /* this allows long dropdown options to wrap to a second line if necessary */		
@@ -160,7 +162,7 @@ body {
   width: 50%;
   padding: 10px;
   border-style: solid;
-  border-width: thin;
+  border-width: 2px;
   border-color: #35b7b7;
   /* height: 300px; Should be removed. Only for demonstration */
 }
@@ -189,21 +191,104 @@ body {
   font-family: times, serif; font-size:12pt;
 }
 .geocoder-control-input {
-  font-weight: 900;
-  font-size: 17px;
-  font-family: serif;
+  font-weight: 750;
+  font-size: 16px;
   /* width: 320px; */
-  background-color:#98e8ef;
+  font-family: sans-serif;
+  background-color:#98e8ef;  
+  /* background-color:#35b6b9; */
   color: red;
-  text-emphasis-color: red;
+  /* text-shadow: 1px 1px #FFFFFF;
+  text-emphasis-color: red; */
+}
+.geocoder-control-input:hover {
+  font-weight: 750;
+  font-size: 16px;
+  font-family: sans-serif;
+  /* width: 320px; */
+  background-color:#dff3f5;  
+  /* background-color:#98e8ef;   */
+  /* background-color:#35b6b9; */
+  color: red;
+  /* text-shadow: 1px 1px #FFFFFF;
+  text-emphasis-color: red; */
 }
 
-
+/* used in the legend */
 .circle {
-  width: 5px;
-  height: 5px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
+  width: 12px;
+  height: 12px;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  border-radius: 12px;
   font-size: 17px;
+}
+.tabulator-col {
+  /* background-color: #35b6b9 !important; */
+  background-image: linear-gradient(to top, #ededed 5%, #35b7b7 100%) !important;
+  z-index: 40;
+}
+.tabulator-row.tabulator-selected {
+  background-color: rgba(53, 183, 183,.5) !important;
+  }
+.ui-dialog-title {
+  background-color: linear-gradient(to top, #ededed 5%, #35b7b7 75%);
+  font-size: 19px;
+  text-align: center;
+  text-decoration: underline;
+}
+.ui-dialog-content {
+  font-size: 17px;
+  font-family: serif;
+  font-family:  Georgia, 'Times New Roman', Times, serif;
+  background-color: #FDD200 !important;
+}
+.myButton {
+	box-shadow: 3px 4px 0px 0px #899599;
+	background:linear-gradient(to top, #ededed 5%, #35b7b7 75%);
+	background-color:#35b6b9;
+	border-radius:15px;
+	border:1px solid #d6bcd6;
+	display:inline-block;
+	cursor:pointer;
+	color:black;
+	font-family:Arial;
+	font-size:17px;
+	padding:7px 25px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #e1e2ed;
+}
+.myButton:hover {
+	background:linear-gradient(to bottom, #35b7b7 5%, #35b7b7 100%);
+	background-color:#bab1ba;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+.myButton2 {
+	box-shadow: 3px 4px 0px 0px #899599;
+	background:linear-gradient(to top, #ededed 5%, #FDD200 100%);
+	background-color:#35b6b9;
+	border-radius:15px;
+	border:1px solid #d6bcd6;
+	display:inline-block;
+	cursor:pointer;
+	color: black;
+	font-family:Arial;
+	font-size:17px;
+	padding:7px 25px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #e1e2ed;
+}
+.myButton2:hover {
+	background:linear-gradient(to bottom, #FDD200 5%, #FDD200 100%);
+	background-color:#bab1ba;
+}
+.myButton2:active {
+	position:relative;
+	top:1px;
+}
+.jconfirm.pluginDefaults  {
+  content:"Hey;" 
 }
