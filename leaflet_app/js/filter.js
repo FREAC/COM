@@ -143,7 +143,7 @@ async function filterLocations(event) {
                                 // we dont need this record 
                             }
                         }
-                    } catch {
+                    } catch(err) {
                         // Gets in here if the thing we are looking at is a cluster rather than a single point
                         processing_cluster = true
                         const num_in_cluster = targetLayer._childCount

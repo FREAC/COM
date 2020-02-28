@@ -2,6 +2,8 @@
 
 // comment out the next line to re-enable console messages
 // console.log = function() {}
+//
+// ?freac=true to enable console.log
 
 // Colors
 // const default_fill_color = "#ED9118";
@@ -14,6 +16,7 @@ $(function () {
 });
 
 $(document).ready(function () {
+    console.log('lets get things READY')
     $('.geocoder-control').click(function () {
         $("#map").css("width", "100%");
         // if mobile browser true
@@ -40,14 +43,52 @@ $(document).ready(function () {
 });
 
 // This sets the marker styles for any of the circleMarker symbols
-function markerStyle(fillColor, strokeColor, fillOpacity = 0.75) {
+function createLegend() {    
+    var legend = L.control({position: 'bottomright'});
+    legend.onAdd = function (map) {
+    
+    var div = L.DomUtil.create('div', 'info legend');
+    var labels = ['<strong>Categories</strong>'],
+    categories = ['Maternal Mental Health','At least one MMH Provider','Other'];
+    
+    for (var i = 0; i < categories.length; i++) {
+                div.innerHTML += 
+                labels.push(
+                    '<i class="circle" style="background:' + getColor(categories[i]) + 
+                                              ';color:' + getColor(categories[i]) +
+                    '">O</i>' +
+                (categories[i] ? categories[i] : '+'));
+            }
+            div.innerHTML = labels.join('<br>');
+        return div;
+        };
+        legend.addTo(map);
+    }
+function markerStyle(fillColor, strokeColor, fillOpacity = 0.75,cat) {
+    // console.log('did cat get here',cat['mhnum'],cat)
+    // console.log('did cat get here',cat)
+    try {var spec = cat['Specialty'];
+    } catch(err){
+        console.log('blew looking up specialty ',cat)
+        var spec = 'other';
+    }
     return {
-        fillColor: fillColor,
+        // fillColor: fillColor,
+        fillColor: fillC(spec),
         color: strokeColor,
         fillOpacity: fillOpacity,
         radius: 4,
         weight: 0.8
     };
+}
+function fillC(cat){
+    // console.log('did we get an attribute ',cat)
+    if (cat.includes('Maternal Mental Health')) {
+        return '#ff0000'
+    } else {
+        // console.log('returning the default ',cat['Which_cate'])
+        return default_fill_color;
+    }
 }
 
 // current selection
@@ -61,12 +102,28 @@ const json_group = new L.FeatureGroup({
         iconCreateFunction: function (cluster) {
         return L.divIcon({
             html: '<b>' + cluster.getChildCount() + '</b>',
-            className: 'clustered_sites',
+            className: setClass(cluster),
             iconSize: L.point(15, 15)
         });
 
     }
 });
+
+function setClass(cluster) {
+    console.log('cluster is ',cluster)
+    const num_in_cluster = cluster._childCount
+    console.log('----Found a cluster with ', num_in_cluster,' pieces')
+    var each_layer = cluster.getAllChildMarkers()
+    console.log('here should be the whole cluster ',each_layer)
+    var useClass = 'clustered_sites'
+    for(var i=0; i<num_in_cluster; i++){
+        console.log('----here is the clustered specialty ',i,' ',each_layer[i].data.Specialty)
+        if (each_layer[i].data.Specialty.includes('Maternal Mental Health')){
+            useClass = 'clustered_sites_with_MMH'
+        }
+    }
+    return useClass
+}
 
 // this one is used just on the initial load
 const json_group_c = new L.markerClusterGroup({
@@ -76,7 +133,7 @@ const json_group_c = new L.markerClusterGroup({
             iconCreateFunction: function (cluster) {
             return L.divIcon({
                 html: '<b>' + cluster.getChildCount() + '</b>',
-                className: 'clustered_sites',
+                className: setClass(cluster),
                 iconSize: L.point(15, 15)
             });
     
@@ -122,7 +179,7 @@ const selection_group = new L.markerClusterGroup({
     iconCreateFunction: function (cluster) {
         return L.divIcon({
             html: '<b>' + cluster.getChildCount() + '</b>',
-            className: 'clustered_sites',
+            className: setClass(cluster),
             iconSize: L.point(15, 15)
         });
 
@@ -153,7 +210,13 @@ function getUrlParam(parameter, defaultvalue){
     } 
     return urlparameter;
 }
-
+function getColor(d) {
+    // console.log('try to get the color block ',d)
+    return d === 'Maternal Mental Health' ? "#de2d26" :
+           d === 'At least one MMH Provider' ? "#b3e9e9" :
+           d === 'Other'  ? "#35b6b9" :
+                        "#ff7f00";
+}
 // initial setup function to loop through json that
 // assigns marker and add to map
 async function setup() {
@@ -190,8 +253,9 @@ async function setup() {
         map.addLayer(selection_group)
         activeLayer = json_group;
     });
+ 
 }
-
+  
 ///////////////////////////////////////////////
 ///////////////////////////////////////////////
 ///////////////////////////////////////////////
@@ -241,6 +305,7 @@ const map = new L.Map('map', {
     zoom: 6,
     maxBounds: [bottomLeft, topRight]
 });
+
 //This will hold the marker for the address zoom
 var results = L.layerGroup().addTo(map);
 
@@ -277,6 +342,7 @@ map.on({
 
 // Load the data
 setup();
+createLegend();
 
 // ESRI Geocoder 
 
@@ -298,7 +364,8 @@ var geocoder = L.esri.Geocoding.geosearch({
     useMapBounds: false,
     placeholder: '2. Enter an address or provider name',
     collapseAfterResult: false,
-    //searchBounds: [bottomLeft, topRight]
+    // collapseAfterResult: true,
+    // searchBounds: [bottomLeft, topRight]
 }).addTo(map);
 geocoder.on('results', async function (result) {
     // if mobile browser true
@@ -323,7 +390,7 @@ geocoder.on('results', async function (result) {
         window.scrollTo(0,document.body.scrollHeight);
         try {
             results.clearLayers();
-        } catch {console.log('could not clear it')}
+        } catch (err) {console.log('could not clear it')}
         // original way we added the marker
         // results.addLayer(L.marker(result.results[0].latlng));
         L.marker(result.results[0].latlng).addTo(results);
@@ -348,7 +415,15 @@ const locate = L.control.locate({
     drawCircle: false,
     showPopup: false
 }).addTo(map);
-
+//
+// create stuff for the bookmarks
+// var bookcontrol = new L.Control.Bookmarks().addTo(map);
+// map.fire('bookmark:add', {
+//     id: 'bookid', // make sure it's unique,
+//     name: 'Bookmark name',
+//     latlng: [lat, lng], // important, we're dealing with JSON here,
+//     your_key: 'your value'
+// });
 // check whether on mobile devices
 // Commented out based on issue #54
 if (!L.Browser.mobile) {
@@ -404,7 +479,8 @@ $('#filter_by').click(async function () {
     console.log('did we eeeeeeeeeeeeeeeeeeeeeever get our text ',filterText)
     $('#filters_used').html(filterText)
     $('#filters_used').removeClass('hidden_element')   
-});    
+});
+
 // Generate the filters text
 async function generateFilterText(){
     console.log('first load the Pretty Options text')
@@ -595,9 +671,12 @@ function createPopup(data) {
     //                 (Opens in a new tab)</a>
 
     var content = `<b>${data['Agency']}</b><br>
-                    ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
-                    ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
+                    <b>G:</b> ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
+                    <b>P:</b> ${data['address']} <br>
+                    <b>G:</b> ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
+                    <b>P:</b> ${data['city_1']} , ${data['State']} ${data['zip']}<br>
                     ${data['Phone_Numb']}         
+                    <br><a href="http://www.google.com/maps?layer=c&cbll=${data['N_Latitude']},${data['N_Longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)</a>
                     <br><a href="https://flmomsmhresources.org/${data['mhnum']}" target=_blank>Click for provider details<br>
                     (Opens in a new tab)</a>            `;
     if (data['website']){
@@ -676,7 +755,7 @@ function configurePopup(data) {
             .setLatLng(marker_location)
             .setContent(pop_text)
             .openOn(map);
-    } catch {}
+    } catch(err) {}
 
 }
 
@@ -781,7 +860,7 @@ async function zoomToLocation(lat, lng, z = 11, data) {
             .setLatLng(marker_location)
             .setContent(pop_text)
             .openOn(map);
-    } catch {}
+    } catch (err) {}
     //make sure the map is the top most div
     // $('#map').css('z-index', '11');
 }
@@ -920,6 +999,7 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
                     insurance: layer.data.Insurance,
                     housenumber: layer.data.HouseNumber,
                     street: layer.data.Street,
+                    unit: layer.data.Unit,
                     address: layer.data.Address,
                     relevance: layer.data.Relevance,
                     matchlevel: layer.data.MatchLevel,
@@ -1039,9 +1119,11 @@ function querySearchArea(location) {
 // Assign these properties to each marker in the data
 function markerLogic(data, selection_marker) {
     // Create marker for data
+    // console.log('what is data now ',data['mhnum'],' -- ',data['Which_cate'],data)
+    var categ = data['Which_cate']
     const popup = createPopup(data);
     const marker_location = new L.LatLng(data['Latitude'], data['Longitude']);
-    const circle_marker = L.circleMarker(marker_location, markerStyle(default_fill_color, default_outline_color))
+    const circle_marker = L.circleMarker(marker_location, markerStyle(default_fill_color, default_outline_color,0.75,data))
         .bindPopup(popup);
 
     circle_marker.on({
@@ -1186,15 +1268,20 @@ async function prettyAccepting(){
 async function cleanWebsite(website) {
     //console.log('can we clean it ', website)
     if (website){
-        console.log('got one to try')
+        // console.log('got one to try')
         if(website.includes('https://') || website.includes('http://')) {
-            console.log('has the http -- returning',website)
+            // console.log('has the http -- returning',website)
             return website;
         } else {
-            console.log('need to append the http -- returning http://',website)
+            // console.log('need to append the http -- returning http://',website)
             return website = 'http://' + website;
         }
     } else {
         return ''
     }
 }
+function handleClick() {
+    this.value = (this.value == 'Show Filters' ? 'Hide Filters' : 'Show Filters');
+    document.getElementById("showHideFilters").value=this.value;
+}
+document.getElementById('showHideFilters').onclick=handleClick;
