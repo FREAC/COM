@@ -526,6 +526,11 @@ const locate = L.control.locate({
     drawCircle: false,
     showPopup: false
 }).addTo(map);
+// check whether on mobile devices
+// Commented out based on issue #54
+if (!L.Browser.mobile) {
+    map.removeControl(locate);
+}
 //
 // create stuff for the bookmarks
 // var bookcontrol = new L.Control.Bookmarks().addTo(map);
@@ -535,11 +540,7 @@ const locate = L.control.locate({
 //     latlng: [lat, lng], // important, we're dealing with JSON here,
 //     your_key: 'your value'
 // });
-// check whether on mobile devices
-// Commented out based on issue #54
-if (!L.Browser.mobile) {
-    map.removeControl(locate);
-}
+
 
 function clearSelection({
     provider = true,
