@@ -224,8 +224,8 @@ body {
   font-size: 17px;
 }
 .tabulator-col {
-  /* background-color: #35b6b9 !important; */
-  background-image: linear-gradient(to top, #ededed 5%, #35b7b7 100%) !important;
+  background-color: #35b6b9 !important;
+  /* background-image: linear-gradient(to top, #ededed 5%, #35b7b7 100%) !important; */
   z-index: 40;
 }
 .tabulator-row.tabulator-selected {
@@ -245,7 +245,7 @@ body {
 }
 .myButton {
 	box-shadow: 3px 4px 0px 0px #899599;
-	background:linear-gradient(to top, #ededed 5%, #35b7b7 75%);
+	/* background:linear-gradient(to top, #ededed 5%, #35b7b7 75%); */
 	background-color:#35b6b9;
 	border-radius:15px;
 	border:1px solid #d6bcd6;
@@ -268,7 +268,7 @@ body {
 }
 .myButton2 {
 	box-shadow: 3px 4px 0px 0px #899599;
-	background:linear-gradient(to top, #ededed 5%, #FDD200 100%);
+	/* background:linear-gradient(to top, #ededed 5%, #FDD200 100%); */
 	background-color:#35b6b9;
 	border-radius:15px;
 	border:1px solid #d6bcd6;
