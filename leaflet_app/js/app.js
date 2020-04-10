@@ -890,13 +890,6 @@ async function zoomToLocation(lat, lng, z = 11, data) {
     if (selection_marker) {
         map.removeLayer(selection_marker);
     }
-    if (z === 99) {
-        // came from a mhnum zoom request
-        map.flyTo(new L.LatLng(lat, lng), 13);
-    } else {
-        // set view to location
-        map.flyTo(new L.LatLng(lat, lng), z);
-    }
 
     // Set marker location
     const marker_location = new L.LatLng(lat, lng);
