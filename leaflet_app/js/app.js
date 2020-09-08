@@ -1165,7 +1165,7 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
 
         // A container to hold the query results
         const tableResults = [];
-        console.log('hhhhhhhhhhhow many meet our criteria ',counter_points_in_circle)
+        console.log('---------------------------------hhhhhhhhhhhow many meet our criteria ',counter_points_in_circle)
         for (let i = 0; i <= counter_points_in_circle; i++) {
             console.log('what does a typical result look like, ', results[i])
             //results[i]['phone_numb'] = await formatPhone(results[i]['phone_numb'])
