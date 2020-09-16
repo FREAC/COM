@@ -43,7 +43,7 @@
     "exorcist": "^0.1.6",
     "leaflet-modal": "^0.1.0",
     "less": "^2.1.1",
-    "phantomjs-polyfill": "0.0.1",
+    "phantomjs-polyfill": "0.0.2",
     "serve": "^11.3.0",
     "tape": "^4.0.0",
     "testling": "^1.7.1",
