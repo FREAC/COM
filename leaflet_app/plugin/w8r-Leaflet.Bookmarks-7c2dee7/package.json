@@ -42,7 +42,7 @@
     "debowerify": "^0.8.2",
     "exorcist": "^0.1.6",
     "leaflet-modal": "^0.1.0",
-    "less": "^2.1.1",
+    "less": "^4.1.0",
     "phantomjs-polyfill": "0.0.1",
     "serve": "^11.3.0",
     "tape": "^4.0.0",
