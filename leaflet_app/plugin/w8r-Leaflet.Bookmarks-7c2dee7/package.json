@@ -48,7 +48,7 @@
     "tape": "^4.0.0",
     "testling": "^1.7.1",
     "uglify-js": "^3.13.9",
-    "watchify": "^1.0.6"
+    "watchify": "^4.0.0"
   },
   "dependencies": {
     "leaflet": "^1.7.1"
