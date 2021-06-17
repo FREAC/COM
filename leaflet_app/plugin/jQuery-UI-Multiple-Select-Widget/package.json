@@ -30,7 +30,7 @@
     "jquery-ui": "^1.11.0"
   },
   "devDependencies": {
-    "eslint-config-google": "^0.9.1",
+    "eslint-config-google": "^0.14.0",
     "node-qunit-phantomjs": "^2.0.0",
     "uglifyjs": "^2.4.11"
   }
