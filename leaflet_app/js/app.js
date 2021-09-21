@@ -7,9 +7,9 @@
 
 // Colors
 // const default_fill_color = "#ED9118";
-const default_fill_color = "#35b6b9";
-const default_outline_color = "#FFFFFF";
-const selected_color = "#2BBED8";
+const default_fill_color = "#35b6b9";    // darker blue
+const default_outline_color = "#FFFFFF"; // white
+const selected_color = "#2BBED8";        // lighter blue
 const selected_fill_opacity = 1;
 $(function () {
     $('.mpick').fSelect();
@@ -84,7 +84,11 @@ function markerStyle(fillColor, strokeColor, fillOpacity = 0.75,cat) {
 function fillC(cat){
     // console.log('did we get an attribute ',cat)
     if (cat.includes('Maternal Mental Health')) {
-        return '#ff0000'
+        if (showBase) {
+            return '#ff0000' // red
+        } else {
+            return default_fill_color;
+        }
     } else {
         // console.log('returning the default ',cat['Which_cate'])
         return default_fill_color;
@@ -110,6 +114,7 @@ const json_group = new L.FeatureGroup({
 });
 
 function setClass(cluster) {
+    // set the color of the cluster based on whether or not there is a MMH in the cluster
     console.log('cluster is ',cluster)
     const num_in_cluster = cluster._childCount
     console.log('----Found a cluster with ', num_in_cluster,' pieces')
@@ -119,7 +124,11 @@ function setClass(cluster) {
     for(var i=0; i<num_in_cluster; i++){
         console.log('----here is the clustered specialty ',i,' ',each_layer[i].data.Specialty)
         if (each_layer[i].data.Specialty.includes('Maternal Mental Health')){
-            useClass = 'clustered_sites_with_MMH'
+            if (showBase) {
+                useClass = 'clustered_sites_with_MMH' 
+            } else {
+                useClass = 'clustered_sites'
+            }
         }
     }
     return useClass
@@ -211,11 +220,11 @@ function getUrlParam(parameter, defaultvalue){
     return urlparameter;
 }
 function getColor(d) {
-    // console.log('try to get the color block ',d)
-    return d === 'Maternal Mental Health' ? "#de2d26" :
-           d === 'At least one MMH Provider' ? "#b3e9e9" :
-           d === 'Other'  ? "#35b6b9" :
-                        "#ff7f00";
+    console.log('try to get the color block ',d)
+    return d === 'Maternal Mental Health' ? "#de2d26" :    // red
+           d === 'At least one MMH Provider' ? "#b3e9e9" : // light blue
+           d === 'Other'  ? "#35b6b9" : 
+                        "#ff7f00";                         // dark blue : orange                   
 }
 // initial setup function to loop through json that
 // assigns marker and add to map
@@ -342,7 +351,7 @@ map.on({
 
 // Load the data
 setup();
-createLegend();
+if(showBase){createLegend();}
 
 // ESRI Geocoder 
 
@@ -671,10 +680,10 @@ function createPopup(data) {
     //                 (Opens in a new tab)</a>
 
     var content = `<b>${data['Agency']}</b><br>
-                    <b>G:</b> ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
-                    <b>P:</b> ${data['address']} <br>
-                    <b>G:</b> ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
-                    <b>P:</b> ${data['city_1']} , ${data['State']} ${data['zip']}<br>
+                <!--    <b>G:</b> ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br> -->
+                     ${data['address']} <br>
+                <!--    <b>G:</b> ${data['City']}, ${data['State']} ${data['PostalCode']}<br> -->
+                     ${data['city']} , ${data['state']} ${data['zip']}<br>
                     ${data['Phone_Numb']}         
                     <br><a href="http://www.google.com/maps?layer=c&cbll=${data['N_Latitude']},${data['N_Longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)</a>
                     <br><a href="https://flmomsmhresources.org/${data['mhnum']}" target=_blank>Click for provider details<br>
@@ -920,14 +929,9 @@ function insertTabulator(data) {
                 }
             }
         }, {
-            title: "Street Number",
-            field: "housenumber",
-            visible: false
-        },
-        {
-            title: "Street",
-            field: "street",
-            visible: false
+            title: "Address",
+            field: "address",
+            visible: true
         },{
             title: "City",
             field: "city",
@@ -1129,27 +1133,27 @@ function markerLogic(data, selection_marker) {
     circle_marker.on({
         mouseover: function (event) {
             if (event.target !== selection_marker) {
-                event.target.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity));
+                event.target.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity,data));
             }
         },
         mouseout: function (event) {
             if (event.target !== selection_marker) {
-                event.target.setStyle(markerStyle(default_fill_color, default_outline_color));
+                event.target.setStyle(markerStyle(default_fill_color, default_outline_color,1.0,data));
             }
         },
         click: function (event) {
             if (selection_marker === undefined) {
                 selection_marker = event.target
-                event.target.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity));
+                event.target.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity,data));
             } else {
-                selection_marker.setStyle(markerStyle(default_fill_color, default_outline_color));
+                selection_marker.setStyle(markerStyle(default_fill_color, default_outline_color,data));
                 selection_marker = event.target;
-                selection_marker.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity));
+                selection_marker.setStyle(markerStyle(selected_color, selected_color, selected_fill_opacity,data));
             }
         },
         popupclose: function (event) {
             selection_marker = undefined;
-            event.target.setStyle(markerStyle(default_fill_color, default_outline_color));
+            event.target.setStyle(markerStyle(default_fill_color, default_outline_color,1.0,data));
         },
         contextmenu: function () {}
     });
