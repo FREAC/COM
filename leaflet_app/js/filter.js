@@ -132,7 +132,7 @@ async function filterLocations(event) {
                                     targetLayer.data['Latitude'] = targetLayer._latlng.lat;
                                     targetLayer.data['Longitude'] = targetLayer._latlng.lng;
                                     targetLayer.data['Agency'] = targetLayer.data.Agency;
-                                    targetLayer.data['Address'] = targetLayer.data.Address;
+                                    targetLayer.data['address'] = targetLayer.data.Address;
                                     const marker =  markerLogic(targetLayer.data);
                                     marker.addTo(selection_group);
                                     need_it = true;
