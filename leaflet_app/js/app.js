@@ -1177,7 +1177,7 @@ function markerLogic(data, selection_marker) {
         'City': data['City'],
         'city': data['city'],
         'State': data['State'],
-        'state': data['State'],
+        'state': data['state'],
         'Zip':   data['Zip'],
         'zip':   data['zip'],
         'PostalCode': data['PostalCode'],
