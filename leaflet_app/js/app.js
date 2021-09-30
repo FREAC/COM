@@ -49,7 +49,7 @@ function createLegend() {
     
     var div = L.DomUtil.create('div', 'info legend');
     var labels = ['<strong>Categories</strong>'],
-    categories = ['Maternal Mental Health','At least one MMH Provider','Other'];
+    categories = ['Maternal Mental Health Provider','At least one MMH Provider','Not a MMH Provider'];
     
     for (var i = 0; i < categories.length; i++) {
                 div.innerHTML += 
@@ -221,9 +221,9 @@ function getUrlParam(parameter, defaultvalue){
 }
 function getColor(d) {
     console.log('try to get the color block ',d)
-    return d === 'Maternal Mental Health' ? "#de2d26" :    // red
-           d === 'At least one MMH Provider' ? "#b3e9e9" : // light blue
-           d === 'Other'  ? "#35b6b9" : 
+    return d === 'Maternal Mental Health Provider' ? "#de2d26" :    // red
+           d === 'At least one MMH Provider' ? "#f7aeab": //light red - orginally light blue"#b3e9e9"
+           d === 'Not a MMH Provider'  ? "#35b6b9" : 
                         "#ff7f00";                         // dark blue : orange                   
 }
 // initial setup function to loop through json that
@@ -311,7 +311,7 @@ const map = new L.Map('map', {
     center: new L.LatLng(28.3, -83.1),
     minZoom: 6,
     maxZoom: 22,
-    zoom: 6,
+    zoom: 7,
     maxBounds: [bottomLeft, topRight]
 });
 
@@ -321,6 +321,9 @@ var results = L.layerGroup().addTo(map);
 //Add baseLayers to map as control layers
 var showBase = getUrlParam('freac')
 if (showBase) {
+    // show the show/hide filters button
+    var s_h_filter = document.getElementById('showHideFilters')
+    s_h_filter.classList.remove('hidden_element')
     L.control.layers(baseLayers).addTo(map);
 } else {
     // comment out the next line to re-enable console messages
@@ -815,6 +818,7 @@ async function zoomToLocation(lat, lng, z = 11, data) {
                         ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
                         ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
                         ${data['Phone_Numb']}
+                        <br><a href="http://www.google.com/maps?layer=c&cbll=${data['N_Latitude']},${data['N_Longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)</a>
                         <br><a href="https://flmomsmhresources.org/${data['mhnum']}" target=_blank>Click for provider details<br>
                         (Opens in a new tab)</a>                         `;
             if (data['website']){
@@ -840,10 +844,10 @@ async function zoomToLocation(lat, lng, z = 11, data) {
 
             if (showBase) {
                 var pop_text = `<b>${data['agency']}</b><br>
-                    ${data['housenumber']} ${data['street']} ${data['unit']}<br>
-                    ${data['address']}<br> <font color='red'>${data['Relevance']} ${data['MatchLevel']}</font> <br>            
+                    ${data['address']}<br>    
                     ${data['city']}, ${data['state']} ${data['postalcode']}<br>
-                    ${data['phone_numb']}    
+                    ${data['phone_numb']}
+                    <br><a href="http://www.google.com/maps?layer=c&cbll=${data['n_latitude']},${data['n_longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)-</a>
                     <br><a href="https://flmomsmhresources.org/${data['mhnum']}" target=_blank>Click for provider details<br>
                     (Opens in a new tab)</a>            `;
             } else {
@@ -1008,7 +1012,7 @@ async function pointsInCircle(circle, meters_user_set, groupLayer) {
                     relevance: layer.data.Relevance,
                     matchlevel: layer.data.MatchLevel,
                     city: layer.data.City,
-                    state: layer.data.State,
+                    state: layer.data.state,
                     postalcode: layer.data.PostalCode,
                     website: layer.data.website,
                     phone_numb: layer.data.Phone_Numb,
