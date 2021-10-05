@@ -105,7 +105,7 @@ const json_group = new L.FeatureGroup({
     maxClusterRadius: 0,
         iconCreateFunction: function (cluster) {
         return L.divIcon({
-            html: '<b>' + cluster.getChildCount() + '</b>',
+            html: '<b><p style="font-size:10px">' + cluster.getChildCount() + '</p>',
             className: setClass(cluster),
             iconSize: L.point(15, 15)
         });
@@ -141,7 +141,7 @@ const json_group_c = new L.markerClusterGroup({
         spiderfyDistanceMultiplier: 1000000.0,
             iconCreateFunction: function (cluster) {
             return L.divIcon({
-                html: '<b>' + cluster.getChildCount() + '</b>',
+                html: '<b><p style="font-size:10px">' + cluster.getChildCount() + '</p>',
                 className: setClass(cluster),
                 iconSize: L.point(15, 15)
             });
@@ -187,7 +187,7 @@ const selection_group = new L.markerClusterGroup({
     spiderfyDistanceMultiplier: 100000.0,
     iconCreateFunction: function (cluster) {
         return L.divIcon({
-            html: '<b>' + cluster.getChildCount() + '</b>',
+            html: '<b><p style="font-size:10px">' + cluster.getChildCount() + '</p>',
             className: setClass(cluster),
             iconSize: L.point(15, 15)
         });
