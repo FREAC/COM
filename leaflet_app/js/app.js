@@ -115,14 +115,14 @@ const json_group = new L.FeatureGroup({
 
 function setClass(cluster) {
     // set the color of the cluster based on whether or not there is a MMH in the cluster
-    console.log('cluster is ',cluster)
+    // console.log('cluster is ',cluster)
     const num_in_cluster = cluster._childCount
-    console.log('----Found a cluster with ', num_in_cluster,' pieces')
+    // console.log('----Found a cluster with ', num_in_cluster,' pieces')
     var each_layer = cluster.getAllChildMarkers()
-    console.log('here should be the whole cluster ',each_layer)
+    // console.log('here should be the whole cluster ',each_layer)
     var useClass = 'clustered_sites'
     for(var i=0; i<num_in_cluster; i++){
-        console.log('----here is the clustered specialty ',i,' ',each_layer[i].data.Specialty)
+        // console.log('----here is the clustered specialty ',i,' ',each_layer[i].data.Specialty)
         if (each_layer[i].data.Specialty.includes('Maternal Mental Health')){
             if (showBase) {
                 useClass = 'clustered_sites_with_MMH' 
@@ -320,6 +320,8 @@ var results = L.layerGroup().addTo(map);
 
 //Add baseLayers to map as control layers
 var showBase = getUrlParam('freac')
+console.log('what is showBase',showBase)
+var showBase = true
 if (showBase) {
     // show the show/hide filters button
     var s_h_filter = document.getElementById('showHideFilters')
@@ -506,6 +508,8 @@ async function generateFilterText(){
     var servesOptions     = await prettyServes();
     var telehealthOptions = await prettyTelehealth();
     var acceptingOptions  = await prettyAccepting();
+    var minorityOptions   = await prettyMinority();
+    var minorityTrainingOptions   = await prettyMinorityTraining();
     // console.log('did we get the options loaded ok ', insuranceOptions)
     var theFilters = await getFilters()
     // console.log('FFFFFFINished with the getFilters function')
@@ -562,6 +566,16 @@ async function generateFilterText(){
                         theFilters[j] = '<b>Accepting New Patients?</b>';
                         theFilterValues += acceptingOptions[acceptingOptions.indexOf(theFilters[j+1][jj]) + 1] + ', ';
                         break;    
+                    case 'Minority':
+                    case '<b>PDo you self identify as a provicer of color?</b>':
+                        theFilters[j] = '<b>Do you self identify as a provicer of color?</b>';
+                        theFilterValues += minorityOptions[minorityOptions.indexOf(theFilters[j+1][jj]) + 1] + ', ';
+                        break;   
+                    case 'MinorityTraining':
+                    case '<b>Do you have training and experience in treating patients / clients of color?</b>':
+                        theFilters[j] = '<b>Do you have training and experience in treating patients / clients of color?</b>';
+                        theFilterValues += minorityTrainingOptions[minorityTrainingOptions.indexOf(theFilters[j+1][jj]) + 1] + ', ';
+                        break;   
                     default:         
                         theFilters[j] = 'NOT SURE';   
                         theFilterValues += theFilters[j+1][jj]  + ', ';
@@ -812,11 +826,10 @@ async function zoomToLocation(lat, lng, z = 11, data) {
             // <br><a href="http://www.google.com/maps?layer=c&cbll=${data['N_Latitude']},${data['N_Longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)</a>
             // <br><a href="http://staging.bodhtree.com:4200/?provider_id=${data['mhnum']}" target=_blank>Click for provider details<br>
             //             (Opens in a new tab)</a>
-
             data['relevance'] = Math.round(data['relevance'] * 100) / 100;
             var pop_text = `<b>${data['Agency']}</b><br>
-                        ${data['HouseNumber']} ${data['Street']} ${data['Unit']}<br>
-                        ${data['City']}, ${data['State']} ${data['PostalCode']}<br>
+                        ${data['address']} <br>
+                        ${data['city']}, ${data['state']} ${data['zip']}<br>
                         ${data['Phone_Numb']}
                         <br><a href="http://www.google.com/maps?layer=c&cbll=${data['N_Latitude']},${data['N_Longitude']}&cbp=0,0,0,0,0" target=_blank>Click Google Street View (Opens in a new tab)</a>
                         <br><a href="https://flmomsmhresources.org/${data['mhnum']}" target=_blank>Click for provider details<br>
@@ -1186,6 +1199,8 @@ function markerLogic(data, selection_marker) {
         'Phone_Numb': data['Phone_Numb'],
         'Specialty': data['Specialty'],
         'Accepting': data['Accepting'],
+        'Minority': data['minority'],
+        'MinorityTraining': data['minorityTraining'],
         'Insurance': data['Insurance'],
         'Serves': data['Serves'],
         'Which_cate': data['Which_cate'],
@@ -1278,6 +1293,12 @@ async function prettyTelehealth(){
 }
 async function prettyAccepting(){
     return ['notselected','Not Selected','yes','Yes','no','No','waitlist','Waitlist']
+}
+async function prettyMinority(){
+    return ['notselected','Not Selected','yes','Yes','no','No']
+}
+async function prettyMinorityTraining(){
+    return ['notselected','Not Selected','yes','Yes','no','No']
 }
 async function cleanWebsite(website) {
     //console.log('can we clean it ', website)
