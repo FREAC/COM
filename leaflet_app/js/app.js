@@ -567,8 +567,8 @@ async function generateFilterText(){
                         theFilterValues += acceptingOptions[acceptingOptions.indexOf(theFilters[j+1][jj]) + 1] + ', ';
                         break;    
                     case 'Minority':
-                    case '<b>Providers offering people of color specialization</b>':
-                        theFilters[j] = '<b>Providers offering people of color specialization</b>';
+                    case '<b>I am looking for a provider specializing in people of color</b>':
+                        theFilters[j] = '<b>I am looking for a provider specializing in people of color</b>';
                         theFilterValues += minorityOptions[minorityOptions.indexOf(theFilters[j+1][jj]) + 1] + ', ';
                         break;   
                     case 'MinorityTraining':
