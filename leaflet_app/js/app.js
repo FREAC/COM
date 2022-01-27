@@ -43,11 +43,11 @@ $(document).ready(function () {
 });
 
 // This sets the marker styles for any of the circleMarker symbols
-function createLegend() {    
+function createLegend() {   
     var legend = L.control({position: 'bottomright'});
     legend.onAdd = function (map) {
     
-    var div = L.DomUtil.create('div', 'info legend');
+    var div = L.DomUtil.create('div', 'info legend d-none d-sm-block');
     var labels = ['<strong>Categories</strong>'],
     categories = ['Maternal Mental Health Provider','At least one MMH Provider','Not a MMH Provider'];
     
@@ -567,8 +567,8 @@ async function generateFilterText(){
                         theFilterValues += acceptingOptions[acceptingOptions.indexOf(theFilters[j+1][jj]) + 1] + ', ';
                         break;    
                     case 'Minority':
-                    case '<b>PDo you self identify as a provicer of color?</b>':
-                        theFilters[j] = '<b>Do you self identify as a provicer of color?</b>';
+                    case '<b>I am looking for a provider specializing in people of color</b>':
+                        theFilters[j] = '<b>I am looking for a provider specializing in people of color</b>';
                         theFilterValues += minorityOptions[minorityOptions.indexOf(theFilters[j+1][jj]) + 1] + ', ';
                         break;   
                     case 'MinorityTraining':
