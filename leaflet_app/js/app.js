@@ -806,7 +806,7 @@ async function zoomToLocation(lat, lng, z = 11, data) {
     const marker_location = new L.LatLng(lat, lng);
 
     // set the selection_marker variable to our location and style
-    selection_marker = L.circleMarker(marker_location, markerStyle(selected_color, selected_color, selected_fill_opacity));
+    selection_marker = L.circleMarker(marker_location, markerStyle(selected_color, selected_color, selected_fill_opacity,data));
 
     //allow for the user to click the point under the marker
     selection_marker.options.interactive = false;
