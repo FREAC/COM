@@ -1,7 +1,7 @@
 'use strict';
 
 // comment out the next line to re-enable console messages
-// console.log = function() {}
+console.log = function() {}
 //
 // ?freac=true to enable console.log
 
@@ -895,12 +895,18 @@ async function zoomToLocation(lat, lng, z = 11, data) {
 function insertTabulator(data) {
     table = new Tabulator("#results-table", {
         rowFormatter:function(row){
-            var whatMedia = window.styleMedia.type
+            // 
+            // this does not and never has worked with FireFox
+            //
+            //var whatMedia = window.styleMedia.type
+
+            var whatMedia = window.matchMedia("print")
+
             // console.log('can I show stuff here ',whatMedia)
             //
             //this conditional format does NOT work but leaving it in for now.
             //
-            if (whatMedia === 'print') {
+            if (whatMedia) {
                 // console.log('putting on the borders for the table ')
                 row.getElement().style.borderWidth = "thin",
                 row.getElement().style.borderStyle = "solid"
