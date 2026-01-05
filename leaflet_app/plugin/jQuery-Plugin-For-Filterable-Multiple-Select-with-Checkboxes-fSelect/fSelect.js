@@ -49,6 +49,19 @@
             this.create();
         }
 
+        // Helper to safely convert any value to string
+        function encodeHtml(str) {
+            return String(str == null ? '' : str);
+        }
+
+        // Escape for safe use inside HTML attribute or inner HTML
+        function escapeAttr(str) {
+            return $('<div>').text(encodeHtml(str)).html();
+        }
+
+        function escapeHtmlText(str) {
+            return $('<div>').text(encodeHtml(str)).html();
+        }
 
         /**
          * Prototype class
@@ -105,7 +118,7 @@
                     var $el = $(el);
 
                     if ('optgroup' == $el.prop('nodeName').toLowerCase()) {
-                        choices += '<div class="fs-optgroup-label" data-group="' + $this.optgroup + '">' + $el.prop('label') + '</div>';
+                        choices += '<div class="fs-optgroup-label" data-group="' + $this.optgroup + '">' + escapeHtmlText($el.prop('label')) + '</div>';
                         choices += $this.buildOptions($el);
                         $this.optgroup++;
                     }
@@ -119,7 +132,9 @@
                             var disabled = $el.is(':disabled') ? ' disabled' : '';
                             var selected = -1 < $.inArray(val, $this.selected) ? ' selected' : '';
                             var group = ' g' + $this.optgroup;
-                            var row = '<div class="fs-option' + selected + disabled + group + classes + '" data-value="' + val + '" data-index="' + $this.idx + '"><span class="fs-checkbox"><i></i></span><div class="fs-option-label">' + $el.html() + '</div></div>';
+                            var safeVal = escapeAttr(val);
+                            var labelText = escapeHtmlText($el.text());
+                            var row = '<div class="fs-option' + selected + disabled + group + classes + '" data-value="' + safeVal + '" data-index="' + $this.idx + '"><span class="fs-checkbox"><i></i></span><div class="fs-option-label">' + labelText + '</div></div>';
 
                             if ('function' === typeof $this.settings.optionFormatter) {
                                 row = $this.settings.optionFormatter(row);
@@ -139,7 +154,7 @@
                 var labelText = [];
 
                 this.$wrap.find('.fs-option.selected').each(function(i, el) {
-                    labelText.push($(el).find('.fs-option-label').html());
+                    labelText.push($(el).find('.fs-option-label').text());
                 });
 
                 if (labelText.length < 1) {
@@ -152,7 +167,7 @@
                     labelText = labelText.join(', ');
                 }
 
-                this.$wrap.find('.fs-label').html(labelText);
+                this.$wrap.find('.fs-label').text(labelText);
                 this.$wrap.toggleClass('fs-default', labelText === settings.placeholder);
             }
         }
