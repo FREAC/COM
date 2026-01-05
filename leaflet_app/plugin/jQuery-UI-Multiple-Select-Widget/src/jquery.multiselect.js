@@ -76,7 +76,7 @@
    /**
     * Checks whether a given image source URL is safe to use.
     * Only allows http, https, protocol-relative, data image URLs, or relative URLs
-    * that do not begin with a dangerous scheme such as "javascript:".
+    * that do not begin with a dangerous scheme such as "javascript:", "vbscript:", or unsafe "data:".
     *
     * @param {string} src
     * @returns {boolean}
@@ -86,9 +86,11 @@
          return false;
       }
       var trimmed = $.trim ? $.trim(src) : src.replace(/^\s+|\s+$/g, '');
-      // Reject javascript: and similar executable schemes
+      // Reject javascript:, vbscript:, and non-image data: URLs
       var lower = trimmed.toLowerCase();
-      if (lower.indexOf('javascript:') === 0 || lower.indexOf('data:text/html') === 0) {
+      if (lower.indexOf('javascript:') === 0 ||
+          lower.indexOf('vbscript:') === 0 ||
+          (lower.indexOf('data:') === 0 && lower.indexOf('data:image/') !== 0)) {
          return false;
       }
       // Allow common safe patterns: http, https, protocol-relative, data:image, or relative paths
