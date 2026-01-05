@@ -61,10 +61,35 @@ layout: default
 	(function ($) {
 		var $placeholder = $("#placeholder"),
 			$demo = $("#footer a"),
-			$links = $("#menu a");
+			$links = $("#menu a"),
+			// whitelist of allowed demo pages that can be loaded
+			allowedDemos = [
+				"basic",
+				"animations",
+				"callbacks",
+				"headers",
+				"selectedlist",
+				"maxchecked",
+				"preselected",
+				"single",
+				"enabledisable",
+				"refresh",
+				"position",
+				"filter"
+			];
 
 		$(window).bind("hashchange", function () {
-			var hash = location.hash || "#basic", url = hash.replace("#", "") + '.html';
+			var rawHash = location.hash || "#basic",
+				// strip leading "#"
+				hashValue = rawHash.charAt(0) === "#" ? rawHash.substring(1) : rawHash;
+
+			// validate against whitelist; default to "basic" if invalid
+			if ($.inArray(hashValue, allowedDemos) === -1) {
+				hashValue = "basic";
+				rawHash = "#basic";
+			}
+
+			var url = hashValue + ".html";
 
 			// load in demo
 			$placeholder.attr("src", url);
@@ -73,7 +98,7 @@ layout: default
 			// set active link
 			$links.each(function () {
 				var $this = $(this);
-				$this[$this.attr('href') === hash ? 'addClass' : 'removeClass']('active');
+				$this[$this.attr('href') === rawHash ? 'addClass' : 'removeClass']('active');
 			});
 		});
 
