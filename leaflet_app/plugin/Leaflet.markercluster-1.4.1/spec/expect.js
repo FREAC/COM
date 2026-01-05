@@ -581,9 +581,9 @@
           return stylize('undefined', 'undefined');
 
         case 'string':
-          var simple = '\'' + json.stringify(value).replace(/^"|"$/g, '')
-                                                   .replace(/'/g, "\\'")
-                                                   .replace(/\\"/g, '"') + '\'';
+          var simple = '\'' + String(value)
+                                  .replace(/\\/g, '\\\\')
+                                  .replace(/'/g, "\\'") + '\'';
           return stylize(simple, 'string');
 
         case 'number':
