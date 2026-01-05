@@ -74,6 +74,36 @@
    };
 
    /**
+    * Checks whether a given image source URL is safe to use.
+    * Only allows http, https, protocol-relative, data image URLs, or relative URLs
+    * that do not begin with a dangerous scheme such as "javascript:".
+    *
+    * @param {string} src
+    * @returns {boolean}
+    */
+   function isSafeImageSrc(src) {
+      if (!src || typeof src !== 'string') {
+         return false;
+      }
+      var trimmed = $.trim ? $.trim(src) : src.replace(/^\s+|\s+$/g, '');
+      // Reject javascript: and similar executable schemes
+      var lower = trimmed.toLowerCase();
+      if (lower.indexOf('javascript:') === 0 || lower.indexOf('data:text/html') === 0) {
+         return false;
+      }
+      // Allow common safe patterns: http, https, protocol-relative, data:image, or relative paths
+      if (lower.indexOf('http:') === 0 ||
+          lower.indexOf('https:') === 0 ||
+          lower.indexOf('//') === 0 ||
+          lower.indexOf('data:image/') === 0 ||
+          lower.charAt(0) === '/' ||
+          (lower.charAt(0) !== '#' && lower.indexOf(':') === -1)) {
+         return true;
+      }
+      return false;
+   }
+
+   /**
     * Checks an option element for data-image-src
     * and adds that as an image tag within the widget option
     * 
@@ -82,7 +112,7 @@
     */
    function insertImage(option, span) {
     var optionImageSrc = option.getAttribute('data-image-src');
-    if (optionImageSrc) {
+    if (optionImageSrc && isSafeImageSrc(optionImageSrc)) {
       var img = document.createElement('img');
       img.setAttribute('src', optionImageSrc);
       span.insertBefore(img, span.firstChild);
