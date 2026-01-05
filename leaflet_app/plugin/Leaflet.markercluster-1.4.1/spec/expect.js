@@ -706,9 +706,18 @@
             name = name.substr(1, name.length - 2);
             name = stylize(name, 'name');
           } else {
-            name = name.replace(/'/g, "\\'")
-                       .replace(/\\"/g, '"')
-                       .replace(/(^"|"$)/g, "'");
+            // Reconstruct a safely escaped single-quoted string literal from the raw key.
+            var rawName = '' + key;
+            name = rawName.replace(/['\\\n\r\t]/g, function (ch) {
+              switch (ch) {
+                case '\\': return '\\\\';
+                case '\'': return '\\\'';
+                case '\n': return '\\n';
+                case '\r': return '\\r';
+                case '\t': return '\\t';
+              }
+            });
+            name = '\'' + name + '\'';
             name = stylize(name, 'string');
           }
         }
